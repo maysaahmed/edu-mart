@@ -19,3 +19,7 @@ yarn-error.log
 /.vscode
 rr
 .rr.yaml
+.htaccess
+docker-compose.override.yml
+/.docker
+/storage/db-data/*
