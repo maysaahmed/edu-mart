@@ -3,9 +3,14 @@
 namespace App\Traits;
 
 
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Symfony\Component\HttpFoundation\Response;
+use \Illuminate\Http\JsonResponse;
+
 trait ApiResponser{
 
-    protected function successResponse($data, $message = '', $code = 200)
+    protected function successResponse($data, $message = '', $code = Response::HTTP_OK): JsonResponse
     {
         return response()->json([
             'status'=> 'Success',
@@ -14,13 +19,25 @@ trait ApiResponser{
         ], $code);
     }
 
-    protected function errorResponse($message = '', $code)
+    protected function errorResponse($message = '', $code = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
         return response()->json([
             'status'=>'Error',
             'message' => $message,
             'data' => []
         ], $code);
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+
+        throw new HttpResponseException(response()->json([
+            'status'=> 'Error',
+            'message' => 'Validation Errors',
+            'data' => $validator->errors()
+        ], Response::HTTP_UNPROCESSABLE_ENTITY));
+
+
     }
 
 }

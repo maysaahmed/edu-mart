@@ -25,10 +25,5 @@ Route::group(['middleware'=> ['role:admin-api|admin']], function() {
 
 Route::get('levels', ['uses' => 'App\Http\Controllers\LevelController@index']);
 Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
-//Route::group(['prefix' => 'categories'], function()  {
-//    Route::get('/', 'App\Http\Controllers\CategoryController@index');
-//    Route::post('/', 'App\Http\Controllers\CategoryController@store');
-//    Route::put('/{id}',  'App\Http\Controllers\CategoryController@update');
-//    Route::delete('/{id}', 'App\Http\Controllers\CategoryController@destroy');
-//    });
+
 
