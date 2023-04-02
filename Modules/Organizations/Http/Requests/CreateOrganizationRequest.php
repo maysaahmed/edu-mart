@@ -1,9 +1,9 @@
 <?php
 
 namespace Modules\Organizations\Http\Requests;
+use App\Http\Requests\ApiRequest;
 
-
-class CreateOrganizationRequest extends APIRequest
+class CreateOrganizationRequest extends ApiRequest
 {
     public function rules()
     {
