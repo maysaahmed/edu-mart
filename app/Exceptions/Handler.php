@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 use App\Traits\ApiResponser;
@@ -10,6 +14,7 @@ use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Handler extends ExceptionHandler
 {
@@ -30,7 +35,7 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
-        //
+
     ];
 
     /**
@@ -56,47 +61,72 @@ class Handler extends ExceptionHandler
 
     /**
      * Report or log an exception.
-     * @param Exception $exception
+     * @param Throwable $e
      * @throws Throwable
      */
-    public function report(Throwable $exception)
+    public function report(Throwable $e)
     {
-        parent::report($exception);
+        parent::report($e);
     }
 
 
+//    /**
+//     * Render an exception into an HTTP response.
+//     * @param \Illuminate\Http\Request $request
+//     * @param Exception $exception
+//     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
+//     */
+//    public function render($request, Throwable $exception)
+//    {
+//        $response = $this->handleException($request, $exception);
+//        return $response;
+//    }
     /**
-     * Render an exception into an HTTP response.
-     * @param \Illuminate\Http\Request $request
+     * @param $request
      * @param Exception $exception
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\Response|JsonResponse|Response
+     * @throws Throwable
      */
-    public function render($request, Throwable $exception)
-    {
-        $response = $this->handleException($request, $exception);
-        return $response;
-    }
-
-    public function handleException($request, Exception $exception)
+    public function handleException($request, Exception $exception): \Illuminate\Http\Response|JsonResponse|Response
     {
 
         if ($exception instanceof MethodNotAllowedHttpException) {
-            return $this->errorResponse('The specified method for the request is invalid', Response::HTTP_METHOD_NOT_ALLOWED);
+            return $this->errorResponse('The specified method for the request is invalid.', Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
         if ($exception instanceof NotFoundHttpException) {
-            return $this->errorResponse('The specified URL cannot be found', Response::HTTP_NOT_FOUND);
+            return $this->errorResponse('The specified URL cannot be found.', Response::HTTP_NOT_FOUND);
         }
 
         if ($exception instanceof HttpException) {
             return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
         }
 
+        if($exception instanceof ModelNotFoundException) {
+            return $this->errorResponse('The specified data cannot be found.', Response::HTTP_NOT_FOUND);
+        }
+
+
         if (config('app.debug')) {
             return parent::render($request, $exception);
         }
 
-        return $this->errorResponse('Unexpected Exception. Try later', Response::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->errorResponse('Unexpected Exception. Try later');
 
+    }
+
+    /**
+     * @param Request $request
+     * @param AuthenticationException|AuthenticationException $exception
+     * @return JsonResponse|RedirectResponse|Response
+     */
+    protected function unauthenticated($request, AuthenticationException $exception): JsonResponse|RedirectResponse|Response
+    {
+
+        if($request->expectsJson() || $request->headers->has('Authorization')){
+            return $this->errorResponse('Unauthorized.', Response::HTTP_UNAUTHORIZED);
+        }
+
+        return redirect()->guest('login');
     }
 }

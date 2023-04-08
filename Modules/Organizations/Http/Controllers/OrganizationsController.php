@@ -60,14 +60,16 @@ class OrganizationsController extends ApiController
     public function update(CreateOrganizationRequest $request, $id)
     {
         try{
-            $item = Organization::findOrFail($id);
-
+            $item = Organization::find($id);
+            if(!$item){
+                return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
+            }
             if ($item->update($request->all())) {
                 $this->response['message'] = 'Data updated successfully!';
                 return $this->successResponse(new OrganizationResource($item),'Organization updated successfully!' , Response::HTTP_ACCEPTED);
 
             } else {
-                return $this->errorResponse('Data failed to update!');
+                return $this->errorResponse('Organization failed to update!');
             }
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -83,11 +85,14 @@ class OrganizationsController extends ApiController
     public function destroy($id)
     {
         try {
-            $item = Organization::findOrFail($id);
+            $item = Organization::find($id);
+            if(!$item){
+                return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
+            }
             if ($item->delete()) {
                 return $this->successResponse([],'Organization removed successfully!');
             } else {
-                return $this->errorResponse('Data failed to remove!');
+                return $this->errorResponse('Organization failed to remove!');
             }
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
