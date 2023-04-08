@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,12 +17,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware'=> ['role:admin-api|admin']], function() {
-//    Route::get('/products/{id}', [CategoryController::class, 'edit']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('user/user', 'App\Http\Controllers\UserAuthController@details');
 });
 
 
+
+
+
+//Route::group(['middleware'=> ['role:admin-api|admin']], function() {
+////    Route::get('/products/{id}', [CategoryController::class, 'edit']);
+//    Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
+//
+//});
+
+
 Route::get('levels', ['uses' => 'App\Http\Controllers\LevelController@index']);
-Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
+//Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
 
 

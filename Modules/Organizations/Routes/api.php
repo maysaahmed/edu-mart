@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/organizations', function (Request $request) {
     return $request->user();
 });
-
-//Route::group(['middleware'=> ['role:admin-api|admin']], function() {
+//role:admin-api|super-admin
+Route::middleware('auth:admin-api')->group(function () {
     Route::resource('organizations', 'Modules\Organizations\Http\Controllers\OrganizationsController',['only'=>['index', 'store', 'update', 'destroy']]);
 
-//});
+});
