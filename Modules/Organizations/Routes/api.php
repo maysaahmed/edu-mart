@@ -21,4 +21,5 @@ Route::middleware('auth:api')->get('/organizations', function (Request $request)
 Route::middleware('auth:admin-api')->group(function () {
     Route::resource('/organizations', 'OrganizationsController',['only'=>['index', 'store', 'update', 'destroy']]);
     Route::post('/organizations/updateStatus/{organization}', 'OrganizationsController@updateStatus');
+    Route::post('/organizations/import', 'OrganizationsController@import');
 });

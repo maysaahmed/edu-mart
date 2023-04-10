@@ -43,4 +43,23 @@ trait ApiResponser{
 
     }
 
+    protected function importFailures($failures): JsonResponse
+    {
+        $errors = [];
+        foreach ($failures as $failure) {
+            $errors[] =[
+                'row' => $failure->row()-1,
+                'attribute' => $failure->attribute(),
+                'errors' => implode(", ", $failure->errors()),
+            ];
+        }
+
+        throw new HttpResponseException(response()->json([
+            'status'=> 'Error',
+            'message' => 'Validation Errors',
+            'data' => $errors
+        ], Response::HTTP_UNPROCESSABLE_ENTITY));
+
+    }
+
 }

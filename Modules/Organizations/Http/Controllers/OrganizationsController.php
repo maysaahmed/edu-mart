@@ -3,15 +3,18 @@
 namespace Modules\Organizations\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Organizations\Entities\Organization;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\QueryBuilder\QueryBuilder;
 use Modules\Organizations\Http\Requests\CreateOrganizationRequest;
+use Modules\Organizations\Http\Requests\ImportCSVRequest;
 use Modules\Organizations\Transformers\OrganizationResource;
+use Modules\Organizations\Imports\ImportOrganizations;
+
 
 class OrganizationsController extends ApiController
 {
@@ -47,6 +50,26 @@ class OrganizationsController extends ApiController
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
+        }
+
+    }
+
+    /**
+     * @param ImportCSVRequest $request
+     * @return JsonResponse
+     */
+    public function import(ImportCSVRequest $request)
+    {
+        $file = $request->file('file')->store('import');
+        try {
+            $import = new ImportOrganizations;
+            $import->import($file);
+
+            return $this->successResponse([],'Organizations saved successfully!' , Response::HTTP_CREATED);
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+
+             return $this->importFailures($e->failures());
         }
 
     }
