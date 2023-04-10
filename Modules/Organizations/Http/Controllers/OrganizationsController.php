@@ -4,7 +4,9 @@ namespace Modules\Organizations\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Modules\Organizations\Entities\Organization;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -17,14 +19,14 @@ class OrganizationsController extends ApiController
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(): Renderable
     {
         try {
-            $orgs = QueryBuilder::for(Organization::class)
-                ->allowedFilters('name', 'phone', 'address')
+            $organizations = QueryBuilder::for(Organization::class)
+                ->allowedFilters('name', 'phone', 'address', 'status')
                 ->paginate();
 
-            return $this->successResponse(OrganizationResource::collection($orgs));
+            return $this->successResponse(OrganizationResource::collection($organizations));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -33,10 +35,10 @@ class OrganizationsController extends ApiController
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
+     * @param CreateOrganizationRequest $request
      * @return Renderable
      */
-    public function store(CreateOrganizationRequest $request)
+    public function store(CreateOrganizationRequest $request): Renderable
     {
 
         try {
@@ -50,14 +52,13 @@ class OrganizationsController extends ApiController
     }
 
 
-
     /**
      * Update the specified resource in storage.
-     * @param Request $request
+     * @param CreateOrganizationRequest $request
      * @param int $id
      * @return Renderable
      */
-    public function update(CreateOrganizationRequest $request, $id)
+    public function update(CreateOrganizationRequest $request, $id): Renderable
     {
         try{
             $item = Organization::find($id);
@@ -65,8 +66,43 @@ class OrganizationsController extends ApiController
                 return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
             }
             if ($item->update($request->all())) {
-                $this->response['message'] = 'Data updated successfully!';
                 return $this->successResponse(new OrganizationResource($item),'Organization updated successfully!' , Response::HTTP_ACCEPTED);
+
+            } else {
+                return $this->errorResponse('Organization failed to update!');
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+
+    }
+
+    /**
+     * update status -> active or blocked
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function updateStatus(Request $request, $id): JsonResponse
+    {
+        $validation_rules = [
+            'status' => 'required|in:0,1'
+        ];
+        $validator = $this->getValidationFactory()->make($request->all(), $validation_rules);
+
+        if ($validator->fails()) {
+            $this->failedValidation($validator);
+        }
+
+        try{
+            $item = Organization::find($id);
+            if (!$item) {
+                return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
+            }
+
+            if ($item->update(['status' => $request->status])) {
+                return $this->successResponse(new OrganizationResource($item), 'Organization status updated successfully!', Response::HTTP_ACCEPTED);
 
             } else {
                 return $this->errorResponse('Organization failed to update!');
@@ -82,7 +118,7 @@ class OrganizationsController extends ApiController
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy($id): Renderable
     {
         try {
             $item = Organization::find($id);

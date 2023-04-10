@@ -30,11 +30,14 @@ trait ApiResponser{
 
     public function failedValidation(Validator $validator)
     {
-
+        $errors = [];
+        foreach ($validator->errors()->getMessages() as $key => $value) {
+            $errors[$key] = implode(", ", $value);
+        }
         throw new HttpResponseException(response()->json([
             'status'=> 'Error',
             'message' => 'Validation Errors',
-            'data' => $validator->errors()
+            'data' => $errors
         ], Response::HTTP_UNPROCESSABLE_ENTITY));
 
 

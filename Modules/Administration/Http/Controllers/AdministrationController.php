@@ -68,7 +68,7 @@ class AdministrationController extends ApiController
         return $this->errorResponse('The provided credentials do not match our records.!', Response::HTTP_UNAUTHORIZED);
 
 
-    }   
+    }
 
     /**
      * @param Request $request
