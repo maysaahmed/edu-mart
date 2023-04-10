@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use Modules\Organizations\Http\Controllers;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,8 +16,9 @@ use Modules\Organizations\Http\Controllers;
 Route::middleware('auth:api')->get('/organizations', function (Request $request) {
     return $request->user();
 });
+
 //role:admin-api|super-admin
-Route::middleware('auth:admin-api')->group(function () {
-    Route::resource('organizations', 'OrganizationsController',['only'=>['index', 'store', 'update', 'destroy']]);
-    Route::post('/organizations/updateStatus/{organization}', 'OrganizationsController@updateStatus');
+Route::middleware('auth:admin-api')->prefix('organizations')->group(function () {
+    Route::resource('/', 'OrganizationsController',['only'=>['index', 'store', 'update', 'destroy']]);
+    Route::post('/updateStatus/{organization}', 'OrganizationsController@updateStatus');
 });

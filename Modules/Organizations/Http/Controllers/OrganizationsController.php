@@ -17,9 +17,9 @@ class OrganizationsController extends ApiController
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function index(): Renderable
+    public function index(): JsonResponse
     {
         try {
             $organizations = QueryBuilder::for(Organization::class)
@@ -36,9 +36,9 @@ class OrganizationsController extends ApiController
     /**
      * Store a newly created resource in storage.
      * @param CreateOrganizationRequest $request
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function store(CreateOrganizationRequest $request): Renderable
+    public function store(CreateOrganizationRequest $request): JsonResponse
     {
 
         try {
@@ -55,10 +55,10 @@ class OrganizationsController extends ApiController
     /**
      * Update the specified resource in storage.
      * @param CreateOrganizationRequest $request
-     * @param int $id
-     * @return Renderable
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(CreateOrganizationRequest $request, $id): Renderable
+    public function update(CreateOrganizationRequest $request, $id): JsonResponse
     {
         try{
             $item = Organization::find($id);
@@ -115,10 +115,10 @@ class OrganizationsController extends ApiController
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy($id): Renderable
+    public function destroy($id): JsonResponse
     {
         try {
             $item = Organization::find($id);
