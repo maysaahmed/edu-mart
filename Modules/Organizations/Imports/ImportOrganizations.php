@@ -38,8 +38,8 @@ class ImportOrganizations implements ToModel, SkipsEmptyRows, WithValidation, Wi
     {
         return [
             '*.name' => 'required|unique:organizations|max:255',
-            '*.phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            '*.address' => 'nullable|regex:/([- ,\/0-9a-zA-Z]+)/|min:8',
+            '*.phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            '*.address' => 'required|regex:/([- ,\/0-9a-zA-Z]+)/|min:8',
         ];
     }
 

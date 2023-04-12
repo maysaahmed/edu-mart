@@ -48,18 +48,40 @@ trait ApiResponser{
         $errors = [];
         foreach ($failures as $failure) {
             $errors[] =[
-                'row' => $failure->row()-1,
+                'row' => $failure->row() - 1,
                 'attribute' => $failure->attribute(),
-                'errors' => implode(", ", $failure->errors()),
+                'errors' => implode("|", $failure->errors()),
             ];
         }
 
         throw new HttpResponseException(response()->json([
             'status'=> 'Error',
             'message' => 'Validation Errors',
-            'data' => $errors
+            'data' => $this->filter_failures($errors, 'row')
         ], Response::HTTP_UNPROCESSABLE_ENTITY));
 
+    }
+
+    private function filter_failures($failures, $key): array
+    {
+        $groups = $errors = array();
+
+        foreach($failures as $failure) {
+            $groups[$failure[$key]][] = $failure;
+        }
+
+        foreach($groups as $key => $value)
+        {
+            $attributes = $msgs = '';
+            foreach($value as $item)
+            {
+                $attributes .= $item['attribute'] . ',';
+                $msgs .= $item['errors'] . ',';
+
+            }
+            array_push($errors, ['row' => $key, 'attributes' => rtrim($attributes, ", "), 'errors' => rtrim($msgs, ", ")]);
+        }
+        return $errors;
     }
 
 }

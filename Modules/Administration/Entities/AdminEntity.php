@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AdminEntity extends Admin
 {
-    use HasFactory;
+    use HasFactory, HasRoles;
 
     protected $fillable = [];
     protected $table = 'admins';

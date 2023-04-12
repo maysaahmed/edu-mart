@@ -88,6 +88,7 @@ class AdministrationController extends ApiController
      */
     public function details()
     {
-        return response()->json(['user' => auth("admin-api")->user()], 200);
+        $user = auth("admin-api")->user();
+        return response()->json(['user' =>  $user, 'permissions' => $user->getAllPermissions()], 200);
     }
 }
