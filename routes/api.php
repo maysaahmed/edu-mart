@@ -24,6 +24,3 @@ Route::middleware('auth:api')->group(function () {
 
 
 
-Route::get('levels', ['uses' => 'App\Http\Controllers\LevelController@index']);
-
-
