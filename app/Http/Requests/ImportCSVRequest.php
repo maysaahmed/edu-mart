@@ -1,7 +1,6 @@
 <?php
 
-namespace Modules\Organizations\Http\Requests;
-use App\Http\Requests\ApiRequest;
+namespace App\Http\Requests;
 
 class ImportCSVRequest extends ApiRequest
 {
@@ -9,7 +8,7 @@ class ImportCSVRequest extends ApiRequest
     {
         return [
             'file'      => 'required|mimes:csv,txt',
-            ];
+        ];
 
     }
 

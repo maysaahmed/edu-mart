@@ -3,15 +3,14 @@
 namespace Modules\Organizations\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\Organizations\Entities\Organization;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\QueryBuilder\QueryBuilder;
 use Modules\Organizations\Http\Requests\CreateOrganizationRequest;
-use Modules\Organizations\Http\Requests\ImportCSVRequest;
 use Modules\Organizations\Transformers\OrganizationResource;
 use Modules\Organizations\Imports\ImportOrganizations;
 

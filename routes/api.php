@@ -24,16 +24,6 @@ Route::middleware('auth:api')->group(function () {
 
 
 
-
-
-//Route::group(['middleware'=> ['role:admin-api|admin']], function() {
-////    Route::get('/products/{id}', [CategoryController::class, 'edit']);
-//    Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
-//
-//});
-
-
 Route::get('levels', ['uses' => 'App\Http\Controllers\LevelController@index']);
-//Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
 
 
