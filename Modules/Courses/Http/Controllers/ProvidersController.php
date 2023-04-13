@@ -55,8 +55,8 @@ class ProvidersController extends ApiController
         try {
             $import = new ImportProviders;
             $import->import($file);
-
-            return $this->successResponse([],'Providers saved successfully!' , Response::HTTP_CREATED);
+            $rowCount = $import->getRowCount();
+            return $this->successResponse([],$rowCount . ' Providers have been uploaded successfully!' , Response::HTTP_CREATED);
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 

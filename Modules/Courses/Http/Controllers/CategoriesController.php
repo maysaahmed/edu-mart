@@ -55,8 +55,8 @@ class CategoriesController extends ApiController
         try {
             $import = new ImportCategories;
             $import->import($file);
-
-            return $this->successResponse([],'Categories saved successfully!' , Response::HTTP_CREATED);
+            $rowCount = $import->getRowCount();
+            return $this->successResponse([],$rowCount . ' Categories have been uploaded successfully!' , Response::HTTP_CREATED);
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 

@@ -11,10 +11,13 @@ use Modules\Organizations\Entities\Organization;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\Importable;
+use App\Traits\CountRows;
 
 class ImportOrganizations implements ToModel, SkipsEmptyRows, WithValidation, WithHeadingRow, WithBatchInserts
 {
-    use Importable, ValidatesRequests, SkipsFailures;
+    use Importable, ValidatesRequests, SkipsFailures, CountRows;
+
+
     /**
      * @param array $row
      *
@@ -22,6 +25,7 @@ class ImportOrganizations implements ToModel, SkipsEmptyRows, WithValidation, Wi
      */
     public function model(array $row): Modules\Organizations\Entities\Organization|Organization|null
     {
+        ++$this->rows;
         return new Organization([
             'name'     => $row['name'],
             'phone'    => $row['phone'],
@@ -42,6 +46,8 @@ class ImportOrganizations implements ToModel, SkipsEmptyRows, WithValidation, Wi
             '*.address' => 'required|regex:/([- ,\/0-9a-zA-Z]+)/|min:8',
         ];
     }
+
+
 
 
 }

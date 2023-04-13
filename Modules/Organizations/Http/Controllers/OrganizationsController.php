@@ -57,14 +57,14 @@ class OrganizationsController extends ApiController
      * @param ImportCSVRequest $request
      * @return JsonResponse
      */
-    public function import(ImportCSVRequest $request)
+    public function import(ImportCSVRequest $request): JsonResponse
     {
         $file = $request->file('file')->store('import');
         try {
             $import = new ImportOrganizations;
             $import->import($file);
-
-            return $this->successResponse([],'Organizations saved successfully!' , Response::HTTP_CREATED);
+            $rowCount = $import->getRowCount();
+            return $this->successResponse([],$rowCount.' Organizations have been uploaded successfully!' , Response::HTTP_CREATED);
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 

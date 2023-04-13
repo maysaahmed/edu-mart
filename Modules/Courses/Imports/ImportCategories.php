@@ -2,6 +2,7 @@
 
 namespace Modules\Courses\Imports;
 
+use App\Traits\CountRows;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -14,7 +15,7 @@ use Maatwebsite\Excel\Concerns\Importable;
 
 class ImportCategories implements ToModel, SkipsEmptyRows, WithValidation, WithHeadingRow, WithBatchInserts
 {
-    use Importable, ValidatesRequests, SkipsFailures;
+    use Importable, ValidatesRequests, SkipsFailures, CountRows;
     /**
      * @param array $row
      *
@@ -22,6 +23,7 @@ class ImportCategories implements ToModel, SkipsEmptyRows, WithValidation, WithH
      */
     public function model(array $row): Modules\Courses\Entities\Category|Category|null
     {
+        ++$this->rows;
         return new Category([
             'name'     => $row['name'],
         ]);
