@@ -4,7 +4,12 @@ namespace Modules\Organizations\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Organizations\Core\Organization\Commands\CreateOrganization\ICreateOrganization;
+use Modules\Organizations\Core\Organization\Commands\DeleteOrganization\IDeleteOrganization;
+use Modules\Organizations\Core\Organization\Commands\EditOrganization\IEditOrganization;
+use Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination\IGetOrganizationPagination;
 use Modules\Organizations\Entities\Organization;
 use Symfony\Component\HttpFoundation\Response;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -17,14 +22,13 @@ class OrganizationsController extends ApiController
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
-    {
-        try {
-            $orgs = QueryBuilder::for(Organization::class)
-                ->allowedFilters('name', 'phone', 'address')
-                ->paginate();
 
-            return $this->successResponse(OrganizationResource::collection($orgs));
+    public function index(Request $request, IGetOrganizationPagination $query): JsonResponse
+    {
+
+        try {
+            $pagination = $query->execute($request->data());
+            return $this->successResponse(OrganizationResource::collection($pagination));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -34,15 +38,13 @@ class OrganizationsController extends ApiController
     /**
      * Store a newly created resource in storage.
      * @param Request $request
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function store(CreateOrganizationRequest $request)
+    public function store(CreateOrganizationRequest $request, ICreateOrganization $command)
     {
-
         try {
-            $org = Organization::create($request->all());
-            return $this->successResponse(new OrganizationResource($org),'Organization saved successfully!' , Response::HTTP_CREATED);
-
+            $result = $command->execute($request->data());
+            return $this->successResponse( new OrganizationResource($result),'Organization saved successfully!' , Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -50,27 +52,24 @@ class OrganizationsController extends ApiController
     }
 
 
-
     /**
      * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function update(CreateOrganizationRequest $request, $id)
+    public function update(CreateOrganizationRequest $request, int $id, IEditOrganization $command)
     {
         try{
-            $item = Organization::find($id);
-            if(!$item){
-                return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
-            }
-            if ($item->update($request->all())) {
-                $this->response['message'] = 'Data updated successfully!';
-                return $this->successResponse(new OrganizationResource($item),'Organization updated successfully!' , Response::HTTP_ACCEPTED);
 
-            } else {
-                return $this->errorResponse('Organization failed to update!');
-            }
+            $formData = $request->data();
+            $formData->id = $id;
+
+            $result = $command->execute($formData);
+
+            $this->response['message'] = 'Data updated successfully!';
+            return $this->successResponse(new OrganizationResource($result),'Organization updated successfully!' , Response::HTTP_ACCEPTED);
+
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -80,20 +79,13 @@ class OrganizationsController extends ApiController
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy($id, IDeleteOrganization $command)
     {
         try {
-            $item = Organization::find($id);
-            if(!$item){
-                return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
-            }
-            if ($item->delete()) {
-                return $this->successResponse([],'Organization removed successfully!');
-            } else {
-                return $this->errorResponse('Organization failed to remove!');
-            }
+            $command->execute($id);
+            return $this->successResponse([],'Organization removed successfully!');
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

@@ -2,24 +2,20 @@
 
 namespace App\Core\User\Commands\CreateUser;
 
+use App\Core\User\Repositories\IUserRepository;
 use App\Domain\Entities\User\User;
 
 class CreateUser implements ICreateUser
 {
-    public function __construct()
-    {
+    private IUserRepository $repository;
 
+    public function __construct(IUserRepository $repository)
+    {
+        $this->repository = $repository;
     }
 
     public function execute(CreateUserModel $model): User
     {
-
-        $user = new User();
-        $user->name = $model->name;
-        $user->email = $model->email;
-        $user->password = bcrypt($model->password);
-        $user->save();
-
-        return $user;
+        return $this->repository->createUser($model);
     }
 }
