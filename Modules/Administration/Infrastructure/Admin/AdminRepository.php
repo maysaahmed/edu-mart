@@ -15,7 +15,7 @@ class AdminRepository extends Repository implements IAdminRepository
         return Admin::class;
     }
 
-    public function getAdminByEmail(string $email): Admin
+    public function getAdminByEmail(string $email): Admin|null
     {
         return $admin = Admin::Where('email', $email)->first();
     }

@@ -14,7 +14,8 @@ use Modules\Administration\Http\Requests\AdminLoginRequest;
 use Modules\Administration\Transformers\AdminResource;
 use Symfony\Component\HttpFoundation\Response;
 use OpenApi\Annotations as OA;
-use Hash;
+use Illuminate\Support\Facades\Hash;
+
 class AdministrationController extends ApiController
 {
 //    /**

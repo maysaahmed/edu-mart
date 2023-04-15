@@ -6,8 +6,8 @@ use Spatie\LaravelData\Data;
 class AdminAuthModel extends Data
 {
      public function __construct(
-        public $email,
-        public $password,
+        public string $email,
+        public string $password,
     ) {
     }
     

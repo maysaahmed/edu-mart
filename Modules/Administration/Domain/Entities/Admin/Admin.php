@@ -9,11 +9,11 @@ class Admin extends User
 {
     use HasFactory;
 
-    protected $fillable = [];
-    protected $table = 'users';
-
-    protected static function newFactory()
-    {
-        return \Modules\Administration\Database\factories\AdminEntityFactory::new();
-    }
+//    protected $fillable = [];
+//    protected $table = 'users';
+//
+//    protected static function newFactory()
+//    {
+//        return \Modules\Administration\Database\factories\AdminEntityFactory::new();
+//    }
 }

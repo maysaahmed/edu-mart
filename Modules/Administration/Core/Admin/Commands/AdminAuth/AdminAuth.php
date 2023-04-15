@@ -2,6 +2,7 @@
 namespace Modules\Administration\Core\Admin\Commands\AdminAuth;
 
 use Modules\Administration\Core\Admin\Repositories\IAdminRepository;
+use Illuminate\Support\Facades\Hash;
 
 class AdminAuth implements IAdminAuth
 {
@@ -14,12 +15,11 @@ class AdminAuth implements IAdminAuth
 
     public function execute(AdminAuthModel $model): array
     {
-        dd($model->email);
         $admin = $this->repository->getAdminByEmail($model->email);
 
         if ($admin) {
             if (Hash::check($model->password, $admin->password)) {
-                $token = $admin->createToken('authToken')->accessToken;
+                $token = $admin->createToken('authToken')->plainTextToken;
                 $data = ['name' => $admin->name,'token' => $token];
 
                 return $data;
