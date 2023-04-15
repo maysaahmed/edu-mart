@@ -6,8 +6,8 @@ use App\Http\Controllers\ApiController;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Administration\Core\Admin\Commands\CreateAdmin\ICreateAdmin;
-use Modules\Administration\Core\Admin\Queries\GetAdminPagination\IGetAdminPagination;
+use Modules\Administration\Core\Admin\Commands\CreateAdmin;
+use Modules\Administration\Core\Admin\Queries\GetAdminPagination;
 use Modules\Administration\Domain\Entities\Admin\Admin;
 use Modules\Administration\Core\Admin\Commands\AdminAuth;
 use Modules\Administration\Http\Requests\AdminLoginRequest;
@@ -52,20 +52,24 @@ class AdministrationController extends ApiController
 //        }
 //    }
 
-    public function index(Request $request, IGetAdminPagination $query): JsonResponse
+    public function index(Request $request, GetAdminPagination\IGetAdminPagination $query): JsonResponse
     {
         try {
-            $pagination = $query->execute($request->all());
+            $queryModel = GetAdminPagination\GetAdminPaginationModel::from($request->all());
+            $pagination = $query->execute($queryModel);
+            
             return $this->successResponse( AdminResource::collection($pagination));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
     }
 
-    public function store(Request $request, ICreateAdmin $command): JsonResponse
+    public function store(Request $request, CreateAdmin\ICreateAdmin $command): JsonResponse
     {
         try {
-            $result = $command->execute($request->all());
+            $commandModel = CreateAdmin\CreateAdminModel::from($request->all());
+            $result = $command->execute($commandModel);
+            
             return $this->successResponse( new AdminResource($result));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -84,7 +88,6 @@ class AdministrationController extends ApiController
         try {
             // map request to command.
             $commandModel = AdminAuth\AdminAuthModel::from($request->all());
-            
             $result = $command->execute($commandModel);
             return $this->successResponse($result);
         } catch (\Throwable $th) {
@@ -94,8 +97,11 @@ class AdministrationController extends ApiController
     }
 
     public function logout (Request $request) {
-        $token = $request->user()->token();
-        $token->revoke();
+        
+        $request->user()->tokens()->delete();
+        
+//        $token = $request->user()->token();
+//        $token->revoke();
         return $this->successResponse([], 'You have been successfully logged out!');
     }
 
@@ -104,8 +110,8 @@ class AdministrationController extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function details()
+    public function details(Request $request)
     {
-        return response()->json(['user' => auth("admin-api")->user()], 200);
+        return response()->json(['user' => $request->user()], 200);
     }
 }

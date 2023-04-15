@@ -1,17 +1,16 @@
 <?php
 namespace Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination;
+use Spatie\LaravelData\Data;
 
-class GetOrganizationPaginationModel
+class GetOrganizationPaginationModel extends Data
 {
-    public int $page = 1;
-    public ?string $name;
-
-    public function __construct(int $page, ?string $name = null, ?string $phone = null, ?string $address = null)
-    {
-        $this->page = $page;
-        $this->name = $name;
-        $this->phone = $phone;
-        $this->address = $address;
+    
+    public function __construct(
+        public int $page = 1, 
+        public ?string $name = null, 
+        public ?string $phone = null, 
+        public ?string $address = null
+    ) {
     }
-
+    
 }

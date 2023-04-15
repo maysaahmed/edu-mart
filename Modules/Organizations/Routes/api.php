@@ -13,11 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/organizations', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/organizations', function (Request $request) {
     return $request->user();
 });
 //role:admin-api|super-admin
-Route::middleware('auth:admin-api')->group(function () {
+
+Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->group(function () {
     Route::resource('organizations', 'Modules\Organizations\Http\Controllers\OrganizationsController',['only'=>['index', 'store', 'update', 'destroy']]);
 
 });
