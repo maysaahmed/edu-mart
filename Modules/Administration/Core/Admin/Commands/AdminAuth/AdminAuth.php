@@ -14,6 +14,7 @@ class AdminAuth implements IAdminAuth
 
     public function execute(AdminAuthModel $model): array
     {
+        dd($model->email);
         $admin = $this->repository->getAdminByEmail($model->email);
 
         if ($admin) {

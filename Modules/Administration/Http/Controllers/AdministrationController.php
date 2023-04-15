@@ -9,11 +9,11 @@ use Illuminate\Http\Request;
 use Modules\Administration\Core\Admin\Commands\CreateAdmin\ICreateAdmin;
 use Modules\Administration\Core\Admin\Queries\GetAdminPagination\IGetAdminPagination;
 use Modules\Administration\Domain\Entities\Admin\Admin;
-use Modules\Administration\Core\Admin\Commands\AdminAuth\IAdminAuth;
+use Modules\Administration\Core\Admin\Commands\AdminAuth;
 use Modules\Administration\Http\Requests\AdminLoginRequest;
 use Modules\Administration\Transformers\AdminResource;
 use Symfony\Component\HttpFoundation\Response;
-
+use OpenApi\Annotations as OA;
 use Hash;
 class AdministrationController extends ApiController
 {
@@ -54,7 +54,7 @@ class AdministrationController extends ApiController
     public function index(Request $request, IGetAdminPagination $query): JsonResponse
     {
         try {
-            $pagination = $query->execute($request->data());
+            $pagination = $query->execute($request->all());
             return $this->successResponse( AdminResource::collection($pagination));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -64,7 +64,7 @@ class AdministrationController extends ApiController
     public function store(Request $request, ICreateAdmin $command): JsonResponse
     {
         try {
-            $result = $command->execute($request->data());
+            $result = $command->execute($request->all());
             return $this->successResponse( new AdminResource($result));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -77,14 +77,18 @@ class AdministrationController extends ApiController
      * @param AdminLoginRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(AdminLoginRequest $request, IAdminAuth $command): JsonResponse
+    public function login(AdminLoginRequest $request, AdminAuth\IAdminAuth $command): JsonResponse
     {
+
         try {
-            $result = $command->execute($request->data());
+            // map request to command.
+            $commandModel = AdminAuth\AdminAuthModel::from($request->all());
+            
+            $result = $command->execute($commandModel);
             return $this->successResponse($result);
         } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-            return $this->errorResponse('The provided credentials do not match our records.!', Response::HTTP_UNAUTHORIZED);
+            return $this->errorResponse($th->getMessage());
+//            return $this->errorResponse('The provided credentials do not match our records.!', Response::HTTP_UNAUTHORIZED);
         }
     }
 
