@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Modules\Organizations\Core\Organization\Commands\CreateOrganization;
 use Modules\Organizations\Core\Organization\Commands\DeleteOrganization;
 use Modules\Organizations\Core\Organization\Commands\EditOrganization;
+use Modules\Organizations\Core\Organization\Commands\ImportOrganization;
 use Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination;
 use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Validation\ValidationException;
@@ -16,7 +17,7 @@ use Modules\Organizations\Entities\Organization;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Organizations\Http\Requests\CreateOrganizationRequest;
 use Modules\Organizations\Transformers\OrganizationResource;
-use Modules\Organizations\Imports\ImportOrganizations;
+
 
 
 class OrganizationsController extends ApiController
@@ -62,15 +63,16 @@ class OrganizationsController extends ApiController
 
     /**
      * @param ImportCSVRequest $request
+     * @param ImportOrganization\IImportOrganization $command
      * @return JsonResponse
+     * @throws \Laravel\Octane\Exceptions\DdException
      */
-    public function import(ImportCSVRequest $request): JsonResponse
+    public function import(ImportCSVRequest $request, ImportOrganization\IImportOrganization $command): JsonResponse
     {
         $file = $request->file('file')->store('import');
+
         try {
-            $import = new ImportOrganizations;
-            $import->import($file);
-            $rowCount = $import->getRowCount();
+            $rowCount = $command->execute($file);
             return $this->successResponse([],$rowCount.' Organizations have been uploaded successfully!' , Response::HTTP_CREATED);
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
@@ -89,7 +91,6 @@ class OrganizationsController extends ApiController
     public function update(CreateOrganizationRequest $request, int $id, EditOrganization\IEditOrganization $command)
     {
         try{
-
             $commandModel = EditOrganization\EditOrganizationModel::from($request->all() + ["id" => $id]);
             $result = $command->execute($commandModel);
 

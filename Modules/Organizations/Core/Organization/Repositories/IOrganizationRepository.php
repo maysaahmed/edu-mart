@@ -15,4 +15,5 @@ interface IOrganizationRepository extends IRepository
     public function createOrganization(CreateOrganizationModel $model): Organization;
     public function editOrganization(EditOrganizationModel $model): Organization|null;
     public function deleteOrganization(int $id): bool;
+    public function importOrganizations(string $file_path): int;
 }

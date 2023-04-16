@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Organizations\Imports;
+namespace Modules\Organizations\Infrastructure\Organization\Imports;
 
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Modules\Organizations\Entities\Organization;
+use Modules\Organizations\Domain\Entities\Organization\Organization;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -20,10 +20,9 @@ class ImportOrganizations implements ToModel, SkipsEmptyRows, WithValidation, Wi
 
     /**
      * @param array $row
-     *
-     * @return Modules\Organizations\Entities\Organization|null
+     * @return Modules\Organizations\Domain\Entities\Organization\Organization|Organization|null
      */
-    public function model(array $row): Modules\Organizations\Entities\Organization|Organization|null
+    public function model(array $row): Modules\Organizations\Domain\Entities\Organization\Organization|Organization|null
     {
         ++$this->rows;
         return new Organization([

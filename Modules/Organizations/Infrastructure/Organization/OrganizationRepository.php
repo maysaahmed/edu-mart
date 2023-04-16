@@ -9,6 +9,7 @@ use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Organizations\Domain\Entities\Organization\Organization;
 use Spatie\QueryBuilder\QueryBuilder;
+use Modules\Organizations\Infrastructure\Organization\Imports\ImportOrganizations;
 
 class OrganizationRepository extends Repository implements IOrganizationRepository
 {
@@ -35,6 +36,7 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
         $org->name = $model->name;
         $org->phone = $model->phone;
         $org->address = $model->address;
+        $org->status = $model->status;
         $org->save();
 
         return $org;
@@ -50,6 +52,7 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
             $item->name = $model->name;
             $item->phone = $model->phone;
             $item->address = $model->address;
+            $item->status = $model->status;
             $save = $item->save();
 
             if ($save) {
@@ -64,5 +67,13 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
     {
         $item = $this->getOrganizationById($id);
         return  $item && $item->delete();
+    }
+
+    public function importOrganizations($file_path): int
+    {
+        $import = new ImportOrganizations;
+        $import->import($file_path);
+        return $import->getRowCount();
+
     }
 }

@@ -30,6 +30,6 @@ Route::middleware('auth:sanctum')->group(function () {
 //});
 
 
-Route::get('levels', ['uses' => 'App\Http\Controllers\LevelController@index']);
+//Route::get('levels', ['uses' => 'App\Http\Controllers\LevelController@index']);
 //Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
 
