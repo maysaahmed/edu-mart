@@ -53,6 +53,11 @@ class OrganizationsServiceProvider extends ServiceProvider
             \Modules\Organizations\Core\Organization\Commands\DeleteOrganization\DeleteOrganization::class
         );
 
+        $this->app->bind(
+            \Modules\Organizations\Core\Organization\Commands\ImportOrganization\IImportOrganization::class,
+            \Modules\Organizations\Core\Organization\Commands\ImportOrganization\ImportOrganization::class
+        );
+
 
         $this->app->bind(
             \Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination\IGetOrganizationPagination::class,
