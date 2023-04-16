@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Organizations\Core\Organization\Commands\CreateOrganization\CreateOrganizationModel;
 use Modules\Organizations\Core\Organization\Commands\CreateOrganization\ICreateOrganization;
 use Modules\Organizations\Core\Organization\Commands\DeleteOrganization\IDeleteOrganization;
 use Modules\Organizations\Core\Organization\Commands\EditOrganization\IEditOrganization;
@@ -37,8 +38,10 @@ class OrganizationsController extends ApiController
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
+     * @param CreateOrganizationRequest $request
+     * @param ICreateOrganization $command
      * @return JsonResponse
+     * @throws \Laravel\Octane\Exceptions\DdException
      */
     public function store(CreateOrganizationRequest $request, ICreateOrganization $command)
     {
