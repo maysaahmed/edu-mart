@@ -16,9 +16,11 @@ use Illuminate\Http\Request;
 Route::middleware('auth:sanctum')->get('/organizations', function (Request $request) {
     return $request->user();
 });
-//role:admin-api|super-admin
 
+//role:admin-api|super-admin
 Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->group(function () {
     Route::resource('organizations', 'Modules\Organizations\Http\Controllers\OrganizationsController',['only'=>['index', 'store', 'update', 'destroy']]);
+    Route::post('/organizations/updateStatus/{organization}', 'OrganizationsController@updateStatus');
+    Route::post('/organizations/import', 'OrganizationsController@import');
 
 });

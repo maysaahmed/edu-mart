@@ -3,23 +3,27 @@
 namespace Modules\Organizations\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Organizations\Core\Organization\Commands\CreateOrganization;
 use Modules\Organizations\Core\Organization\Commands\DeleteOrganization;
 use Modules\Organizations\Core\Organization\Commands\EditOrganization;
 use Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination;
+use App\Http\Requests\ImportCSVRequest;
+use Illuminate\Validation\ValidationException;
+
 use Modules\Organizations\Entities\Organization;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Organizations\Http\Requests\CreateOrganizationRequest;
 use Modules\Organizations\Transformers\OrganizationResource;
+use Modules\Organizations\Imports\ImportOrganizations;
+
 
 class OrganizationsController extends ApiController
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return JsonResponse
      */
 
     public function index(Request $request, GetOrganizationPagination\IGetOrganizationPagination $query): JsonResponse
@@ -29,6 +33,7 @@ class OrganizationsController extends ApiController
             $queryModel = GetOrganizationPagination\GetOrganizationPaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
             return $this->successResponse(OrganizationResource::collection($pagination));
+
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -38,6 +43,7 @@ class OrganizationsController extends ApiController
     /**
      * Store a newly created resource in storage.
      * @param CreateOrganizationRequest $request
+
      * @param ICreateOrganization $command
      * @return JsonResponse
      * @throws \Laravel\Octane\Exceptions\DdException
@@ -54,6 +60,25 @@ class OrganizationsController extends ApiController
 
     }
 
+    /**
+     * @param ImportCSVRequest $request
+     * @return JsonResponse
+     */
+    public function import(ImportCSVRequest $request): JsonResponse
+    {
+        $file = $request->file('file')->store('import');
+        try {
+            $import = new ImportOrganizations;
+            $import->import($file);
+            $rowCount = $import->getRowCount();
+            return $this->successResponse([],$rowCount.' Organizations have been uploaded successfully!' , Response::HTTP_CREATED);
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+
+             return $this->importFailures($e->failures());
+        }
+
+    }
 
     /**
      * Update the specified resource in storage.
@@ -78,11 +103,49 @@ class OrganizationsController extends ApiController
     }
 
     /**
+     * update status -> active or blocked
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function updateStatus(Request $request, $id): JsonResponse
+    {
+        $validation_rules = [
+            'status' => 'required|in:0,1'
+        ];
+        $validator = $this->getValidationFactory()->make($request->all(), $validation_rules);
+
+        if ($validator->fails()) {
+            $this->failedValidation($validator);
+        }
+
+        try{
+            $item = Organization::find($id);
+            if (!$item) {
+                return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
+            }
+
+            if ($item->update(['status' => $request->status])) {
+                return $this->successResponse(new OrganizationResource($item), 'Organization status updated successfully!', Response::HTTP_ACCEPTED);
+
+            } else {
+                return $this->errorResponse('Organization failed to update!');
+            }
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+
+    }
+
+    /**
      * Remove the specified resource from storage.
-     * @param int $id
+     * @param $id
+     * @param DeleteOrganization\IDeleteOrganization $command
      * @return JsonResponse
      */
-    public function destroy($id, DeleteOrganization\IDeleteOrganization $command)
+    public function destroy($id, DeleteOrganization\IDeleteOrganization $command): JsonResponse
+
     {
         try {
             $command->execute($id);

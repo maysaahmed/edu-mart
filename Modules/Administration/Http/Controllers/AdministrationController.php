@@ -57,7 +57,7 @@ class AdministrationController extends ApiController
         try {
             $queryModel = GetAdminPagination\GetAdminPaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
-            
+
             return $this->successResponse( AdminResource::collection($pagination));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -69,7 +69,7 @@ class AdministrationController extends ApiController
         try {
             $commandModel = CreateAdmin\CreateAdminModel::from($request->all());
             $result = $command->execute($commandModel);
-            
+
             return $this->successResponse( new AdminResource($result));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -96,10 +96,17 @@ class AdministrationController extends ApiController
         }
     }
 
+
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Foundation\Application|\Illuminate\Http\Response
+     */
     public function logout (Request $request) {
-        
+
         $request->user()->tokens()->delete();
-        
+
 //        $token = $request->user()->token();
 //        $token->revoke();
         return $this->successResponse([], 'You have been successfully logged out!');
@@ -112,6 +119,9 @@ class AdministrationController extends ApiController
      */
     public function details(Request $request)
     {
-        return response()->json(['user' => $request->user()], 200);
+
+        $user = auth("admin-api")->user();
+        return response()->json(['user' =>  $user, 'permissions' => $user->getAllPermissions()], 200);
+
     }
 }

@@ -23,9 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-
-
-
 //Route::group(['middleware'=> ['auth:sanctum', 'ability:guard-admin-api']], function() {
 ////    Route::get('/products/{id}', [CategoryController::class, 'edit']);
 //    Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
@@ -35,5 +32,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('levels', ['uses' => 'App\Http\Controllers\LevelController@index']);
 //Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
-
 
