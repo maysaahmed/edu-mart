@@ -3,13 +3,17 @@
 namespace Modules\Organizations\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Organizations\Core\Organization\Commands\CreateOrganization;
+use Modules\Organizations\Core\Organization\Commands\DeleteOrganization;
+use Modules\Organizations\Core\Organization\Commands\EditOrganization;
+use Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination;
+use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Validation\ValidationException;
+
 use Modules\Organizations\Entities\Organization;
 use Symfony\Component\HttpFoundation\Response;
-use Spatie\QueryBuilder\QueryBuilder;
 use Modules\Organizations\Http\Requests\CreateOrganizationRequest;
 use Modules\Organizations\Transformers\OrganizationResource;
 use Modules\Organizations\Imports\ImportOrganizations;
@@ -21,14 +25,15 @@ class OrganizationsController extends ApiController
      * Display a listing of the resource.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
-    {
-        try {
-            $organizations = QueryBuilder::for(Organization::class)
-                ->allowedFilters('name', 'phone', 'address', 'status')
-                ->paginate();
 
-            return $this->successResponse(OrganizationResource::collection($organizations));
+    public function index(Request $request, GetOrganizationPagination\IGetOrganizationPagination $query): JsonResponse
+    {
+
+        try {
+            $queryModel = GetOrganizationPagination\GetOrganizationPaginationModel::from($request->all());
+            $pagination = $query->execute($queryModel);
+            return $this->successResponse(OrganizationResource::collection($pagination));
+
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -38,15 +43,17 @@ class OrganizationsController extends ApiController
     /**
      * Store a newly created resource in storage.
      * @param CreateOrganizationRequest $request
+
+     * @param ICreateOrganization $command
      * @return JsonResponse
+     * @throws \Laravel\Octane\Exceptions\DdException
      */
-    public function store(CreateOrganizationRequest $request): JsonResponse
+    public function store(CreateOrganizationRequest $request, CreateOrganization\ICreateOrganization $command)
     {
-
         try {
-            $org = Organization::create($request->all());
-            return $this->successResponse(new OrganizationResource($org),'Organization saved successfully!' , Response::HTTP_CREATED);
-
+            $commandModel = CreateOrganization\CreateOrganizationModel::from($request->all());
+            $result = $command->execute($commandModel);
+            return $this->successResponse( new OrganizationResource($result),'Organization saved successfully!' , Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -73,26 +80,22 @@ class OrganizationsController extends ApiController
 
     }
 
-
     /**
      * Update the specified resource in storage.
-     * @param CreateOrganizationRequest $request
-     * @param $id
+     * @param Request $request
+     * @param int $id
      * @return JsonResponse
      */
-    public function update(CreateOrganizationRequest $request, $id): JsonResponse
+    public function update(CreateOrganizationRequest $request, int $id, EditOrganization\IEditOrganization $command)
     {
         try{
-            $item = Organization::find($id);
-            if(!$item){
-                return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
-            }
-            if ($item->update($request->all())) {
-                return $this->successResponse(new OrganizationResource($item),'Organization updated successfully!' , Response::HTTP_ACCEPTED);
 
-            } else {
-                return $this->errorResponse('Organization failed to update!');
-            }
+            $commandModel = EditOrganization\EditOrganizationModel::from($request->all() + ["id" => $id]);
+            $result = $command->execute($commandModel);
+
+            $this->response['message'] = 'Data updated successfully!';
+            return $this->successResponse(new OrganizationResource($result),'Organization updated successfully!' , Response::HTTP_ACCEPTED);
+
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -138,20 +141,15 @@ class OrganizationsController extends ApiController
     /**
      * Remove the specified resource from storage.
      * @param $id
+     * @param DeleteOrganization\IDeleteOrganization $command
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy($id, DeleteOrganization\IDeleteOrganization $command): JsonResponse
+
     {
         try {
-            $item = Organization::find($id);
-            if(!$item){
-                return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
-            }
-            if ($item->delete()) {
-                return $this->successResponse([],'Organization removed successfully!');
-            } else {
-                return $this->errorResponse('Organization failed to remove!');
-            }
+            $command->execute($id);
+            return $this->successResponse([],'Organization removed successfully!');
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

@@ -38,6 +38,32 @@ class OrganizationsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+
+        // Application/Core
+        $this->app->bind(
+            \Modules\Organizations\Core\Organization\Commands\CreateOrganization\ICreateOrganization::class,
+            \Modules\Organizations\Core\Organization\Commands\CreateOrganization\CreateOrganization::class
+        );
+        $this->app->bind(
+            \Modules\Organizations\Core\Organization\Commands\EditOrganization\IEditOrganization::class,
+            \Modules\Organizations\Core\Organization\Commands\EditOrganization\EditOrganization::class
+        );
+        $this->app->bind(
+            \Modules\Organizations\Core\Organization\Commands\DeleteOrganization\IDeleteOrganization::class,
+            \Modules\Organizations\Core\Organization\Commands\DeleteOrganization\DeleteOrganization::class
+        );
+
+
+        $this->app->bind(
+            \Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination\IGetOrganizationPagination::class,
+            \Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination\GetOrganizationPagination::class
+        );
+
+        // Persistence
+        $this->app->bind(
+            \Modules\Organizations\Core\Organization\Repositories\IOrganizationRepository::class,
+            \Modules\Organizations\Infrastructure\Organization\OrganizationRepository::class
+        );
     }
 
     /**

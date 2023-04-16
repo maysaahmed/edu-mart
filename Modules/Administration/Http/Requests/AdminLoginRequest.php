@@ -2,10 +2,9 @@
 
 namespace Modules\Administration\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use JetBrains\PhpStorm\ArrayShape;
+use App\Http\Requests\ApiRequest;
 
-class AdminLoginRequest extends FormRequest
+class AdminLoginRequest extends ApiRequest
 {
     /**
      * Get the validation rules that apply to the request.
