@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('user/user', 'App\Http\Controllers\UserAuthController@details');
 });
 
@@ -26,7 +26,7 @@ Route::middleware('auth:api')->group(function () {
 
 
 
-//Route::group(['middleware'=> ['role:admin-api|admin']], function() {
+//Route::group(['middleware'=> ['auth:sanctum', 'ability:guard-admin-api']], function() {
 ////    Route::get('/products/{id}', [CategoryController::class, 'edit']);
 //    Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
 //

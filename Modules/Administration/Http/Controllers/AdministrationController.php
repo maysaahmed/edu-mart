@@ -6,15 +6,16 @@ use App\Http\Controllers\ApiController;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Administration\Core\Admin\Commands\CreateAdmin\ICreateAdmin;
-use Modules\Administration\Core\Admin\Queries\GetAdminPagination\IGetAdminPagination;
+use Modules\Administration\Core\Admin\Commands\CreateAdmin;
+use Modules\Administration\Core\Admin\Queries\GetAdminPagination;
 use Modules\Administration\Domain\Entities\Admin\Admin;
-use Modules\Administration\Core\Admin\Commands\AdminAuth\IAdminAuth;
+use Modules\Administration\Core\Admin\Commands\AdminAuth;
 use Modules\Administration\Http\Requests\AdminLoginRequest;
 use Modules\Administration\Transformers\AdminResource;
 use Symfony\Component\HttpFoundation\Response;
+use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Hash;
 
-use Hash;
 class AdministrationController extends ApiController
 {
 //    /**
@@ -51,20 +52,24 @@ class AdministrationController extends ApiController
 //        }
 //    }
 
-    public function index(Request $request, IGetAdminPagination $query): JsonResponse
+    public function index(Request $request, GetAdminPagination\IGetAdminPagination $query): JsonResponse
     {
         try {
-            $pagination = $query->execute($request->data());
+            $queryModel = GetAdminPagination\GetAdminPaginationModel::from($request->all());
+            $pagination = $query->execute($queryModel);
+            
             return $this->successResponse( AdminResource::collection($pagination));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
     }
 
-    public function store(Request $request, ICreateAdmin $command): JsonResponse
+    public function store(Request $request, CreateAdmin\ICreateAdmin $command): JsonResponse
     {
         try {
-            $result = $command->execute($request->data());
+            $commandModel = CreateAdmin\CreateAdminModel::from($request->all());
+            $result = $command->execute($commandModel);
+            
             return $this->successResponse( new AdminResource($result));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -77,20 +82,26 @@ class AdministrationController extends ApiController
      * @param AdminLoginRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(AdminLoginRequest $request, IAdminAuth $command): JsonResponse
+    public function login(AdminLoginRequest $request, AdminAuth\IAdminAuth $command): JsonResponse
     {
+
         try {
-            $result = $command->execute($request->data());
+            // map request to command.
+            $commandModel = AdminAuth\AdminAuthModel::from($request->all());
+            $result = $command->execute($commandModel);
             return $this->successResponse($result);
         } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-            return $this->errorResponse('The provided credentials do not match our records.!', Response::HTTP_UNAUTHORIZED);
+            return $this->errorResponse($th->getMessage());
+//            return $this->errorResponse('The provided credentials do not match our records.!', Response::HTTP_UNAUTHORIZED);
         }
     }
 
     public function logout (Request $request) {
-        $token = $request->user()->token();
-        $token->revoke();
+        
+        $request->user()->tokens()->delete();
+        
+//        $token = $request->user()->token();
+//        $token->revoke();
         return $this->successResponse([], 'You have been successfully logged out!');
     }
 
@@ -99,8 +110,8 @@ class AdministrationController extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function details()
+    public function details(Request $request)
     {
-        return response()->json(['user' => auth("admin-api")->user()], 200);
+        return response()->json(['user' => $request->user()], 200);
     }
 }

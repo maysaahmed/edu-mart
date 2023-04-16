@@ -2,6 +2,7 @@
 namespace Modules\Administration\Core\Admin\Commands\AdminAuth;
 
 use Modules\Administration\Core\Admin\Repositories\IAdminRepository;
+use Illuminate\Support\Facades\Hash;
 
 class AdminAuth implements IAdminAuth
 {
@@ -18,8 +19,8 @@ class AdminAuth implements IAdminAuth
 
         if ($admin) {
             if (Hash::check($model->password, $admin->password)) {
-                $token = $admin->createToken('authToken')->accessToken;
-                $data = ['name' => $admin->name,'token' => $token];
+                $token = $admin->createToken('authToken', ['guard-admin-api'])->plainTextToken;
+                $data = ['name' => $admin->name,'token' => $token, 'role'];
 
                 return $data;
             }

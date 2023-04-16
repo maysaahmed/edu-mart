@@ -1,10 +1,15 @@
 <?php
 
 namespace App\Core\User\Commands\CreateUser;
+use Spatie\LaravelData\Data;
 
-class CreateUserModel
+class CreateUserModel extends Data
 {
-    public string $name;
-    public string $email;
-    public string $password;
+    public function __construct(
+        public string $name,
+        public string $email,
+        public string $password,
+    ) {
+    }
+    
 }

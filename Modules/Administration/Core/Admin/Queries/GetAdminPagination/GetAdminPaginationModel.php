@@ -1,15 +1,14 @@
 <?php
 namespace Modules\Administration\Core\Admin\Queries\GetAdminPagination;
+use Spatie\LaravelData\Data;
 
-class GetAdminPaginationModel
+class GetAdminPaginationModel extends Data
 {
-    public int $page = 1;
-    public ?string $name;
-
-    public function __construct(int $page, ?string $name = null)
-    {
-        $this->page = $page;
-        $this->name = $name;
+    
+    public function __construct(
+        public int $page = 1, 
+        public ?string $name = null
+    ) {
     }
 
 }

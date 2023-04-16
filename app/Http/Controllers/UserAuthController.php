@@ -45,7 +45,7 @@ class UserAuthController extends ApiController
         ];
 
         if (auth()->attempt($credentials)) {
-            $token = auth()->user()->createToken('TutsForWeb')->accessToken;
+            $token = auth()->user()->createToken('TutsForWeb', ['guard-user-api'])->plainTextToken;
             return response()->json(['token' => $token], 200);
         } else {
             return response()->json(['error' => 'UnAuthorised'], 401);
@@ -57,8 +57,8 @@ class UserAuthController extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function details()
+    public function details(Request $request)
     {
-        return response()->json(['user' => auth("user")->user()], 200);
+        return response()->json(['user' => $request->user()], 200);
     }
 }

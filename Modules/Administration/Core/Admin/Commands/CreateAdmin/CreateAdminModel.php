@@ -1,10 +1,14 @@
 <?php
 
 namespace Modules\Administration\Core\Admin\Commands\CreateAdmin;
+use Spatie\LaravelData\Data;
 
-class CreateAdminModel
+class CreateAdminModel extends Data
 {
-    public string $name;
-    public string $email;
-    public string $password;
+    public function __construct(
+        public string $name,
+        public string $email,
+        public string $password,
+    ) {
+    }
 }

@@ -5,6 +5,7 @@ namespace Modules\Administration\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Modules\Administration\Core\Admin\Commands\AdminAuth\AdminAuth;
+use Illuminate\Support\Facades\Facade;
 
 class AdministrationServiceProvider extends ServiceProvider
 {
@@ -46,8 +47,8 @@ class AdministrationServiceProvider extends ServiceProvider
             \Modules\Administration\Core\Admin\Commands\CreateAdmin\CreateAdmin::class
         );
         $this->app->bind(
-            \Modules\Administration\Core\Admin\Commands\AdminAuth\AdminAuth::class,
-            \Modules\Administration\Core\Admin\Commands\AdminAuth\IAdminAuth::class
+            \Modules\Administration\Core\Admin\Commands\AdminAuth\IAdminAuth::class,
+            \Modules\Administration\Core\Admin\Commands\AdminAuth\AdminAuth::class
         );
 
 
@@ -61,6 +62,7 @@ class AdministrationServiceProvider extends ServiceProvider
             \Modules\Administration\Core\Admin\Repositories\IAdminRepository::class,
             \Modules\Administration\Infrastructure\Admin\AdminRepository::class
         );
+        
     }
 
     /**

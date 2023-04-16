@@ -9,7 +9,7 @@ use Modules\Administration\Domain\Entities\Admin\Admin;
 
 interface IAdminRepository extends IRepository
 {
-    public function getAdminByEmail(string $email): Admin;
+    public function getAdminByEmail(string $email): Admin|null;
     public function getAdminsPagination(GetAdminPaginationModel $model): LengthAwarePaginator;
     public function createAdmin(CreateAdminModel $model): Admin;
 }

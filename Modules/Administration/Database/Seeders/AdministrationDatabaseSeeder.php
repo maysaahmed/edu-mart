@@ -16,6 +16,6 @@ class AdministrationDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call("OthersTableSeeder");
+         $this->call(RolesAndPermissionsSeederTableSeeder::class);
     }
 }
