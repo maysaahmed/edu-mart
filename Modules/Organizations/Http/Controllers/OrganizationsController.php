@@ -9,7 +9,6 @@ use Modules\Organizations\Core\Organization\Commands\CreateOrganization;
 use Modules\Organizations\Core\Organization\Commands\DeleteOrganization;
 use Modules\Organizations\Core\Organization\Commands\EditOrganization;
 use Modules\Organizations\Core\Organization\Commands\EditOrganizationStatus;
-use Modules\Organizations\Core\Organization\Commands\EditOrganizationStatus\EditOrganizationStatusModel;
 use Modules\Organizations\Core\Organization\Commands\ImportOrganization;
 use Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination;
 use App\Http\Requests\ImportCSVRequest;
@@ -26,6 +25,8 @@ class OrganizationsController extends ApiController
 {
     /**
      * Display a listing of the resource.
+     * @param Request $request
+     * @param GetOrganizationPagination\IGetOrganizationPagination $query
      * @return JsonResponse
      */
 
@@ -46,10 +47,8 @@ class OrganizationsController extends ApiController
     /**
      * Store a newly created resource in storage.
      * @param CreateOrganizationRequest $request
-
-     * @param ICreateOrganization $command
+     * @param CreateOrganization\ICreateOrganization $command
      * @return JsonResponse
-     * @throws \Laravel\Octane\Exceptions\DdException
      */
     public function store(CreateOrganizationRequest $request, CreateOrganization\ICreateOrganization $command)
     {
@@ -86,8 +85,9 @@ class OrganizationsController extends ApiController
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
+     * @param CreateOrganizationRequest $request
      * @param int $id
+     * @param EditOrganization\IEditOrganization $command
      * @return JsonResponse
      */
     public function update(CreateOrganizationRequest $request, int $id, EditOrganization\IEditOrganization $command)
@@ -96,7 +96,6 @@ class OrganizationsController extends ApiController
             $commandModel = EditOrganization\EditOrganizationModel::from($request->all() + ["id" => $id]);
             $result = $command->execute($commandModel);
 
-            $this->response['message'] = 'Data updated successfully!';
             return $this->successResponse(new OrganizationResource($result),'Organization updated successfully!' , Response::HTTP_ACCEPTED);
 
         } catch (\Throwable $th) {
@@ -109,6 +108,7 @@ class OrganizationsController extends ApiController
      * update status -> active or blocked
      * @param Request $request
      * @param $id
+     * @param EditOrganizationStatus\IEditOrganizationStatus $command
      * @return JsonResponse
      * @throws ValidationException
      */
@@ -142,7 +142,6 @@ class OrganizationsController extends ApiController
      * @return JsonResponse
      */
     public function destroy($id, DeleteOrganization\IDeleteOrganization $command): JsonResponse
-
     {
         try {
             $command->execute($id);

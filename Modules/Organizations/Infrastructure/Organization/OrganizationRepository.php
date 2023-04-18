@@ -74,6 +74,7 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
     {
         $import = new ImportOrganizations;
         $import->import($file_path);
+
         return $import->getRowCount();
 
     }

@@ -18,6 +18,6 @@ class ImportOrganization implements IImportOrganization
        if($rowUploaded)
            return $rowUploaded;
 
-       throw new \Exception('Organization Status failed to update!');
+       throw new \Exception('Organization failed to uploaded!');
     }
 }

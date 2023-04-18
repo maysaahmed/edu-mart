@@ -24,7 +24,7 @@ class Organization extends Model
     protected function status(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? 'active' : 'inactive',
+            get: fn ($value) => $value ? 'active' : 'blocked',
         );
     }
 

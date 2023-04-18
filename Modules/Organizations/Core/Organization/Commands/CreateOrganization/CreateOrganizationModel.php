@@ -7,8 +7,9 @@ class CreateOrganizationModel extends Data
 {
     public function __construct(
         public string $name,
-        public string $phone,
-        public string $address,
+        public ?string $phone = null,
+        public ?string $address =null,
+        public ?int $status = 1,
     ) {
     }
 }

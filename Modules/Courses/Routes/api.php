@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/courses', function (Request $request) {
     return $request->user();
 });
-Route::middleware('auth:admin-api')->group(function () {
-    Route::resource('/courses', 'CoursesController',['only'=>['index', 'store', 'update', 'destroy', 'show']]);
+Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->group(function () {
+    Route::resource('/courses', 'CoursesController',['only'=>['index', 'store', 'update', 'destroy']]);
 
     Route::prefix('courses')->group(function () {
         Route::get('/getLists', 'CoursesController@getLists');

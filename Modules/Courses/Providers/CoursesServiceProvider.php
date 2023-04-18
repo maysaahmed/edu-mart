@@ -38,6 +38,39 @@ class CoursesServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+
+        // Application/Core
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Commands\CreateCategory\ICreateCategory::class,
+            \Modules\Courses\Core\Category\Commands\CreateCategory\CreateCategory::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Commands\EditCategory\IEditCategory::class,
+            \Modules\Courses\Core\Category\Commands\EditCategory\EditCategory::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Commands\DeleteCategory\IDeleteCategory::class,
+            \Modules\Courses\Core\Category\Commands\DeleteCategory\DeleteCategory::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Commands\ImportCategory\IImportCategory::class,
+            \Modules\Courses\Core\Category\Commands\ImportCategory\ImportCategory::class
+        );
+
+
+
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Queries\GetCategoryPagination\IGetCategoryPagination::class,
+            \Modules\Courses\Core\Category\Queries\GetCategoryPagination\GetCategoryPagination::class
+        );
+
+        // Persistence
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Repositories\ICategoryRepository::class,
+            \Modules\Courses\Infrastructure\Category\CategoryRepository::class
+        );
+
+
     }
 
     /**
