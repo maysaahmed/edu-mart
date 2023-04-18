@@ -12,7 +12,6 @@ use Modules\Courses\Core\Category\Commands\ImportCategory;
 use Modules\Courses\Core\Category\Queries\GetCategoryPagination;
 use App\Http\Requests\ImportCSVRequest;
 
-use Modules\Courses\Entities\Category;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Courses\Http\Requests\CategoryRequest;
 use Modules\Courses\Transformers\CategoryResource;
@@ -108,6 +107,7 @@ class CategoriesController extends ApiController
             return $this->successResponse([],'Category removed successfully!');
 
         } catch (\Throwable $th) {
+
             return $this->errorResponse($th->getMessage());
         }
     }

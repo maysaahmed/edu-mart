@@ -57,17 +57,42 @@ class CoursesServiceProvider extends ServiceProvider
             \Modules\Courses\Core\Category\Commands\ImportCategory\ImportCategory::class
         );
 
-
-
         $this->app->bind(
             \Modules\Courses\Core\Category\Queries\GetCategoryPagination\IGetCategoryPagination::class,
             \Modules\Courses\Core\Category\Queries\GetCategoryPagination\GetCategoryPagination::class
+        );
+
+        //providers
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Commands\CreateProvider\ICreateProvider::class,
+            \Modules\Courses\Core\Provider\Commands\CreateProvider\CreateProvider::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Commands\EditProvider\IEditProvider::class,
+            \Modules\Courses\Core\Provider\Commands\EditProvider\EditProvider::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Commands\DeleteProvider\IDeleteProvider::class,
+            \Modules\Courses\Core\Provider\Commands\DeleteProvider\DeleteProvider::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Commands\ImportProvider\IImportProvider::class,
+            \Modules\Courses\Core\Provider\Commands\ImportProvider\ImportProvider::class
+        );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Queries\GetProviderPagination\IGetProviderPagination::class,
+            \Modules\Courses\Core\Provider\Queries\GetProviderPagination\GetProviderPagination::class
         );
 
         // Persistence
         $this->app->bind(
             \Modules\Courses\Core\Category\Repositories\ICategoryRepository::class,
             \Modules\Courses\Infrastructure\Category\CategoryRepository::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Repositories\IProviderRepository::class,
+            \Modules\Courses\Infrastructure\Provider\ProviderRepository::class
         );
 
 
