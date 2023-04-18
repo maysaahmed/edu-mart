@@ -14,6 +14,10 @@ class ImportOrganization implements IImportOrganization
 
     public function execute(string $file_path): int
     {
-       return $this->repository->importOrganizations($file_path);
+       $rowUploaded =  $this->repository->importOrganizations($file_path);
+       if($rowUploaded)
+           return $rowUploaded;
+
+       throw new \Exception('Organization Status failed to update!');
     }
 }

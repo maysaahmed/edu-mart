@@ -3,6 +3,7 @@ namespace Modules\Organizations\Infrastructure\Organization;
 
 use Modules\Organizations\Core\Organization\Commands\CreateOrganization\CreateOrganizationModel;
 use Modules\Organizations\Core\Organization\Commands\EditOrganization\EditOrganizationModel;
+use Modules\Organizations\Core\Organization\Commands\EditOrganizationStatus\EditOrganizationStatusModel;
 use Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination\GetOrganizationPaginationModel;
 use Modules\Organizations\Core\Organization\Repositories\IOrganizationRepository;
 use App\Infrastructure\Repository\Repository;
@@ -75,5 +76,23 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
         $import->import($file_path);
         return $import->getRowCount();
 
+    }
+
+    public function editOrganizationStatus(EditOrganizationStatusModel|\Modules\Organizations\Core\Organization\Repositories\EditOrganizationStatusModel $model): Organization|null
+    {
+        $id = $model->id;
+        $item = $this->getOrganizationById($id);
+
+        if($item){
+
+            $item->status = $model->status;
+            $save = $item->save();
+
+            if ($save) {
+                return $item;
+            }
+        }
+
+        return null;
     }
 }

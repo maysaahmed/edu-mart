@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Modules\Organizations\Core\Organization\Commands\CreateOrganization;
 use Modules\Organizations\Core\Organization\Commands\DeleteOrganization;
 use Modules\Organizations\Core\Organization\Commands\EditOrganization;
+use Modules\Organizations\Core\Organization\Commands\EditOrganizationStatus;
+use Modules\Organizations\Core\Organization\Commands\EditOrganizationStatus\EditOrganizationStatusModel;
 use Modules\Organizations\Core\Organization\Commands\ImportOrganization;
 use Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination;
 use App\Http\Requests\ImportCSVRequest;
@@ -75,10 +77,10 @@ class OrganizationsController extends ApiController
             $rowCount = $command->execute($file);
             return $this->successResponse([],$rowCount.' Organizations have been uploaded successfully!' , Response::HTTP_CREATED);
 
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-
-             return $this->importFailures($e->failures());
+        } catch (\Throwable $e) {
+            return $this->importFailures($e->failures());
         }
+
 
     }
 
@@ -110,7 +112,7 @@ class OrganizationsController extends ApiController
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function updateStatus(Request $request, $id): JsonResponse
+    public function updateStatus(Request $request, $id, EditOrganizationStatus\IEditOrganizationStatus $command): JsonResponse
     {
         $validation_rules = [
             'status' => 'required|in:0,1'
@@ -122,17 +124,11 @@ class OrganizationsController extends ApiController
         }
 
         try{
-            $item = Organization::find($id);
-            if (!$item) {
-                return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
-            }
+            $commandModel = EditOrganizationStatus\EditOrganizationStatusModel::from($request->all() + ["id" => $id]);
+            $result = $command->execute($commandModel);
 
-            if ($item->update(['status' => $request->status])) {
-                return $this->successResponse(new OrganizationResource($item), 'Organization status updated successfully!', Response::HTTP_ACCEPTED);
+            return $this->successResponse(new OrganizationResource($result),'Organization updated successfully!' , Response::HTTP_ACCEPTED);
 
-            } else {
-                return $this->errorResponse('Organization failed to update!');
-            }
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

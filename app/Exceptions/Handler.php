@@ -70,17 +70,6 @@ class Handler extends ExceptionHandler
     }
 
 
-//    /**
-//     * Render an exception into an HTTP response.
-//     * @param \Illuminate\Http\Request $request
-//     * @param Exception $exception
-//     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
-//     */
-//    public function render($request, Throwable $exception)
-//    {
-//        $response = $this->handleException($request, $exception);
-//        return $response;
-//    }
     /**
      * @param $request
      * @param Exception $exception
@@ -105,7 +94,6 @@ class Handler extends ExceptionHandler
         if($exception instanceof ModelNotFoundException) {
             return $this->errorResponse('The specified data cannot be found.', Response::HTTP_NOT_FOUND);
         }
-
 
         if (config('app.debug')) {
             return parent::render($request, $exception);
