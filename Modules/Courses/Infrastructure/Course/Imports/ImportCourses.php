@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Courses\Imports;
+namespace Modules\Courses\Infrastructure\Course\Imports;
 
 use App\Traits\CountRows;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\Importable;
-use Modules\Courses\Entities\Course;
+use Modules\Courses\Domain\Entities\Course;
 
 class ImportCourses implements ToModel, SkipsEmptyRows, WithValidation, WithHeadingRow, WithBatchInserts
 {

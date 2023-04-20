@@ -19,7 +19,7 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
         return Organization::class;
     }
 
-    public function getOrganizationById($id): Organization
+    public function getOrganizationById($id): Organization|null
     {
         return Organization::find($id);
     }

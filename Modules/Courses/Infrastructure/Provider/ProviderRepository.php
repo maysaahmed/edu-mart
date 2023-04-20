@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Courses\Infrastructure\Provider;
 
+use Illuminate\Support\Collection;
 use Modules\Courses\Core\Provider\Commands\EditProvider\EditProviderModel;
 use Modules\Courses\Core\Provider\Queries\GetProviderPagination\GetProviderPaginationModel;
 use Modules\Courses\Core\Provider\Repositories\IProviderRepository;
@@ -17,7 +18,7 @@ class ProviderRepository extends Repository implements IProviderRepository
         return Provider::class;
     }
 
-    public function getProviderById($id): Provider
+    public function getProviderById($id): Provider|null
     {
         return Provider::find($id);
     }
@@ -71,5 +72,8 @@ class ProviderRepository extends Repository implements IProviderRepository
 
     }
 
-
+    public function getProviders(): Collection
+    {
+        return Provider::all();
+    }
 }

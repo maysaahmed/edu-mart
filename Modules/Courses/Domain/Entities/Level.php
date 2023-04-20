@@ -10,7 +10,7 @@ class Level extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = ['name'];
 
     protected static function newFactory()
     {

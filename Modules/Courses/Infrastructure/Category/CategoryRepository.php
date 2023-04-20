@@ -7,6 +7,7 @@ use Modules\Courses\Core\Category\Repositories\ICategoryRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Courses\Domain\Entities\Category;
+use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\QueryBuilder;
 use Modules\Courses\Infrastructure\Category\Imports\ImportCategories;
 
@@ -17,7 +18,7 @@ class CategoryRepository extends Repository implements ICategoryRepository
         return Category::class;
     }
 
-    public function getCategoryById($id): Category
+    public function getCategoryById($id): Category|null
     {
         return Category::find($id);
     }
@@ -68,6 +69,12 @@ class CategoryRepository extends Repository implements ICategoryRepository
         $import = new ImportCategories;
         $import->import($file_path);
         return $import->getRowCount();
+
+    }
+
+    public function getCategories(): Collection
+    {
+        return Category::all();
 
     }
 
