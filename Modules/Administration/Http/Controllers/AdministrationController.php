@@ -106,7 +106,7 @@ class AdministrationController extends ApiController
                 "updatedBy" => $currentUserID,
             ];
 
-            $commandModel = EditAdmin\EditAdminModel::from($request->all() + $additionalModelData);
+            $commandModel = EditAdmin\EditAdminModel::from($request->except(["_method"]) + $additionalModelData);
             $result = $command->execute($commandModel);
 
             $this->response['message'] = 'Data updated successfully!';
@@ -180,10 +180,10 @@ class AdministrationController extends ApiController
 
     /**
      * Update profile the current user.
-     * @param Request $request
+     * @param EditProfileRequest $request
      * @return JsonResponse
      */
-    public function UpdateProfile(EditProfileRequest $request, EditProfile\IEditProfile $command) : JsonResponse
+    public function updateProfile(EditProfileRequest $request, EditProfile\IEditProfile $command) : JsonResponse
     {
         try{
             $currentUserID = $request->user()->id;
@@ -209,7 +209,7 @@ class AdministrationController extends ApiController
      * @param Request $request
      * @return JsonResponse
      */
-    public function ChangePassword(Request $request, ChangePassword\IChangePassword $command) : JsonResponse
+    public function changePassword(Request $request, ChangePassword\IChangePassword $command) : JsonResponse
     {
         $validation_rules = [
             'oldPassword' => 'required',

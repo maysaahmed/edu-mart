@@ -26,7 +26,7 @@ class UpdateAdminStatus implements IUpdateAdminStatus
             throw new \Exception('Admin cannot be found!');
         }
 
-        $updatedItem = $this->repository->UpdateAdminStatus($_id, $model->status, $model->updatedBy);
+        $updatedItem = $this->repository->updateAdminStatus($_id, $model->status, $model->updatedBy);
         if ($updatedItem){
             return $updatedItem;
         }

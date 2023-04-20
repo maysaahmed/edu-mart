@@ -15,24 +15,26 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Route::get('/administration/getRole', function (Request $request) {
-//    dd(\Spatie\Permission\Models\Role::findById(1));
+//    dd(\Spatie\Permission\Models\Role::findById(1), \Spatie\Permission\Models\Role::find(1));
 //    return $request->user();
 //});
 
 Route::post('/administration/login', 'Modules\Administration\Http\Controllers\AdministrationController@login')->name('login');
 Route::post('/administration/register', 'Modules\Administration\Http\Controllers\AdministrationController@register');
 
-Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->prefix('administration')->group( function () {
-    Route::resource('/', 'Modules\Administration\Http\Controllers\AdministrationController',['only'=>['index', 'store', 'update', 'destroy']]);
+Route::middleware(['auth:admin-api', 'ability:guard-admin-api'])->prefix('administration')->group( function () {
 
-    Route::put('/updateStatus/{admin}', 'Modules\Administration\Http\Controllers\AdministrationController@updateAdminStatus');
-    Route::put('/updateProfile', 'Modules\Administration\Http\Controllers\AdministrationController@UpdateProfile');
-    Route::put('/changePassword', 'Modules\Administration\Http\Controllers\AdministrationController@ChangePassword');
+    Route::put('/updateStatus/{admin}', 'Modules\Administration\Http\Controllers\AdministrationController@updateStatus');
+    Route::put('/updateProfile', 'Modules\Administration\Http\Controllers\AdministrationController@updateProfile');
+    Route::put('/changePassword', 'Modules\Administration\Http\Controllers\AdministrationController@changePassword');
 
     Route::get('/user', 'Modules\Administration\Http\Controllers\AdministrationController@details');
     Route::post('/logout', 'Modules\Administration\Http\Controllers\AdministrationController@logout');
 
     Route::resource('/roles', 'RolesController',['only'=>['store']]);
 
-
+    // resource should be at the end to not override the single routes
+    Route::resource('/', 'Modules\Administration\Http\Controllers\AdministrationController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
+        '' => 'admin' // this to fix resource parameter name, as it come without name because the resource name no follow the convention naming.
+    ]);
 });

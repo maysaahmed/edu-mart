@@ -50,7 +50,7 @@ class AdminRepository extends Repository implements IAdminRepository
         return $item;
     }
 
-    public function editAdmin(int $id, string $name, string $email, string $password, int $roleId, int $status, int $updatedBy): Admin|null
+    public function editAdmin(int $id, string $name, string $email, ?string $password, int $roleId, int $status, int $updatedBy): Admin|null
     {
         $item = $this->getAdminByID($id);
 
@@ -59,7 +59,7 @@ class AdminRepository extends Repository implements IAdminRepository
             $item->name = $name;
             $item->email = $email;
 
-            if(!filled($password)){
+            if(filled($password)){
                 $item->password = bcrypt($password);
             }
 
@@ -80,12 +80,13 @@ class AdminRepository extends Repository implements IAdminRepository
     public function deleteAdmin(int $id,  int $deletedBy): bool
     {
         $item = $this->getAdminByID($id);
+        $item->deleted_at = now();
         $item->deleted_by = $deletedBy;
 
-        return  $item && $item->delete();
+        return  $item && $item->save();
     }
 
-    public function UpdateAdminStatus(int $id, int $isActive, int $updatedBy): Admin|null
+    public function updateAdminStatus(int $id, int $isActive, int $updatedBy): Admin|null
     {
         $item = $this->getAdminByID($id);
 

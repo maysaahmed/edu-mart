@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,18 +17,20 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/courses', function (Request $request) {
     return $request->user();
 });
-Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->group(function () {
-    Route::resource('/courses', 'CoursesController',['only'=>['index', 'store', 'update', 'destroy']]);
+
+Route::middleware(['auth:admin-api', 'ability:guard-admin-api'])->group(function () {
+
     Route::get('/courses/show/{id}', 'CoursesController@show');
     Route::prefix('courses')->group(function () {
         Route::get('/getLists', 'CoursesController@getLists');
         Route::post('/import', 'CoursesController@import');
-        Route::resource('/categories', 'CategoriesController', ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::post('/categories/import', 'CategoriesController@import');
-        Route::resource('/providers', 'ProvidersController', ['only' => ['index', 'store', 'update', 'destroy']]);
+        Route::resource('/categories', 'CategoriesController', ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::post('/providers/import', 'ProvidersController@import');
-        Route::resource('/levels', 'levelsController', ['only' => ['index', 'store', 'update', 'destroy']]);
+        Route::resource('/providers', 'ProvidersController', ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::post('/levels/import', 'levelsController@import');
+        Route::resource('/levels', 'levelsController', ['only' => ['index', 'store', 'update', 'destroy']]);
     });
 
+    Route::resource('/courses', 'CoursesController',['only'=>['index', 'store', 'update', 'destroy']]);
 });
