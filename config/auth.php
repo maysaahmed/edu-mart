@@ -41,11 +41,11 @@ return [
             'provider' => 'users',
         ],
         'admin-api' => [
-            'driver' => 'passport',
+            'driver' => 'sanctum',
             'provider' => 'admins',
         ],
         'api' => [
-            'driver' => 'token',
+            'driver' => 'sanctum',
             'provider' => 'users',
             'hash' => false,
         ]
@@ -71,11 +71,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Domain\Entities\User\User::class,
         ],
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
+            'model' => App\Domain\Entities\User\User::class,
         ]
     ],
 

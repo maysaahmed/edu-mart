@@ -6,11 +6,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminAuth implements IAdminAuth
 {
-    private IAdminRepository $repository;
-
-    public function __construct(IAdminRepository $repository)
+    public function __construct(
+        private IAdminRepository $repository
+    )
     {
-        $this->repository = $repository;
     }
 
     public function execute(AdminAuthModel $model): array
@@ -19,6 +18,9 @@ class AdminAuth implements IAdminAuth
 
         if ($admin) {
             if (Hash::check($model->password, $admin->password)) {
+
+                $dd = $admin->permissions();
+//                $abilities =
                 $token = $admin->createToken('authToken', ['guard-admin-api'])->plainTextToken;
                 $data = ['name' => $admin->name,'token' => $token, 'role' => 'admin'];
 

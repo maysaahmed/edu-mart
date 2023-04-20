@@ -6,15 +6,14 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class GetAdminPagination implements IGetAdminPagination
 {
-    private IAdminRepository $repository;
-
-    public function __construct(IAdminRepository $repository)
+    public function __construct(
+        private IAdminRepository $repository
+    )
     {
-        $this->repository = $repository;
     }
 
     public function execute(GetAdminPaginationModel $model): LengthAwarePaginator
     {
-        return $this->repository->getAdminsPagination($model);
+        return $this->repository->getAdminsPagination($model->page, $model->name);
     }
 }

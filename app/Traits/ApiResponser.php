@@ -5,6 +5,7 @@ namespace App\Traits;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use \Illuminate\Http\JsonResponse;
 
@@ -41,6 +42,14 @@ trait ApiResponser{
         ], Response::HTTP_UNPROCESSABLE_ENTITY));
 
 
+    }
+
+    public function validateRequest(array $requestData, array $validation_rules){
+        $validator = $this->getValidationFactory()->make($requestData, $validation_rules);
+
+        if ($validator->fails()) {
+            $this->failedValidation($validator);
+        }
     }
 
     protected function importFailures($failures): JsonResponse
