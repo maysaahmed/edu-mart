@@ -9,10 +9,14 @@ class CreateAdminRequest extends ApiRequest
     {
         $rules = [
             'status' => 'in:1,0',
-            'password' => 'required|string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/',
+            'roleId' => 'required|integer'
         ];
 
-        $id = $this->route('organization');
+        $id = $this->route('admin');
+
+        $passRule =  (!isset($id) ? 'required' : 'nullable'). '|string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/';
+        $rules["password"] = $passRule;
+
         if (!isset($id))
         {
             $rules += ['name'=> 'required|unique:users|max:255'];

@@ -11,7 +11,6 @@ class EditProfileRequest extends ApiRequest
         $rules = [
             'password' => 'nullable|string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/',
         ];
-
         $rules += ['name'=> 'required|max:255|unique:users,name,'.$id,];
         $rules += ['email'=> 'required|email|max:255|unique:users,email,'.$id,];
 

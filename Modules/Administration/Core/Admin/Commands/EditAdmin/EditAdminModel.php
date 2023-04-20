@@ -9,10 +9,10 @@ class EditAdminModel extends Data
         public int $id,
         public string $name,
         public string $email,
-        public string $password,
         public int $roleId,
         public int $isActive,
         public int $updatedBy,
+        public ?string $password = null,
     ) {
     }
 

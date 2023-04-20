@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,14 +14,15 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/organizations', function (Request $request) {
+Route::middleware('auth:admin-api')->get('/organizations', function (Request $request) {
     return $request->user();
 });
 
 //role:admin-api|super-admin
-Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->group(function () {
-    Route::resource('organizations', 'Modules\Organizations\Http\Controllers\OrganizationsController',['only'=>['index', 'store', 'update', 'destroy']]);
+Route::middleware(['auth:admin-api', 'ability:guard-admin-api'])->group(function () {
+
     Route::post('/organizations/updateStatus/{organization}', 'OrganizationsController@updateStatus');
     Route::post('/organizations/import', 'OrganizationsController@import');
+    Route::resource('organizations', 'Modules\Organizations\Http\Controllers\OrganizationsController',['only'=>['index', 'store', 'update', 'destroy']]);
 
 });
