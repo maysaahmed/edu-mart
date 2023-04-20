@@ -20,8 +20,9 @@ Route::middleware('auth:sanctum')->get('/administration', function (Request $req
 Route::post('/administration/login', 'Modules\Administration\Http\Controllers\AdministrationController@login')->name('login');
 Route::post('/administration/register', 'Modules\Administration\Http\Controllers\AdministrationController@register');
 
-Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->group( function () {
-    Route::get('/administration/user', 'Modules\Administration\Http\Controllers\AdministrationController@details');
-    Route::post('/administration/logout', 'Modules\Administration\Http\Controllers\AdministrationController@logout');
+Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->prefix('administration')->group( function () {
+    Route::get('/user', 'Modules\Administration\Http\Controllers\AdministrationController@details');
+    Route::post('/logout', 'Modules\Administration\Http\Controllers\AdministrationController@logout');
+    Route::resource('/roles', 'RolesController',['only'=>['store']]);
 
 });
