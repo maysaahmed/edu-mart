@@ -2,9 +2,10 @@
 
 namespace Modules\Administration\Database\Seeders;
 
+use App\Enums\EnumUserTypes;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Admin;
+use Modules\Administration\Domain\Entities\Admin\Admin;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -29,7 +30,8 @@ class RolesAndPermissionsSeederTableSeeder extends Seeder
         $user = Admin::Create([
             'name' => 'super-admin',
             'email' => 'superAdmin@gmail.com',
-            'password' => bcrypt('admin')
+            'password' => bcrypt('admin'),
+            'type'     => EnumUserTypes::Admin
         ]);
 
 

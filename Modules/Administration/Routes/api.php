@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,16 +14,24 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/administration', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:sanctum')->get('/administration', function (Request $request) {
+//    return $request->user();
+//});
 
 Route::post('/administration/login', 'Modules\Administration\Http\Controllers\AdministrationController@login')->name('login');
 Route::post('/administration/register', 'Modules\Administration\Http\Controllers\AdministrationController@register');
 
 Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->prefix('administration')->group( function () {
+    Route::resource('/', 'Modules\Administration\Http\Controllers\AdministrationController',['only'=>['index', 'store', 'update', 'destroy']]);
+
+    Route::put('/updateStatus/{admin}', 'Modules\Administration\Http\Controllers\AdministrationController@updateAdminStatus');
+    Route::put('/updateProfile', 'Modules\Administration\Http\Controllers\AdministrationController@UpdateProfile');
+    Route::put('/changePassword', 'Modules\Administration\Http\Controllers\AdministrationController@ChangePassword');
+
     Route::get('/user', 'Modules\Administration\Http\Controllers\AdministrationController@details');
     Route::post('/logout', 'Modules\Administration\Http\Controllers\AdministrationController@logout');
+    
     Route::resource('/roles', 'RolesController',['only'=>['store']]);
+
 
 });

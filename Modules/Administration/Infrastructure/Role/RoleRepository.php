@@ -14,11 +14,25 @@ class RoleRepository extends Repository implements IRoleRepository
         return Role::class;
     }
 
-    public function getRoleById(int $id): Role|null
+    public function getRoleByName(string $roleName): Role|null
     {
-        return $Role = Role::find($id);
+        try {
+            return Role::findByName($roleName);
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
+    public function getRoleById($roleId): Role|null
+    {
+        try {
+            return Role::findById($roleId);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+  
 
     public function createRole(string $name): Role
     {
@@ -28,4 +42,5 @@ class RoleRepository extends Repository implements IRoleRepository
 
         return $Role;
     }
+
 }

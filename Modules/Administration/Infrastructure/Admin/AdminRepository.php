@@ -1,7 +1,6 @@
 <?php
 namespace Modules\Administration\Infrastructure\Admin;
 
-use Modules\Administration\Core\Admin\Commands\CreateAdmin\CreateAdminModel;
 use Modules\Administration\Core\Admin\Queries\GetAdminPagination\GetAdminPaginationModel;
 use Modules\Administration\Core\Admin\Repositories\IAdminRepository;
 use App\Infrastructure\Repository\Repository;
@@ -10,6 +9,7 @@ use Modules\Administration\Domain\Entities\Admin\Admin;
 
 class AdminRepository extends Repository implements IAdminRepository
 {
+
     protected function model(): string
     {
         return Admin::class;
@@ -17,27 +17,123 @@ class AdminRepository extends Repository implements IAdminRepository
 
     public function getAdminByEmail(string $email): Admin|null
     {
-        return $admin = Admin::Where('email', $email)->first();
+        return Admin::Where('email', $email)->first();
     }
 
-    public function getAdminsPagination(GetAdminPaginationModel $model): LengthAwarePaginator
+    public function getAdminByID($id): Admin|null
     {
-        if ($model->name) {
-            $this->addCriteria(new NameCriteria($model->name));
+        return Admin::find($id);
+    }
+
+    public function getAdminsPagination(int $page, ?string $name = null): LengthAwarePaginator
+    {
+        if ($name) {
+            $this->addCriteria(new NameCriteria($name));
         }
 
         $this->addCriteria(new OrderByLatest());
-        return $this->paginator(50, $model->page);
+        return $this->paginator(50, $page);
     }
 
-    public function createAdmin(CreateAdminModel $model): Admin
+    public function createAdmin(string $name, string $email, string $password, int $type, int $roleId, int $createdBy): Admin
     {
-        $admin = new Admin();
-        $admin->name = $model->name;
-        $admin->email = $model->email;
-        $admin->password = bcrypt($model->password);
-        $admin->save();
+        $item = new Admin();
+        $item->name = $name;
+        $item->email = $email;
+        $item->password = bcrypt($password);
+        $item->type = $type;
+        $item->created_by = $createdBy;
+        $item->save();
 
-        return $admin;
+        $item->syncRoles([$roleId]);
+
+        return $item;
+    }
+
+    public function editAdmin(int $id, string $name, string $email, string $password, int $roleId, int $status, int $updatedBy): Admin|null
+    {
+        $item = $this->getAdminByID($id);
+
+        if($item){
+
+            $item->name = $name;
+            $item->email = $email;
+
+            if(!filled($password)){
+                $item->password = bcrypt($password);
+            }
+
+            $item->is_active = $status;
+            $item->updated_by = $updatedBy;
+            $save = $item->save();
+
+            if ($save) {
+                $item->syncRoles([$roleId]);
+
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    public function deleteAdmin(int $id,  int $deletedBy): bool
+    {
+        $item = $this->getAdminByID($id);
+        $item->deleted_by = $deletedBy;
+
+        return  $item && $item->delete();
+    }
+
+    public function UpdateAdminStatus(int $id, int $isActive, int $updatedBy): Admin|null
+    {
+        $item = $this->getAdminByID($id);
+
+        if($item){
+            $item->is_active = $isActive;
+            $item->updated_by = $updatedBy;
+            $save = $item->save();
+
+            if ($save) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    public function editProfile(int $profileId, string $name, string $email): Admin|null
+    {
+        $item = $this->getAdminByID($profileId);
+
+        if($item){
+
+            $item->name = $name;
+            $item->email = $email;
+            $save = $item->save();
+
+            if ($save) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    public function ChangePassword(int $profileId, string $password): Admin|null
+    {
+        $item = $this->getAdminByID($profileId);
+
+        if($item){
+
+            $item->password = bcrypt($password);
+            $save = $item->save();
+
+            if ($save) {
+                return $item;
+            }
+        }
+
+        return null;
     }
 }

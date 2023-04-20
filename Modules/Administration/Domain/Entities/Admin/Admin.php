@@ -3,17 +3,20 @@
 namespace Modules\Administration\Domain\Entities\Admin;
 
 use App\Domain\Entities\User\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends User
 {
-//    use HasFactory;
-
-//    protected $fillable = [];
-//    protected $table = 'users';
+    protected $table = 'users';
+    protected $guard = 'admin-api';
+//    protected $guard_name = ['admin-api'];
 //
-//    protected static function newFactory()
-//    {
-//        return \Modules\Administration\Database\factories\AdminEntityFactory::new();
-//    }
+//    protected $fillable = [
+//        'name', 'email', 'password',
+//    ];
+//    protected $hidden = [
+//        'password', 'remember_token',
+//    ];
+
 }

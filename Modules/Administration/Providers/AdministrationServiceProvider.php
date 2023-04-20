@@ -43,18 +43,43 @@ class AdministrationServiceProvider extends ServiceProvider
 
         // Application/Core
         $this->app->bind(
+            \Modules\Administration\Core\Admin\Queries\GetAdminPagination\IGetAdminPagination::class,
+            \Modules\Administration\Core\Admin\Queries\GetAdminPagination\GetAdminPagination::class
+        );
+
+        $this->app->bind(
             \Modules\Administration\Core\Admin\Commands\CreateAdmin\ICreateAdmin::class,
             \Modules\Administration\Core\Admin\Commands\CreateAdmin\CreateAdmin::class
         );
+
+        $this->app->bind(
+            \Modules\Administration\Core\Admin\Commands\EditAdmin\IEditAdmin::class,
+            \Modules\Administration\Core\Admin\Commands\EditAdmin\EditAdmin::class
+        );
+
+        $this->app->bind(
+            \Modules\Administration\Core\Admin\Commands\DeleteAdmin\IDeleteAdmin::class,
+            \Modules\Administration\Core\Admin\Commands\DeleteAdmin\DeleteAdmin::class
+        );
+
+        $this->app->bind(
+            \Modules\Administration\Core\Admin\Commands\UpdateAdminStatus\IUpdateAdminStatus::class,
+            \Modules\Administration\Core\Admin\Commands\UpdateAdminStatus\UpdateAdminStatus::class
+        );
+
+        $this->app->bind(
+            \Modules\Administration\Core\Admin\Commands\EditProfile\IEditProfile::class,
+            \Modules\Administration\Core\Admin\Commands\EditProfile\EditProfile::class
+        );
+
         $this->app->bind(
             \Modules\Administration\Core\Admin\Commands\AdminAuth\IAdminAuth::class,
             \Modules\Administration\Core\Admin\Commands\AdminAuth\AdminAuth::class
         );
 
-
         $this->app->bind(
-            \Modules\Administration\Core\Admin\Queries\GetAdminPagination\IGetAdminPagination::class,
-            \Modules\Administration\Core\Admin\Queries\GetAdminPagination\GetAdminPagination::class
+            \Modules\Administration\Core\Admin\Commands\ChangePassword\IChangePassword::class,
+            \Modules\Administration\Core\Admin\Commands\ChangePassword\ChangePassword::class
         );
 
         //Roles
@@ -65,9 +90,15 @@ class AdministrationServiceProvider extends ServiceProvider
 
         // Persistence
         $this->app->bind(
+          \Modules\Administration\Core\Admin\Repositories\IAdminRepository::class,
+          \Modules\Administration\Infrastructure\Admin\AdminRepository::class
+        );
+        
+        $this->app->bind(
             \Modules\Administration\Core\Role\Repositories\IRoleRepository::class,
             \Modules\Administration\Infrastructure\Role\RoleRepository::class
         );
+        
 
     }
 

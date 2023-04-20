@@ -1,18 +1,19 @@
 <?php
 
-namespace Modules\Administration\Core\Admin\Commands\CreateAdmin;
-use App\Enums\EnumUserTypes;
+namespace Modules\Administration\Core\Admin\Commands\EditAdmin;
 use Spatie\LaravelData\Data;
 
-class CreateAdminModel extends Data
+class EditAdminModel extends Data
 {
     public function __construct(
+        public int $id,
         public string $name,
         public string $email,
         public string $password,
-        public int $type,
         public int $roleId,
-        public int $createdBy,
+        public int $isActive,
+        public int $updatedBy,
     ) {
     }
+
 }
