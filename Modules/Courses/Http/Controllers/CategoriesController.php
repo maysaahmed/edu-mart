@@ -3,29 +3,34 @@
 namespace Modules\Courses\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Http\JsonResponse;
-use Modules\Courses\Entities\Category;
-use Modules\Courses\Transformers\CategoryResource;
-use Modules\Courses\Http\Requests\CategoryRequest;
-use Modules\Courses\Imports\ImportCategories;
-use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Http\Request;
+use Modules\Courses\Core\Category\Commands\CreateCategory;
+use Modules\Courses\Core\Category\Commands\DeleteCategory;
+use Modules\Courses\Core\Category\Commands\EditCategory;
+use Modules\Courses\Core\Category\Commands\ImportCategory;
+use Modules\Courses\Core\Category\Queries\GetCategoryPagination;
+use App\Http\Requests\ImportCSVRequest;
+
 use Symfony\Component\HttpFoundation\Response;
+use Modules\Courses\Http\Requests\CategoryRequest;
+use Modules\Courses\Transformers\CategoryResource;
 
 class CategoriesController extends ApiController
 {
     /**
      * Display a listing of the resource.
+     * @param Request $request
+     * @param GetCategoryPagination\IGetCategoryPagination $query
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request, GetCategoryPagination\IGetCategoryPagination $query): JsonResponse
     {
         try {
-            $categories = QueryBuilder::for(Category::class)
-                ->allowedFilters('name')
-                ->paginate();
+            $queryModel = GetCategoryPagination\GetCategoryPaginationModel::from($request->all());
+            $pagination = $query->execute($queryModel);
 
-            return $this->successResponse(CategoryResource::collection($categories));
+            return $this->successResponse(CategoryResource::collection($pagination));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -35,12 +40,13 @@ class CategoriesController extends ApiController
     /**
      * Store a newly created resource in storage.
      * @param CategoryRequest $request
+     * @param CreateCategory\ICreateCategory $command
      * @return JsonResponse
      */
-    public function store(CategoryRequest $request): JsonResponse
+    public function store(CategoryRequest $request, CreateCategory\ICreateCategory $command): JsonResponse
     {
         try {
-            $category = Category::create($request->all());
+            $category = $command->execute($request->name);
             return $this->successResponse(new CategoryResource($category),'Category saved successfully!' , Response::HTTP_CREATED);
 
         } catch (\Throwable $th) {
@@ -49,16 +55,20 @@ class CategoriesController extends ApiController
     }
 
 
-    public function import(ImportCSVRequest $request): JsonResponse
+    /**
+     * import from csv
+     * @param ImportCSVRequest $request
+     * @param ImportCategory\IImportCategory $command
+     * @return JsonResponse
+     */
+    public function import(ImportCSVRequest $request, ImportCategory\IImportCategory $command): JsonResponse
     {
         $file = $request->file('file')->store('import');
         try {
-            $import = new ImportCategories;
-            $import->import($file);
-            $rowCount = $import->getRowCount();
+            $rowCount = $command->execute($file);
             return $this->successResponse([],$rowCount . ' Categories have been uploaded successfully!' , Response::HTTP_CREATED);
 
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+        } catch (\Throwable $e) {
 
             return $this->importFailures($e->failures());
         }
@@ -69,21 +79,16 @@ class CategoriesController extends ApiController
      * Update the specified resource in storage.
      * @param CategoryRequest $request
      * @param int $id
+     * @param EditCategory\IEditCategory $command
      * @return JsonResponse
      */
-    public function update(CategoryRequest $request, $id): JsonResponse
+    public function update(CategoryRequest $request, int $id, EditCategory\IEditCategory $command): JsonResponse
     {
         try{
-            $item = Category::find($id);
-            if(!$item){
-                return $this->errorResponse('Category cannot be found!', Response::HTTP_NOT_FOUND);
-            }
-            if ($item->update($request->all())) {
-                return $this->successResponse(new CategoryResource($item),'Category updated successfully!' , Response::HTTP_ACCEPTED);
+            $commandModel = EditCategory\EditCategoryModel::from($request->all() + ["id" => $id]);
+            $category = $command->execute($commandModel);
+            return $this->successResponse(new CategoryResource($category),'Category updated successfully!' , Response::HTTP_ACCEPTED);
 
-            } else {
-                return $this->errorResponse('Category failed to update!');
-            }
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -92,22 +97,19 @@ class CategoriesController extends ApiController
     /**
      * Remove the specified resource from storage.
      * @param int $id
+     * @param DeleteCategory\IDeleteCategory $command
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy($id,  DeleteCategory\IDeleteCategory $command): JsonResponse
     {
         try {
-            $item = Category::find($id);
-            if(!$item){
-                return $this->errorResponse('Category cannot be found!', Response::HTTP_NOT_FOUND);
-            }
-            if ($item->delete()) {
-                return $this->successResponse([],'Category removed successfully!');
-            } else {
-                return $this->errorResponse('Category failed to remove!');
-            }
+            $command->execute($id);
+            return $this->successResponse([],'Category removed successfully!');
+
         } catch (\Throwable $th) {
+
             return $this->errorResponse($th->getMessage());
         }
     }
+
 }

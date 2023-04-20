@@ -10,7 +10,6 @@ class GetOrganizationPaginationModel extends Data
         public ?string $name = null,
         public ?string $phone = null,
         public ?string $address = null,
-        public int $status = 1
     ) {
     }
 

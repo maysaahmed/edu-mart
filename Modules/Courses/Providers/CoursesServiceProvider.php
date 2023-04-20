@@ -38,6 +38,137 @@ class CoursesServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+
+        // Application/Core
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Commands\CreateCategory\ICreateCategory::class,
+            \Modules\Courses\Core\Category\Commands\CreateCategory\CreateCategory::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Commands\EditCategory\IEditCategory::class,
+            \Modules\Courses\Core\Category\Commands\EditCategory\EditCategory::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Commands\DeleteCategory\IDeleteCategory::class,
+            \Modules\Courses\Core\Category\Commands\DeleteCategory\DeleteCategory::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Commands\ImportCategory\IImportCategory::class,
+            \Modules\Courses\Core\Category\Commands\ImportCategory\ImportCategory::class
+        );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Queries\GetCategoryPagination\IGetCategoryPagination::class,
+            \Modules\Courses\Core\Category\Queries\GetCategoryPagination\GetCategoryPagination::class
+        );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Queries\GetCategories\IGetCategories::class,
+            \Modules\Courses\Core\Category\Queries\GetCategories\GetCategories::class
+        );
+
+        //levels
+        $this->app->bind(
+            \Modules\Courses\Core\Level\Commands\CreateLevel\ICreateLevel::class,
+            \Modules\Courses\Core\Level\Commands\CreateLevel\CreateLevel::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Level\Commands\EditLevel\IEditLevel::class,
+            \Modules\Courses\Core\Level\Commands\EditLevel\EditLevel::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Level\Commands\DeleteLevel\IDeleteLevel::class,
+            \Modules\Courses\Core\Level\Commands\DeleteLevel\DeleteLevel::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Level\Commands\ImportLevel\IImportLevel::class,
+            \Modules\Courses\Core\Level\Commands\ImportLevel\ImportLevel::class
+        );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Level\Queries\GetLevelPagination\IGetLevelPagination::class,
+            \Modules\Courses\Core\Level\Queries\GetLevelPagination\GetLevelPagination::class
+        );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Level\Queries\GetLevels\IGetLevels::class,
+            \Modules\Courses\Core\Level\Queries\GetLevels\GetLevels::class
+        );
+
+        //providers
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Commands\CreateProvider\ICreateProvider::class,
+            \Modules\Courses\Core\Provider\Commands\CreateProvider\CreateProvider::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Commands\EditProvider\IEditProvider::class,
+            \Modules\Courses\Core\Provider\Commands\EditProvider\EditProvider::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Commands\DeleteProvider\IDeleteProvider::class,
+            \Modules\Courses\Core\Provider\Commands\DeleteProvider\DeleteProvider::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Commands\ImportProvider\IImportProvider::class,
+            \Modules\Courses\Core\Provider\Commands\ImportProvider\ImportProvider::class
+        );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Queries\GetProviderPagination\IGetProviderPagination::class,
+            \Modules\Courses\Core\Provider\Queries\GetProviderPagination\GetProviderPagination::class
+        );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Queries\GetProviders\IGetProviders::class,
+            \Modules\Courses\Core\Provider\Queries\GetProviders\GetProviders::class
+        );
+        //Courses
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Commands\CreateCourse\ICreateCourse::class,
+            \Modules\Courses\Core\Course\Commands\CreateCourse\CreateCourse::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Commands\EditCourse\IEditCourse::class,
+            \Modules\Courses\Core\Course\Commands\EditCourse\EditCourse::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Commands\DeleteCourse\IDeleteCourse::class,
+            \Modules\Courses\Core\Course\Commands\DeleteCourse\DeleteCourse::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Commands\ImportCourse\IImportCourse::class,
+            \Modules\Courses\Core\Course\Commands\ImportCourse\ImportCourse::class
+        );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Queries\GetCoursePagination\IGetCoursePagination::class,
+            \Modules\Courses\Core\Course\Queries\GetCoursePagination\GetCoursePagination::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Queries\GetCourse\IGetCourse::class,
+            \Modules\Courses\Core\Course\Queries\GetCourse\GetCourse::class
+        );
+
+        // Persistence
+        $this->app->bind(
+            \Modules\Courses\Core\Category\Repositories\ICategoryRepository::class,
+            \Modules\Courses\Infrastructure\Category\CategoryRepository::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Level\Repositories\ILevelRepository::class,
+            \Modules\Courses\Infrastructure\Level\LevelRepository::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Provider\Repositories\IProviderRepository::class,
+            \Modules\Courses\Infrastructure\Provider\ProviderRepository::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Repositories\ICourseRepository::class,
+            \Modules\Courses\Infrastructure\Course\CourseRepository::class
+        );
+
+
+
     }
 
     /**

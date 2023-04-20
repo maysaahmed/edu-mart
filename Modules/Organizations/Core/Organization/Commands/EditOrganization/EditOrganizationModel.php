@@ -9,9 +9,9 @@ class EditOrganizationModel extends Data
     public function __construct(
         public int $id,
         public string $name,
-        public string $phone,
-        public string $address,
-        public int $status,
+        public ?string $phone = null,
+        public ?string $address =null,
+        public ?int $status = 1,
     ) {
     }
 

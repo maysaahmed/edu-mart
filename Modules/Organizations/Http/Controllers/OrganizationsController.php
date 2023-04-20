@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Modules\Organizations\Core\Organization\Commands\CreateOrganization;
 use Modules\Organizations\Core\Organization\Commands\DeleteOrganization;
 use Modules\Organizations\Core\Organization\Commands\EditOrganization;
+use Modules\Organizations\Core\Organization\Commands\EditOrganizationStatus;
 use Modules\Organizations\Core\Organization\Commands\ImportOrganization;
 use Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination;
 use App\Http\Requests\ImportCSVRequest;
@@ -24,6 +25,8 @@ class OrganizationsController extends ApiController
 {
     /**
      * Display a listing of the resource.
+     * @param Request $request
+     * @param GetOrganizationPagination\IGetOrganizationPagination $query
      * @return JsonResponse
      */
 
@@ -44,10 +47,8 @@ class OrganizationsController extends ApiController
     /**
      * Store a newly created resource in storage.
      * @param CreateOrganizationRequest $request
-
-     * @param ICreateOrganization $command
+     * @param CreateOrganization\ICreateOrganization $command
      * @return JsonResponse
-     * @throws \Laravel\Octane\Exceptions\DdException
      */
     public function store(CreateOrganizationRequest $request, CreateOrganization\ICreateOrganization $command)
     {
@@ -75,17 +76,18 @@ class OrganizationsController extends ApiController
             $rowCount = $command->execute($file);
             return $this->successResponse([],$rowCount.' Organizations have been uploaded successfully!' , Response::HTTP_CREATED);
 
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-
-             return $this->importFailures($e->failures());
+        } catch (\Throwable $e) {
+            return $this->importFailures($e->failures());
         }
+
 
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
+     * @param CreateOrganizationRequest $request
      * @param int $id
+     * @param EditOrganization\IEditOrganization $command
      * @return JsonResponse
      */
     public function update(CreateOrganizationRequest $request, int $id, EditOrganization\IEditOrganization $command)
@@ -94,7 +96,6 @@ class OrganizationsController extends ApiController
             $commandModel = EditOrganization\EditOrganizationModel::from($request->all() + ["id" => $id]);
             $result = $command->execute($commandModel);
 
-            $this->response['message'] = 'Data updated successfully!';
             return $this->successResponse(new OrganizationResource($result),'Organization updated successfully!' , Response::HTTP_ACCEPTED);
 
         } catch (\Throwable $th) {
@@ -107,10 +108,11 @@ class OrganizationsController extends ApiController
      * update status -> active or blocked
      * @param Request $request
      * @param $id
+     * @param EditOrganizationStatus\IEditOrganizationStatus $command
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function updateStatus(Request $request, $id): JsonResponse
+    public function updateStatus(Request $request, $id, EditOrganizationStatus\IEditOrganizationStatus $command): JsonResponse
     {
         $validation_rules = [
             'status' => 'required|in:0,1'
@@ -122,17 +124,11 @@ class OrganizationsController extends ApiController
         }
 
         try{
-            $item = Organization::find($id);
-            if (!$item) {
-                return $this->errorResponse('Organization cannot be found!', Response::HTTP_NOT_FOUND);
-            }
+            $commandModel = EditOrganizationStatus\EditOrganizationStatusModel::from($request->all() + ["id" => $id]);
+            $result = $command->execute($commandModel);
 
-            if ($item->update(['status' => $request->status])) {
-                return $this->successResponse(new OrganizationResource($item), 'Organization status updated successfully!', Response::HTTP_ACCEPTED);
+            return $this->successResponse(new OrganizationResource($result),'Organization updated successfully!' , Response::HTTP_ACCEPTED);
 
-            } else {
-                return $this->errorResponse('Organization failed to update!');
-            }
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -146,7 +142,6 @@ class OrganizationsController extends ApiController
      * @return JsonResponse
      */
     public function destroy($id, DeleteOrganization\IDeleteOrganization $command): JsonResponse
-
     {
         try {
             $command->execute($id);

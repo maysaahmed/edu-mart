@@ -10,10 +10,11 @@ use Modules\Organizations\Domain\Entities\Organization\Organization;
 
 interface IOrganizationRepository extends IRepository
 {
-    public function getOrganizationById($id): Organization;
+    public function getOrganizationById($id): Organization|null;
     public function getOrganizationsPagination(GetOrganizationPaginationModel $model): LengthAwarePaginator;
     public function createOrganization(CreateOrganizationModel $model): Organization;
     public function editOrganization(EditOrganizationModel $model): Organization|null;
     public function deleteOrganization(int $id): bool;
     public function importOrganizations(string $file_path): int;
+    public function editOrganizationStatus(EditOrganizationStatusModel $model): Organization|null;
 }

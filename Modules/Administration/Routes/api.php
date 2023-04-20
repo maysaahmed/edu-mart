@@ -21,14 +21,17 @@ use Illuminate\Support\Facades\Route;
 Route::post('/administration/login', 'Modules\Administration\Http\Controllers\AdministrationController@login')->name('login');
 Route::post('/administration/register', 'Modules\Administration\Http\Controllers\AdministrationController@register');
 
-Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->group( function () {
-    Route::resource('administration', 'Modules\Administration\Http\Controllers\AdministrationController',['only'=>['index', 'store', 'update', 'destroy']]);
+Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->prefix('administration')->group( function () {
+    Route::resource('/', 'Modules\Administration\Http\Controllers\AdministrationController',['only'=>['index', 'store', 'update', 'destroy']]);
 
-    Route::put('/administration/updateStatus/{admin}', 'Modules\Administration\Http\Controllers\AdministrationController@updateAdminStatus');
-    Route::put('/administration/updateProfile', 'Modules\Administration\Http\Controllers\AdministrationController@UpdateProfile');
-    Route::put('/administration/changePassword', 'Modules\Administration\Http\Controllers\AdministrationController@ChangePassword');
+    Route::put('/updateStatus/{admin}', 'Modules\Administration\Http\Controllers\AdministrationController@updateAdminStatus');
+    Route::put('/updateProfile', 'Modules\Administration\Http\Controllers\AdministrationController@UpdateProfile');
+    Route::put('/changePassword', 'Modules\Administration\Http\Controllers\AdministrationController@ChangePassword');
 
-    Route::get('/administration/user', 'Modules\Administration\Http\Controllers\AdministrationController@details');
-    Route::post('/administration/logout', 'Modules\Administration\Http\Controllers\AdministrationController@logout');
+    Route::get('/user', 'Modules\Administration\Http\Controllers\AdministrationController@details');
+    Route::post('/logout', 'Modules\Administration\Http\Controllers\AdministrationController@logout');
+    
+    Route::resource('/roles', 'RolesController',['only'=>['store']]);
+
 
 });

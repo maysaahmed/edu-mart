@@ -4,49 +4,57 @@ namespace Modules\Courses\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\ImportCSVRequest;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
-use Modules\Courses\Entities\Category;
-use Modules\Courses\Entities\Course;
-use Modules\Courses\Entities\Level;
-use Modules\Courses\Entities\Provider;
+use Modules\Courses\Core\Course\Commands\CreateCourse;
+use Modules\Courses\Core\Course\Commands\DeleteCourse;
+use Modules\Courses\Core\Course\Commands\EditCourse;
+use Modules\Courses\Core\Course\Commands\ImportCourse;
+use Modules\Courses\Core\Course\Queries\GetCoursePagination;
+use Modules\Courses\Core\Course\Queries\GetCourse;
+use Modules\Courses\Core\Category\Queries\GetCategories;
+use Modules\Courses\Core\Provider\Queries\GetProviders;
+use Modules\Courses\Core\Level\Queries\GetLevels;
 use Modules\Courses\Http\Requests\CourseRequest;
 use Modules\Courses\Transformers\CategoryResource;
 use Modules\Courses\Transformers\CourseResource;
 use Modules\Courses\Imports\ImportCourses;
-use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
 
 class CoursesController extends ApiController
 {
     /**
      * Display a listing of the resource.
+     * @param Request $request
+     * @param GetCoursePagination\IGetCoursePagination $query
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request,GetCoursePagination\IGetCoursePagination $query): JsonResponse
     {
         try {
-            $providers = QueryBuilder::for(Course::class)
-                ->allowedFilters('name')
-                ->paginate();
-
-            return $this->successResponse(CourseResource::collection($providers));
+            $queryModel = GetCoursePagination\GetCoursePaginationModel::from($request->all());
+            $pagination = $query->execute($queryModel);
+            return $this->successResponse(CourseResource::collection($pagination));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
     }
 
+
     /**
      * get levels, categories, providers lists
+     * @param GetCategories\IGetCategories $query
+     * @param GetProviders\IGetProviders $providerQuery
+     * @param GetLevels\IGetLevels $levelQuery
      * @return JsonResponse
      */
-    public function getLists(): JsonResponse
+    public function getLists(GetCategories\IGetCategories $query, GetProviders\IGetProviders $providerQuery,
+    GetLevels\IGetLevels $levelQuery): JsonResponse
     {
         try {
-            $levels = Level::get(['id','name']);
-            $categories = Category::get(['id','name']);
-            $providers = Provider::get(['id','name']);
-
+            $categories = $query->execute();
+            $providers = $providerQuery->execute();
+            $levels = $levelQuery->execute();
             return $this->successResponse([
                 'levels' => CategoryResource::collection($levels),
                 'categories' => CategoryResource::collection($categories),
@@ -58,35 +66,36 @@ class CoursesController extends ApiController
     }
 
 
-
     /**
      * Store a newly created resource in storage.
      * @param CourseRequest $request
+     * @param CreateCourse\ICreateCourse $command
      * @return JsonResponse
      */
-    public function store(CourseRequest $request): JsonResponse
+    public function store(CourseRequest $request, CreateCourse\ICreateCourse $command): JsonResponse
     {
         try {
-            $course = Course::create($request->all());
-            return $this->successResponse(new CourseResource($course),'Course saved successfully!' , Response::HTTP_CREATED);
+            $commandModel = CreateCourse\CreateCourseModel::from($request->all());
+            $result = $command->execute($commandModel);
+            return $this->successResponse(new CourseResource($result),'Course saved successfully!' , Response::HTTP_CREATED);
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
     }
 
+
     /**
      * upload multiple from excel
      * @param ImportCSVRequest $request
+     * @param ImportCourse\IImportCourse $command
      * @return JsonResponse
      */
-    public function import(ImportCSVRequest $request): JsonResponse
+    public function import(ImportCSVRequest $request, ImportCourse\IImportCourse $command): JsonResponse
     {
         $file = $request->file('file')->store('import');
         try {
-            $import = new ImportCourses;
-            $import->import($file);
-            $rowCount = $import->getRowCount();
+            $rowCount = $command->execute($file);
             return $this->successResponse([],$rowCount.' Courses have been uploaded successfully!' , Response::HTTP_CREATED);
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
@@ -99,18 +108,14 @@ class CoursesController extends ApiController
     /**
      * Show the specified resource.
      * @param int $id
+     * @param GetCourse\IGetCourse $query
      * @return JsonResponse
      */
-    public function show($id): JsonResponse
+    public function show(int $id, GetCourse\IGetCourse $query): JsonResponse
     {
         try{
-            $item = Course::find($id);
-            if(!$item){
-                return $this->errorResponse('Course cannot be found!', Response::HTTP_NOT_FOUND);
-            }
-
+            $item = $query->execute($id);
             return $this->successResponse(new CourseResource($item),'' , Response::HTTP_ACCEPTED);
-
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -122,21 +127,15 @@ class CoursesController extends ApiController
      * Update the specified resource in storage.
      * @param CourseRequest $request
      * @param int $id
+     * @param EditCourse\IEditCourse $command
      * @return JsonResponse
      */
-    public function update(CourseRequest $request, $id): JsonResponse
+    public function update(CourseRequest $request, int $id, EditCourse\IEditCourse $command): JsonResponse
     {
         try{
-            $item = Course::find($id);
-            if(!$item){
-                return $this->errorResponse('Course cannot be found!', Response::HTTP_NOT_FOUND);
-            }
-            if ($item->update($request->all())) {
-                return $this->successResponse(new CourseResource($item),'Course updated successfully!' , Response::HTTP_ACCEPTED);
-
-            } else {
-                return $this->errorResponse('Course failed to update!');
-            }
+            $commandModel = EditCourse\EditCourseModel::from($request->all() + ['id' => $id]);
+            $item = $command->execute($commandModel);
+            return $this->successResponse(new CourseResource($item),'Course updated successfully!' , Response::HTTP_ACCEPTED);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -145,20 +144,15 @@ class CoursesController extends ApiController
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Renderable
+     * @param DeleteCourse\IDeleteCourse $command
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id, DeleteCourse\IDeleteCourse $command):JsonResponse
     {
         try {
-            $item = Course::find($id);
-            if(!$item){
-                return $this->errorResponse('Course cannot be found!', Response::HTTP_NOT_FOUND);
-            }
-            if ($item->delete()) {
-                return $this->successResponse([],'Course removed successfully!');
-            } else {
-                return $this->errorResponse('Course failed to remove!');
-            }
+            $command->execute($id);
+            return $this->successResponse([],'Course removed successfully!');
+
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

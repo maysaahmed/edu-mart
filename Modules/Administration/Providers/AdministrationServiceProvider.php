@@ -82,16 +82,23 @@ class AdministrationServiceProvider extends ServiceProvider
             \Modules\Administration\Core\Admin\Commands\ChangePassword\ChangePassword::class
         );
 
-        // Persistence
+        //Roles
         $this->app->bind(
-            \Modules\Administration\Core\Admin\Repositories\IAdminRepository::class,
-            \Modules\Administration\Infrastructure\Admin\AdminRepository::class
+            \Modules\Administration\Core\Role\Commands\CreateRole\ICreateRole::class,
+            \Modules\Administration\Core\Role\Commands\CreateRole\CreateRole::class
         );
 
+        // Persistence
+        $this->app->bind(
+          \Modules\Administration\Core\Admin\Repositories\IAdminRepository::class,
+          \Modules\Administration\Infrastructure\Admin\AdminRepository::class
+        );
+        
         $this->app->bind(
             \Modules\Administration\Core\Role\Repositories\IRoleRepository::class,
             \Modules\Administration\Infrastructure\Role\RoleRepository::class
         );
+        
 
     }
 

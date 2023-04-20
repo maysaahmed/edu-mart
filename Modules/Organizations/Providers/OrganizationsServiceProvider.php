@@ -52,10 +52,13 @@ class OrganizationsServiceProvider extends ServiceProvider
             \Modules\Organizations\Core\Organization\Commands\DeleteOrganization\IDeleteOrganization::class,
             \Modules\Organizations\Core\Organization\Commands\DeleteOrganization\DeleteOrganization::class
         );
-
         $this->app->bind(
             \Modules\Organizations\Core\Organization\Commands\ImportOrganization\IImportOrganization::class,
             \Modules\Organizations\Core\Organization\Commands\ImportOrganization\ImportOrganization::class
+        );
+        $this->app->bind(
+            \Modules\Organizations\Core\Organization\Commands\EditOrganizationStatus\IEditOrganizationStatus::class,
+            \Modules\Organizations\Core\Organization\Commands\EditOrganizationStatus\EditOrganizationStatus::class
         );
 
 
