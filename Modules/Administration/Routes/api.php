@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::middleware('auth:sanctum')->get('/administration', function (Request $request) {
+//Route::get('/administration/getRole', function (Request $request) {
+//    dd(\Spatie\Permission\Models\Role::findById(1));
 //    return $request->user();
 //});
 
@@ -30,7 +31,7 @@ Route::middleware(['auth:sanctum', 'ability:guard-admin-api'])->prefix('administ
 
     Route::get('/user', 'Modules\Administration\Http\Controllers\AdministrationController@details');
     Route::post('/logout', 'Modules\Administration\Http\Controllers\AdministrationController@logout');
-    
+
     Route::resource('/roles', 'RolesController',['only'=>['store']]);
 
 

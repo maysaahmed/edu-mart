@@ -32,7 +32,7 @@ class RoleRepository extends Repository implements IRoleRepository
         }
     }
 
-  
+
 
     public function createRole(string $name): Role
     {

@@ -37,10 +37,10 @@ class RolesAndPermissionsSeederTableSeeder extends Seeder
 
 
         // create permissions
-        Permission::create(['name' => 'create organization']);
-        Permission::create(['name' => 'edit organizations']);
-        Permission::create(['name' => 'delete organizations']);
-        Permission::create(['name' => 'block organizations']);
+        Permission::create(['name' => 'create_organization']);
+        Permission::create(['name' => 'edit_organizations']);
+        Permission::create(['name' => 'delete_organizations']);
+        Permission::create(['name' => 'block_organizations']);
 
         // or may be done by chaining
         $role = Role::create(['name' => 'super-admin'])
