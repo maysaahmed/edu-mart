@@ -94,6 +94,7 @@ class AdministrationController extends ApiController
      * Update the specified resource in storage.
      * @param CreateAdminRequest $request
      * @param int $id
+     * @param EditAdmin\IEditAdmin $command
      * @return JsonResponse
      */
     public function update(CreateAdminRequest $request, int $id, EditAdmin\IEditAdmin $command) : JsonResponse
@@ -284,4 +285,6 @@ class AdministrationController extends ApiController
         return response()->json(['user' =>  $user, 'permissions' => $user->getAllPermissions()], 200);
 
     }
+
+
 }

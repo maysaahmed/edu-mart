@@ -3,12 +3,12 @@
 namespace App\Enums;
 
 // https://www.php.net/enumerations
-enum EnumUserTypes : int
+enum PermissionEnum : int
 {
-
-    case Admin      = 1;
-    case Manager    = 2;
-    case User       = 3;
+    case create_organization  = 1;
+    case edit_organization    = 2;
+    case delete_organization    = 3;
+    case block_organization    = 4;
 
 
     public static function values(): array

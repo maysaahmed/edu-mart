@@ -1,10 +1,11 @@
 <?php
 namespace Modules\Administration\Infrastructure\Role;
 
-//use Modules\Administration\Core\Role\Queries\GetRolePagination\GetRolePaginationModel;
+use Modules\Administration\Core\Role\Queries\GetRoles\GetRoles;
+use Illuminate\Support\Collection;
 use Modules\Administration\Core\Role\Repositories\IRoleRepository;
 use App\Infrastructure\Repository\Repository;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Modules\Administration\Core\Role\Commands\EditRole\EditRoleModel;
 use Spatie\Permission\Models\Role;
 
 class RoleRepository extends Repository implements IRoleRepository
@@ -41,4 +42,21 @@ class RoleRepository extends Repository implements IRoleRepository
         return $Role;
     }
 
+    public function getRoles(): Collection
+    {
+       return Role::all();
+    }
+
+    public function editRole(EditRoleModel $model): Role|null
+    {
+        $role = $this->getRoleById($model->id);
+        if($role){
+
+            if ($role->syncPermissions($model->permissions)) {
+                return $role;
+            }
+        }
+
+        return null;
+    }
 }

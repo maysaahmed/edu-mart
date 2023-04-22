@@ -87,18 +87,37 @@ class AdministrationServiceProvider extends ServiceProvider
             \Modules\Administration\Core\Role\Commands\CreateRole\ICreateRole::class,
             \Modules\Administration\Core\Role\Commands\CreateRole\CreateRole::class
         );
+        $this->app->bind(
+            \Modules\Administration\Core\Role\Commands\EditRole\IEditRole::class,
+            \Modules\Administration\Core\Role\Commands\EditRole\EditRole::class
+        );
+        $this->app->bind(
+            \Modules\Administration\Core\Role\Queries\GetRoles\IGetRoles::class,
+            \Modules\Administration\Core\Role\Queries\GetRoles\GetRoles::class
+        );
+
+        //Permissions
+        $this->app->bind(
+            \Modules\Administration\Core\Permission\Queries\GetPermissions\IGetPermissions::class,
+            \Modules\Administration\Core\Permission\Queries\GetPermissions\GetPermissions::class
+        );
 
         // Persistence
         $this->app->bind(
           \Modules\Administration\Core\Admin\Repositories\IAdminRepository::class,
           \Modules\Administration\Infrastructure\Admin\AdminRepository::class
         );
-        
+
         $this->app->bind(
             \Modules\Administration\Core\Role\Repositories\IRoleRepository::class,
             \Modules\Administration\Infrastructure\Role\RoleRepository::class
         );
-        
+
+        $this->app->bind(
+            \Modules\Administration\Core\Permission\Repositories\IPermissionRepository::class,
+            \Modules\Administration\Infrastructure\Permission\PermissionRepository::class
+        );
+
 
     }
 
