@@ -25,6 +25,7 @@ class CreateAdminRequest extends ApiRequest
             $rules += ['name'=> 'required|max:255|unique:users,name,'.$id,];
             $rules += ['email'=> 'required|email|max:255|unique:users,email,'.$id,];
         }
+
         return $rules;
 
     }

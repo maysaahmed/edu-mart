@@ -14,7 +14,7 @@ class RoleRequest extends ApiRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:255'
+            'name' => 'required|unique:roles,name|max:255'
         ];
     }
 
