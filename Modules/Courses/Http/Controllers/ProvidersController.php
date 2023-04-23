@@ -18,6 +18,20 @@ use Modules\Courses\Core\Provider\Queries\GetProviderPagination;
 
 class ProvidersController extends ApiController
 {
+
+    /**
+     * Instantiate a new ProvidersController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('can:create_provider', ['only' => ['store', 'import']]);
+        $this->middleware('can:edit_provider',   ['only' => ['update']]);
+        $this->middleware('can:list_providers',   ['only' => ['index']]);
+        $this->middleware('can:delete_provider',   ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @param Request $request

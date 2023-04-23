@@ -24,6 +24,21 @@ use Modules\Organizations\Transformers\OrganizationResource;
 class OrganizationsController extends ApiController
 {
     /**
+     * Instantiate a new OrganizationsController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('can:create_organization', ['only' => ['store', 'import']]);
+        $this->middleware('can:edit_organization',   ['only' => ['update']]);
+        $this->middleware('can:list_organizations',   ['only' => ['show', 'index']]);
+        $this->middleware('can:block_organization',   ['only' => ['updateStatus']]);
+        $this->middleware('can:delete_organization',   ['only' => ['destroy']]);
+    }
+
+
+    /**
      * Display a listing of the resource.
      * @param Request $request
      * @param GetOrganizationPagination\IGetOrganizationPagination $query
@@ -90,7 +105,7 @@ class OrganizationsController extends ApiController
      * @param EditOrganization\IEditOrganization $command
      * @return JsonResponse
      */
-    public function update(CreateOrganizationRequest $request, int $id, EditOrganization\IEditOrganization $command)
+    public function update(CreateOrganizationRequest $request, int $id, EditOrganization\IEditOrganization $command): JsonResponse
     {
         try{
             $commandModel = EditOrganization\EditOrganizationModel::from($request->all() + ["id" => $id]);

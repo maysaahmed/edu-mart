@@ -24,6 +24,19 @@ use App\Enums;
 
 class AdministrationController extends ApiController
 {
+    /**
+     * Instantiate a new AdministrationController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('can:create_admin', ['only' => ['store']]);
+        $this->middleware('can:edit_admin',   ['only' => ['update']]);
+        $this->middleware('can:list_admins',   ['only' => ['index']]);
+        $this->middleware('can:delete_admin',   ['only' => ['destroy']]);
+        $this->middleware('can:block_admin',   ['only' => ['updateStatus']]);
+    }
 //    /**
 //     * Handles Registration Request
 //     *

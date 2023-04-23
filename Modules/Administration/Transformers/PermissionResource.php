@@ -3,6 +3,7 @@
 namespace Modules\Administration\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Enums;
 
 class PermissionResource extends JsonResource
 {
@@ -14,8 +15,9 @@ class PermissionResource extends JsonResource
      */
     public function toArray($request)
     {
+        $permission = $this->name;
         return [
-            'name' => $this->name,
+            'name' => $permission,
             'title' => ucwords(str_replace("_", " ", $this->name))
         ];
     }

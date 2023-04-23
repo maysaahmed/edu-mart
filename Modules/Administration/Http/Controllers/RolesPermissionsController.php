@@ -19,7 +19,18 @@ use Modules\Administration\Transformers\PermissionResource;
 class RolesPermissionsController extends ApiController
 {
 
-
+    /**
+     * Instantiate a new RolesPermissionsController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('can:create_role', ['only' => ['store']]);
+        $this->middleware('can:edit_role',   ['only' => ['update']]);
+        $this->middleware('can:list_roles',   ['only' => ['getAllRoles']]);
+//        $this->middleware('can:list_permissions',   ['only' => ['getAllPermissions']]);
+    }
     /**
      * Store a newly created resource in storage.
      * @param RoleRequest $request

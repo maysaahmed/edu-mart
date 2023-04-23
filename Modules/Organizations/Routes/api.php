@@ -19,7 +19,7 @@ Route::middleware('auth:admin-api')->get('/organizations', function (Request $re
 });
 
 //role:admin-api|super-admin
-Route::middleware(['auth:admin-api', 'ability:guard-admin-api'])->group(function () {
+Route::middleware(['auth:admin-api'])->group(function () {
 
     Route::post('/organizations/updateStatus/{organization}', 'OrganizationsController@updateStatus');
     Route::post('/organizations/import', 'OrganizationsController@import');

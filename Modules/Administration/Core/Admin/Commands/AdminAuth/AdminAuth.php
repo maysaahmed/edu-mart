@@ -19,9 +19,13 @@ class AdminAuth implements IAdminAuth
         if ($admin) {
             if (Hash::check($model->password, $admin->password)) {
 
-                $dd = $admin->permissions();
-//                $abilities =
-                $token = $admin->createToken('authToken', ['guard-admin-api'])->plainTextToken;
+                $permissions = $admin->getAllPermissions();
+                $abilities = [];
+                foreach($permissions as $p) {
+                    $abilities[] = $p->name;
+                }
+                $token = $admin->createToken('authToken',$abilities)->plainTextToken;
+//                $token = $admin->createToken('authToken', ['guard-admin-api'])->plainTextToken;
                 $data = ['name' => $admin->name,'token' => $token, 'role' => 'admin'];
 
                 return $data;

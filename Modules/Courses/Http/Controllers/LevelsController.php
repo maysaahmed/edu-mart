@@ -19,6 +19,19 @@ use Modules\Courses\Transformers\CategoryResource;
 class LevelsController extends ApiController
 {
     /**
+     * Instantiate a new LevelsController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('can:create_level', ['only' => ['store', 'import']]);
+        $this->middleware('can:edit_level',   ['only' => ['update']]);
+        $this->middleware('can:list_levels',   ['only' => ['index']]);
+        $this->middleware('can:delete_level',   ['only' => ['destroy']]);
+    }
+
+    /**
      * Display a listing of the resource.
      * @param Request $request
      * @param GetLevelPagination\IGetLevelPagination $query

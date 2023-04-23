@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/administration/login', 'Modules\Administration\Http\Controllers\AdministrationController@login')->name('login');
 Route::post('/administration/register', 'Modules\Administration\Http\Controllers\AdministrationController@register');
 
-Route::middleware(['auth:admin-api', 'ability:guard-admin-api'])->prefix('administration')->group( function () {
+Route::middleware(['auth:admin-api'])->prefix('administration')->group( function () {
 
     Route::put('/updateStatus/{admin}', 'Modules\Administration\Http\Controllers\AdministrationController@updateStatus');
     Route::put('/updateProfile', 'Modules\Administration\Http\Controllers\AdministrationController@updateProfile');
