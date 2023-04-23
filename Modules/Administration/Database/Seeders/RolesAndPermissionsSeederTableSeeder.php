@@ -34,18 +34,20 @@ class RolesAndPermissionsSeederTableSeeder extends Seeder
             'type'     => EnumUserTypes::Admin
         ]);
 
+        // Create permissions from enums.
+        $reflector = new \ReflectionClass('App\Enums\PermissionsEnum');
 
+        foreach ( $reflector->getConstants() as $constValue ) {
+            Permission::updateOrCreate(['name' => $constValue]);
+        }
 
-        // create permissions
-        Permission::create(['name' => 'create_organization']);
-        Permission::create(['name' => 'edit_organizations']);
-        Permission::create(['name' => 'delete_organizations']);
-        Permission::create(['name' => 'block_organizations']);
-
-        // or may be done by chaining
-        $role = Role::create(['name' => 'super-admin'])
+//        // or may be done by chaining
+        Role::create(['name' => 'super-admin'])
             ->givePermissionTo(Permission::all());
-
+//
         $user->assignRole('super-admin');
+
+
+
     }
 }

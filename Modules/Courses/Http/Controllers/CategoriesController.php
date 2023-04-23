@@ -18,6 +18,20 @@ use Modules\Courses\Transformers\CategoryResource;
 
 class CategoriesController extends ApiController
 {
+
+    /**
+     * Instantiate a new CategoriesController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('ability:create_category', ['only' => ['store', 'import']]);
+        $this->middleware('ability:edit_category',   ['only' => ['update']]);
+        $this->middleware('ability:list_categories',   ['only' => ['index']]);
+        $this->middleware('ability:delete_category',   ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @param Request $request
@@ -100,7 +114,7 @@ class CategoriesController extends ApiController
      * @param DeleteCategory\IDeleteCategory $command
      * @return JsonResponse
      */
-    public function destroy($id,  DeleteCategory\IDeleteCategory $command): JsonResponse
+    public function destroy(int $id,  DeleteCategory\IDeleteCategory $command): JsonResponse
     {
         try {
             $command->execute($id);

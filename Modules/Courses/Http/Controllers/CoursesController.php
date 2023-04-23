@@ -23,6 +23,20 @@ use Illuminate\Http\Request;
 
 class CoursesController extends ApiController
 {
+
+    /**
+     * Instantiate a new CoursesController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('ability:create_course', ['only' => ['store', 'import']]);
+        $this->middleware('ability:edit_course',   ['only' => ['update']]);
+        $this->middleware('ability:list_courses',   ['only' => ['index', 'show']]);
+        $this->middleware('ability:delete_course',   ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @param Request $request

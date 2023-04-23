@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/administration/login', 'Modules\Administration\Http\Controllers\AdministrationController@login')->name('login');
 Route::post('/administration/register', 'Modules\Administration\Http\Controllers\AdministrationController@register');
 
-Route::middleware(['auth:admin-api', 'ability:guard-admin-api'])->prefix('administration')->group( function () {
+Route::middleware(['auth:sanctum', 'token-name:admin-token'])->prefix('administration')->group( function () {
 
     Route::put('/updateStatus/{admin}', 'Modules\Administration\Http\Controllers\AdministrationController@updateStatus');
     Route::put('/updateProfile', 'Modules\Administration\Http\Controllers\AdministrationController@updateProfile');
@@ -31,7 +31,9 @@ Route::middleware(['auth:admin-api', 'ability:guard-admin-api'])->prefix('admini
     Route::get('/user', 'Modules\Administration\Http\Controllers\AdministrationController@details');
     Route::post('/logout', 'Modules\Administration\Http\Controllers\AdministrationController@logout');
 
-    Route::resource('/roles', 'RolesController',['only'=>['store']]);
+    Route::get('/roles/permissions/{role_id?}', 'RolesPermissionsController@getAllPermissions');
+    Route::get('/roles', 'RolesPermissionsController@getAllRoles');
+    Route::resource('/roles', 'RolesPermissionsController',['only'=>['store', 'update']]);
 
     // resource should be at the end to not override the single routes
     Route::resource('/', 'Modules\Administration\Http\Controllers\AdministrationController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([

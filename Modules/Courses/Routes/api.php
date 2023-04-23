@@ -18,7 +18,7 @@ Route::middleware('auth:api')->get('/courses', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth:admin-api', 'ability:guard-admin-api'])->group(function () {
+Route::middleware(['auth:sanctum', 'token-name:admin-token'])->group(function () {
 
     Route::get('/courses/show/{id}', 'CoursesController@show');
     Route::prefix('courses')->group(function () {

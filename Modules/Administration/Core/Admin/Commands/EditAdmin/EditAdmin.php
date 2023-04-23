@@ -29,6 +29,7 @@ class EditAdmin implements IEditAdmin
         }
 
         $role = $this->roleRepository->getRoleById($model->roleId);
+
         if($role == null){
             throw new \Exception('Role cannot be found!');
         }

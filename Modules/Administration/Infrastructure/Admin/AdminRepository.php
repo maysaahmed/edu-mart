@@ -6,6 +6,8 @@ use Modules\Administration\Core\Admin\Repositories\IAdminRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Administration\Domain\Entities\Admin\Admin;
+use Spatie\Permission\Guard;
+use Spatie\Permission\Models\Role;
 
 class AdminRepository extends Repository implements IAdminRepository
 {

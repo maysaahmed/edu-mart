@@ -24,6 +24,19 @@ use App\Enums;
 
 class AdministrationController extends ApiController
 {
+    /**
+     * Instantiate a new AdministrationController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('ability:create_admin', ['only' => ['store']]);
+        $this->middleware('ability:edit_admin',   ['only' => ['update']]);
+        $this->middleware('ability:list_admins',   ['only' => ['index']]);
+        $this->middleware('ability:delete_admin',   ['only' => ['destroy']]);
+        $this->middleware('ability:block_admin',   ['only' => ['updateStatus']]);
+    }
 //    /**
 //     * Handles Registration Request
 //     *
@@ -94,6 +107,7 @@ class AdministrationController extends ApiController
      * Update the specified resource in storage.
      * @param CreateAdminRequest $request
      * @param int $id
+     * @param EditAdmin\IEditAdmin $command
      * @return JsonResponse
      */
     public function update(CreateAdminRequest $request, int $id, EditAdmin\IEditAdmin $command) : JsonResponse
@@ -284,4 +298,6 @@ class AdministrationController extends ApiController
         return response()->json(['user' =>  $user, 'permissions' => $user->getAllPermissions()], 200);
 
     }
+
+
 }

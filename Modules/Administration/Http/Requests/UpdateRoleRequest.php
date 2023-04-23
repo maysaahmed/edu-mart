@@ -4,7 +4,7 @@ namespace Modules\Administration\Http\Requests;
 
 use App\Http\Requests\ApiRequest;
 
-class RoleRequest extends ApiRequest
+class UpdateRoleRequest extends ApiRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,8 @@ class RoleRequest extends ApiRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:roles,name|max:255'
+            'permissions' => 'required|array',
+            'permissions.*' => 'exists:permissions,name',
         ];
     }
 
@@ -25,8 +26,7 @@ class RoleRequest extends ApiRequest
     {
 
         return [
-            'name.required' => 'The name is required.',
-            'name.max' => 'The name length must not be greater than 255 characters.',
+            'permissions.*.exists' => 'The selected permission is invalid',
         ];
 
     }

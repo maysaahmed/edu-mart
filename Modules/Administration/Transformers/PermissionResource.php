@@ -3,8 +3,9 @@
 namespace Modules\Administration\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Enums;
 
-class RoleResource extends JsonResource
+class PermissionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,10 +15,10 @@ class RoleResource extends JsonResource
      */
     public function toArray($request)
     {
+        $permission = $this->name;
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'permissions' => PermissionResource::collection($this->permissions)
+            'name' => $permission,
+            'title' => ucwords(str_replace("_", " ", $this->name))
         ];
     }
 }

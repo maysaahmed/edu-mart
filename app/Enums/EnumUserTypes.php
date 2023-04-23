@@ -5,6 +5,7 @@ namespace App\Enums;
 // https://www.php.net/enumerations
 enum EnumUserTypes : int
 {
+
     case Admin      = 1;
     case Manager    = 2;
     case User       = 3;
