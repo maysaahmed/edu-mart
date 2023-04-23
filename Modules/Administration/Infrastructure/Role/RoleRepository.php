@@ -29,6 +29,7 @@ class RoleRepository extends Repository implements IRoleRepository
         try {
             return Role::findById($roleId);
         } catch (\Exception $e) {
+
             return null;
         }
     }

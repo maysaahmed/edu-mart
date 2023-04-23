@@ -31,10 +31,10 @@ class CoursesController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('can:create_course', ['only' => ['store', 'import']]);
-        $this->middleware('can:edit_course',   ['only' => ['update']]);
-        $this->middleware('can:list_courses',   ['only' => ['index', 'show']]);
-        $this->middleware('can:delete_course',   ['only' => ['destroy']]);
+        $this->middleware('ability:create_course', ['only' => ['store', 'import']]);
+        $this->middleware('ability:edit_course',   ['only' => ['update']]);
+        $this->middleware('ability:list_courses',   ['only' => ['index', 'show']]);
+        $this->middleware('ability:delete_course',   ['only' => ['destroy']]);
     }
 
     /**

@@ -26,9 +26,9 @@ class RolesPermissionsController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('can:create_role', ['only' => ['store']]);
-        $this->middleware('can:edit_role',   ['only' => ['update']]);
-        $this->middleware('can:list_roles',   ['only' => ['getAllRoles']]);
+        $this->middleware('ability:create_role', ['only' => ['store']]);
+        $this->middleware('ability:edit_role',   ['only' => ['update']]);
+        $this->middleware('ability:list_roles',   ['only' => ['getAllRoles']]);
 //        $this->middleware('can:list_permissions',   ['only' => ['getAllPermissions']]);
     }
     /**

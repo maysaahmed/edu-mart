@@ -24,7 +24,8 @@ class AdminAuth implements IAdminAuth
                 foreach($permissions as $p) {
                     $abilities[] = $p->name;
                 }
-                $token = $admin->createToken('authToken',$abilities)->plainTextToken;
+
+                $token = $admin->createToken('admin-token',$abilities)->plainTextToken;
 //                $token = $admin->createToken('authToken', ['guard-admin-api'])->plainTextToken;
                 $data = ['name' => $admin->name,'token' => $token, 'role' => 'admin'];
 

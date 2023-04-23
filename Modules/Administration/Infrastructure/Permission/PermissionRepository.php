@@ -15,10 +15,10 @@ class PermissionRepository extends Repository implements IPermissionRepository
         return Permission::class;
     }
 
-    public function getPermissions(?int $id = null): Collection|null
+    public function getPermissions(?int $role_id = null): Collection|null
     {
-        if ($id) {
-            $this->addCriteria(new RoleIdCriteria($id));
+        if ($role_id) {
+            $this->addCriteria(new RoleIdCriteria($role_id));
         }
 
         return $this->all();

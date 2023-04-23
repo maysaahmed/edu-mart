@@ -26,10 +26,10 @@ class ProvidersController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('can:create_provider', ['only' => ['store', 'import']]);
-        $this->middleware('can:edit_provider',   ['only' => ['update']]);
-        $this->middleware('can:list_providers',   ['only' => ['index']]);
-        $this->middleware('can:delete_provider',   ['only' => ['destroy']]);
+        $this->middleware('ability:create_provider', ['only' => ['store', 'import']]);
+        $this->middleware('ability:edit_provider',   ['only' => ['update']]);
+        $this->middleware('ability:list_providers',   ['only' => ['index']]);
+        $this->middleware('ability:delete_provider',   ['only' => ['destroy']]);
     }
 
     /**

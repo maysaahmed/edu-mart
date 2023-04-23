@@ -25,10 +25,10 @@ class LevelsController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('can:create_level', ['only' => ['store', 'import']]);
-        $this->middleware('can:edit_level',   ['only' => ['update']]);
-        $this->middleware('can:list_levels',   ['only' => ['index']]);
-        $this->middleware('can:delete_level',   ['only' => ['destroy']]);
+        $this->middleware('ability:create_level', ['only' => ['store', 'import']]);
+        $this->middleware('ability:edit_level',   ['only' => ['update']]);
+        $this->middleware('ability:list_levels',   ['only' => ['index']]);
+        $this->middleware('ability:delete_level',   ['only' => ['destroy']]);
     }
 
     /**

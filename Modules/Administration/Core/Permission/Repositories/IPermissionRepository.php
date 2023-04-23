@@ -9,6 +9,6 @@ use Illuminate\Support\Collection;
 interface IPermissionRepository extends IRepository
 {
 
-    public function getPermissions(?int $id = null): Collection|null;
+    public function getPermissions(?int $role_id = null): Collection|null;
 
 }

@@ -31,11 +31,11 @@ class AdministrationController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('can:create_admin', ['only' => ['store']]);
-        $this->middleware('can:edit_admin',   ['only' => ['update']]);
-        $this->middleware('can:list_admins',   ['only' => ['index']]);
-        $this->middleware('can:delete_admin',   ['only' => ['destroy']]);
-        $this->middleware('can:block_admin',   ['only' => ['updateStatus']]);
+        $this->middleware('ability:create_admin', ['only' => ['store']]);
+        $this->middleware('ability:edit_admin',   ['only' => ['update']]);
+        $this->middleware('ability:list_admins',   ['only' => ['index']]);
+        $this->middleware('ability:delete_admin',   ['only' => ['destroy']]);
+        $this->middleware('ability:block_admin',   ['only' => ['updateStatus']]);
     }
 //    /**
 //     * Handles Registration Request

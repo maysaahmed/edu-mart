@@ -26,10 +26,10 @@ class CategoriesController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('can:create_category', ['only' => ['store', 'import']]);
-        $this->middleware('can:edit_category',   ['only' => ['update']]);
-        $this->middleware('can:list_categories',   ['only' => ['index']]);
-        $this->middleware('can:delete_category',   ['only' => ['destroy']]);
+        $this->middleware('ability:create_category', ['only' => ['store', 'import']]);
+        $this->middleware('ability:edit_category',   ['only' => ['update']]);
+        $this->middleware('ability:list_categories',   ['only' => ['index']]);
+        $this->middleware('ability:delete_category',   ['only' => ['destroy']]);
     }
 
     /**

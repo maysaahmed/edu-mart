@@ -8,7 +8,7 @@ class CreateAdminRequest extends ApiRequest
     public function rules()
     {
         $rules = [
-            'status' => 'in:1,0',
+            'isActive' => 'required|in:1,0',
             'roleId' => 'required|integer'
         ];
 

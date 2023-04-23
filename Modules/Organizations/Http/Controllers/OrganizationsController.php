@@ -30,11 +30,11 @@ class OrganizationsController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('can:create_organization', ['only' => ['store', 'import']]);
-        $this->middleware('can:edit_organization',   ['only' => ['update']]);
-        $this->middleware('can:list_organizations',   ['only' => ['show', 'index']]);
-        $this->middleware('can:block_organization',   ['only' => ['updateStatus']]);
-        $this->middleware('can:delete_organization',   ['only' => ['destroy']]);
+        $this->middleware('ability:create_organization', ['only' => ['store', 'import']]);
+        $this->middleware('ability:edit_organization',   ['only' => ['update']]);
+        $this->middleware('ability:list_organizations',   ['only' => ['show', 'index']]);
+        $this->middleware('ability:block_organization',   ['only' => ['updateStatus']]);
+        $this->middleware('ability:delete_organization',   ['only' => ['destroy']]);
     }
 
 
