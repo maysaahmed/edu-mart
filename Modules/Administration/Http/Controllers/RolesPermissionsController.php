@@ -15,7 +15,7 @@ use Modules\Administration\Http\Requests\RoleRequest;
 use Modules\Administration\Http\Requests\UpdateRoleRequest;
 use Modules\Administration\Transformers\RoleResource;
 use Modules\Administration\Transformers\PermissionResource;
-
+use App\Enums;
 class RolesPermissionsController extends ApiController
 {
 
@@ -26,10 +26,9 @@ class RolesPermissionsController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('ability:create_role', ['only' => ['store']]);
-        $this->middleware('ability:edit_role',   ['only' => ['update']]);
-        $this->middleware('ability:list_roles',   ['only' => ['getAllRoles']]);
-//        $this->middleware('can:list_permissions',   ['only' => ['getAllPermissions']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::createRole->value, ['only' => ['store']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editRole->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listRoles->value,   ['only' => ['getAllRoles']]);
     }
     /**
      * Store a newly created resource in storage.

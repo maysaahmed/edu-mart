@@ -4,17 +4,24 @@ namespace Modules\Administration\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AdminResource extends JsonResource
+class AdminLoginResource extends JsonResource
 {
+    protected string $token;
+
+    public function token($value)
+    {
+        $this->token = $value;
+        return $this;
+    }
+
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'status' => $this->is_active,
+            'token' => $this->token,
             'role' => $this->getRoleNames()->first() ?? '',
-            'permissions' => PermissionResource::collection($this->getAllPermissions())
+            'permissions' => PermissionResource::collection($this->getAllPermissions()),
         ];
     }
 }

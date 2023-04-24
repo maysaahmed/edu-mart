@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Enums;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,7 @@ Route::middleware('auth:api')->get('/courses', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth:sanctum', 'token-name:admin-token'])->group(function () {
+Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->group(function () {
 
     Route::get('/courses/show/{id}', 'CoursesController@show');
     Route::prefix('courses')->group(function () {

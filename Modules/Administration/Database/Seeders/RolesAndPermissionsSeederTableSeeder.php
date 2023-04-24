@@ -41,10 +41,10 @@ class RolesAndPermissionsSeederTableSeeder extends Seeder
             Permission::updateOrCreate(['name' => $constValue]);
         }
 
-//        // or may be done by chaining
+        // or may be done by chaining
         Role::create(['name' => 'super-admin'])
             ->givePermissionTo(Permission::all());
-//
+
         $user->assignRole('super-admin');
 
 

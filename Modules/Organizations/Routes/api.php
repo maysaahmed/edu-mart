@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Enums;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,7 @@ Route::middleware('auth:admin-api')->get('/organizations', function (Request $re
 });
 
 //role:admin-api|super-admin
-Route::middleware(['auth:sanctum', 'token-name:admin-token'])->group(function () {
+Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->group(function () {
 
     Route::post('/organizations/updateStatus/{organization}', 'OrganizationsController@updateStatus');
     Route::post('/organizations/import', 'OrganizationsController@import');

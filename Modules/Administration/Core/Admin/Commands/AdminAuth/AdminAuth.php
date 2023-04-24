@@ -26,9 +26,7 @@ class AdminAuth implements IAdminAuth
                 }
 
                 $token = $admin->createToken('admin-token',$abilities)->plainTextToken;
-//                $token = $admin->createToken('authToken', ['guard-admin-api'])->plainTextToken;
-                $data = ['name' => $admin->name,'token' => $token, 'role' => 'admin'];
-
+                $data = ['user' => $admin,'token' => $token];
                 return $data;
             }
         }
