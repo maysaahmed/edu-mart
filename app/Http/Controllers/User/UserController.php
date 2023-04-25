@@ -16,7 +16,7 @@ class UserController extends ApiController
         try {
             $queryModel = GetUserPagination\GetUserPaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
-            
+
             return $this->successResponse(UserResource::collection($pagination));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -27,7 +27,7 @@ class UserController extends ApiController
     {
         $commandModel = CreateUser\CreateUserModel::from($request->all());
         $command->execute($commandModel);
-            
+
         return redirect()->route('home');
     }
 }

@@ -71,6 +71,42 @@ class AdministrationController extends ApiController
 //        }
 //    }
 
+    /**
+     * @OA\Get(
+     *     path="/api/administration",
+     *     tags={"Administration"},
+     *     summary="Returns paginated list of admins",
+     *     description="Returns paginated list of admins",
+     *     operationId="getAdminsList",
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="path",
+     *         description="page number",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="path",
+     *         description="filter data by admin name",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              type="array",
+     *              @OA\Items(ref="#/components/schemas/AdminResource")
+     *          )
+     *       ),
+     * )
+     */
     public function index(Request $request, GetAdminPagination\IGetAdminPagination $query): JsonResponse
     {
         try {
@@ -252,9 +288,44 @@ class AdministrationController extends ApiController
     }
 
     /**
-     * Handles Login Request
-     * @param AdminLoginRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/administration/login",
+     *     tags={"Auth"},
+     *     summary="Admin Login",
+     *     description="Admin Login and generate access token",
+     *     operationId="AuthAdminLogin",
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/AdminAuthModel")
+     *     ),
+     *
+     *     @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="name",
+     *                  type="string",
+     *                  description="Admin Name",
+     *                  nullable=false,
+     *                  example="Admin"
+     *              ),
+     *              @OA\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  description="Admin Access token",
+     *                  nullable=false
+     *              ),
+     *              @OA\Property(
+     *                  property="role",
+     *                  type="string",
+     *                  description="User Type",
+     *                  nullable=false,
+     *                  example="admin"
+     *              ),
+     *          )
+     *      )
+     * )
      */
     public function login(AdminLoginRequest $request, AdminAuth\IAdminAuth $command): JsonResponse
     {

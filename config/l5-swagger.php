@@ -12,7 +12,7 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'L5 Swagger UI',
+                'title' => 'Edu Mart API',
             ],
 
             'routes' => [
@@ -47,6 +47,7 @@ return [
                 */
                 'annotations' => [
                     base_path('app'),
+                    base_path('modules')
                 ],
 
             ],
