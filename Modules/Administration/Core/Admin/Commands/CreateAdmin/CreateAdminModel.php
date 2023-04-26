@@ -13,6 +13,7 @@ class CreateAdminModel extends Data
         public int $type,
         public int $roleId,
         public int $createdBy,
+        public int $isActive,
     ) {
     }
 }

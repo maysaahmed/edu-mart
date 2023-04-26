@@ -19,6 +19,10 @@ class AdminAuth implements IAdminAuth
         if ($admin) {
             if (Hash::check($model->password, $admin->password)) {
 
+                if(!$admin->is_active)
+                {
+                    throw new \Exception('The user account is blocked!');
+                }
                 $permissions = $admin->getAllPermissions();
                 $abilities = [];
                 foreach($permissions as $p) {

@@ -92,8 +92,8 @@ class AdministrationServiceProvider extends ServiceProvider
             \Modules\Administration\Core\Role\Commands\EditRole\EditRole::class
         );
         $this->app->bind(
-            \Modules\Administration\Core\Role\Queries\GetRoles\IGetRoles::class,
-            \Modules\Administration\Core\Role\Queries\GetRoles\GetRoles::class
+            \Modules\Administration\Core\Role\Queries\getRoles\IGetRoles::class,
+            \Modules\Administration\Core\Role\Queries\getRoles\GetRoles::class
         );
 
         //Permissions

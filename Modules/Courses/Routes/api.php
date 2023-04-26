@@ -29,8 +29,8 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
         Route::resource('/categories', 'CategoriesController', ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::post('/providers/import', 'ProvidersController@import');
         Route::resource('/providers', 'ProvidersController', ['only' => ['index', 'store', 'update', 'destroy']]);
-        Route::post('/levels/import', 'levelsController@import');
-        Route::resource('/levels', 'levelsController', ['only' => ['index', 'store', 'update', 'destroy']]);
+        Route::post('/levels/import', 'LevelsController@import');
+        Route::resource('/levels', 'LevelsController', ['only' => ['index', 'store', 'update', 'destroy']]);
     });
 
     Route::resource('/courses', 'CoursesController',['only'=>['index', 'store', 'update', 'destroy']]);

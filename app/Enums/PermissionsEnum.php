@@ -3,7 +3,6 @@ namespace App\Enums;
 
 enum PermissionsEnum: string
 {
-    // case NAMEINAPP = 'name-in-database';
 
     case createOrganization = 'create_organization';
     case listOrganizations = 'list_organizations';
@@ -18,22 +17,22 @@ enum PermissionsEnum: string
     case blockAdmin = 'block_admin';
 
     case createProvider = 'create_provider';
-    case listProvider = 'list_providers';
+    case listProviders = 'list_providers';
     case editProvider = 'edit_provider';
     case deleteProvider = 'delete_provider';
 
     case createLevel = 'create_level';
-    case listLevel = 'list_levels';
+    case listLevels = 'list_levels';
     case editLevel = 'edit_level';
     case deleteLevel = 'delete_level';
 
     case createCategory = 'create_category';
-    case listCategory = 'list_categories';
+    case listCategories = 'list_categories';
     case editCategory = 'edit_category';
     case deleteCategory = 'delete_category';
 
     case createCourse = 'create_course';
-    case listCourse = 'list_courses';
+    case listCourses = 'list_courses';
     case editCourse = 'edit_course';
     case deleteCourse = 'delete_course';
 

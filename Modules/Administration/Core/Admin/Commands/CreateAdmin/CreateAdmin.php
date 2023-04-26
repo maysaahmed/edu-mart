@@ -21,6 +21,6 @@ class CreateAdmin implements ICreateAdmin
             throw new \Exception('Role cannot be found!');
         }
 
-        return $this->repository->createAdmin($model->name, $model->email, $model->password, $model->type, $model->roleId, $model->createdBy);
+        return $this->repository->createAdmin($model->name, $model->email, $model->password, $model->type, $model->roleId, $model->createdBy, $model->isActive);
     }
 }

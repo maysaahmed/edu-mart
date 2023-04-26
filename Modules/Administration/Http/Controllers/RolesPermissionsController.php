@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Modules\Administration\Core\Role\Commands\CreateRole;
 use Modules\Administration\Core\Role\Commands\EditRole;
 use Modules\Administration\Core\Permission\Queries\GetPermissions;
-use Modules\Administration\Core\Role\Queries\GetRoles;
+use Modules\Administration\Core\Role\Queries\getRoles;
 
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Administration\Http\Requests\RoleRequest;
@@ -81,7 +81,7 @@ class RolesPermissionsController extends ApiController
      * @param GetRoles\IGetRoles $query
      * @return JsonResponse
      */
-    public function getAllRoles( GetRoles\IGetRoles $query): JsonResponse
+    public function getAllRoles(GetRoles\IGetRoles $query): JsonResponse
     {
         try {
             $pagination = $query->execute();

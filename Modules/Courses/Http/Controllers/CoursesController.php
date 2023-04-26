@@ -33,7 +33,7 @@ class CoursesController extends ApiController
     public function __construct()
     {
         $this->middleware('ability:'.Enums\PermissionsEnum::createCourse->value, ['only' => ['store', 'import']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::updateCourse->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editCourse->value,   ['only' => ['update']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::listCourses->value,   ['only' => ['index', 'show']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::deleteCourse->value,   ['only' => ['destroy']]);
     }
