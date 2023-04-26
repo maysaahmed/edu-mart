@@ -9,14 +9,19 @@ use Illuminate\Routing\Controller as BaseController;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\SecurityScheme(
- *     type="https",
- *     description="Login with email and password to get the authentication token",
- *     scheme="bearer",
- *     bearerFormat="JWT",
- *     securityScheme="bearerAuth",
+ * @OA\OpenApi(
+ *   security={
+ *     {"bearerAuth":{}}
+ *   }
  * )
- */
+ * @OA\SecurityScheme(
+ *    securityScheme="bearerAuth",
+ *    in="header",
+ *    name="bearerAuth",
+ *    type="http",
+ *    scheme="bearer",
+ *    bearerFormat="JWT",
+ * ),
 
 /**
  * @OA\Info(
@@ -30,6 +35,11 @@ use OpenApi\Annotations as OA;
  *          name="Apache 2.0",
  *          url="http://www.apache.org/licenses/LICENSE-2.0.html"
  *      )
+ * )
+ *
+ * @OA\Server(
+ *      url=L5_SWAGGER_CONST_HOST,
+ *      description="API Server",
  * )
  */
 
