@@ -12,6 +12,12 @@
         },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "http://eduMart.test/api",
+            "description": "API Server"
+        }
+    ],
     "paths": {
         "/api/administration": {
             "get": {
@@ -167,6 +173,20 @@
                     "name": "AdminResource"
                 }
             }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
         }
-    }
+    },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ]
 }
