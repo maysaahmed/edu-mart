@@ -1,0 +1,167 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Edu Mart API",
+        "description": "Edu Mart API Documentation",
+        "contact": {
+            "email": "admin@@admin.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/administration": {
+            "get": {
+                "tags": [
+                    "Administration"
+                ],
+                "summary": "Returns paginated list of admins",
+                "description": "Returns paginated list of admins",
+                "operationId": "getAdminsList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "description": "page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "filter data by admin name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AdminResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/administration/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Admin Login",
+                "description": "Admin Login and generate access token",
+                "operationId": "AuthAdminLogin",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminAuthModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "name": {
+                                            "description": "Admin Name",
+                                            "type": "string",
+                                            "example": "Admin",
+                                            "nullable": false
+                                        },
+                                        "token": {
+                                            "description": "Admin Access token",
+                                            "type": "string",
+                                            "nullable": false
+                                        },
+                                        "role": {
+                                            "description": "User Type",
+                                            "type": "string",
+                                            "example": "admin",
+                                            "nullable": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AdminAuthModel": {
+                "title": "AdminAuthRequestModel",
+                "description": "Admin Auth request",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "Admin Email",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "Admin password",
+                        "type": "passowrd"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "AdminAuthModel"
+                }
+            },
+            "AdminResource": {
+                "title": "AdminResource",
+                "description": "Admin resource",
+                "properties": {
+                    "id": {
+                        "description": "Admin ID",
+                        "type": "integer",
+                        "example": "1",
+                        "nullable": false
+                    },
+                    "name": {
+                        "description": "Admin Name",
+                        "type": "string",
+                        "format": "edumart admin",
+                        "nullable": false
+                    },
+                    "email": {
+                        "description": "Admin Email",
+                        "type": "string",
+                        "format": "admin@admin.com",
+                        "nullable": false
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "AdminResource"
+                }
+            }
+        }
+    }
+}
