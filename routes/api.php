@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Enums;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,23 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:'.Enums\EnumGuardNames::Admin->value)->get('/user', function (Request $request) {
     return $request->user();
 });
 
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:'.Enums\EnumGuardNames::Admin->value)->group(function () {
     Route::get('user/user', 'App\Http\Controllers\UserAuthController@details');
 });
 
-
-//Route::group(['middleware'=> ['auth:sanctum', 'ability:guard-admin-api']], function() {
-////    Route::get('/products/{id}', [CategoryController::class, 'edit']);
-//    Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
-//
-//});
-
-
-//Route::get('levels', ['uses' => 'App\Http\Controllers\LevelController@index']);
-//Route::resource('categories', 'App\Http\Controllers\CategoryController',['only'=>['index', 'store', 'update', 'destroy']]);
 

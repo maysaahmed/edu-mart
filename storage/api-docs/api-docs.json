@@ -1,10 +1,11 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Edu Mart API",
-        "description": "Edu Mart API Documentation",
+        "title": "Edumart Api",
+        "description": "Edumart Api Documentation",
         "contact": {
-            "email": "admin@@admin.com"
+            "name": "Edumart",
+            "email": "info@edumart.com"
         },
         "license": {
             "name": "Apache 2.0",
@@ -12,12 +13,6 @@
         },
         "version": "1.0.0"
     },
-    "servers": [
-        {
-            "url": "http://eduMart.test/api",
-            "description": "API Server"
-        }
-    ],
     "paths": {
         "/api/administration": {
             "get": {
@@ -61,7 +56,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         },
         "/api/administration/login": {
@@ -170,18 +170,12 @@
             }
         },
         "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "name": "bearerAuth",
-                "in": "header",
-                "bearerFormat": "JWT",
-                "scheme": "bearer"
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
             }
         }
-    },
-    "security": [
-        {
-            "bearerAuth": []
-        }
-    ]
+    }
 }

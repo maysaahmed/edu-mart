@@ -18,6 +18,7 @@ use Modules\Administration\Http\Requests\AdminLoginRequest;
 use Modules\Administration\Http\Requests\CreateAdminRequest;
 use Modules\Administration\Http\Requests\EditProfileRequest;
 use Modules\Administration\Transformers\AdminResource;
+use Modules\Administration\Transformers\AdminLoginResource;
 use Symfony\Component\HttpFoundation\Response;
 use OpenApi\Annotations as OA;
 use App\Enums;
@@ -31,11 +32,11 @@ class AdministrationController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('ability:create_admin', ['only' => ['store']]);
-        $this->middleware('ability:edit_admin',   ['only' => ['update']]);
-        $this->middleware('ability:list_admins',   ['only' => ['index']]);
-        $this->middleware('ability:delete_admin',   ['only' => ['destroy']]);
-        $this->middleware('ability:block_admin',   ['only' => ['updateStatus']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::createAdmin->value, ['only' => ['store']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editAdmin->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listAdmins->value,   ['only' => ['index']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteAdmin->value,   ['only' => ['destroy']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::blockAdmin->value,   ['only' => ['updateStatus']]);
     }
 //    /**
 //     * Handles Registration Request
@@ -78,6 +79,7 @@ class AdministrationController extends ApiController
      *     summary="Returns paginated list of admins",
      *     description="Returns paginated list of admins",
      *     operationId="getAdminsList",
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="page",
      *         in="path",
@@ -329,15 +331,13 @@ class AdministrationController extends ApiController
      */
     public function login(AdminLoginRequest $request, AdminAuth\IAdminAuth $command): JsonResponse
     {
-
         try {
             // map request to command.
             $commandModel = AdminAuth\AdminAuthModel::from($request->all());
             $result = $command->execute($commandModel);
-            return $this->successResponse($result);
+            return $this->successResponse((new AdminLoginResource($result['user']))->token($result['token']));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
-//            return $this->errorResponse('The provided credentials do not match our records.!', Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -360,13 +360,13 @@ class AdministrationController extends ApiController
     /**
      * Returns Authenticated User Details
      *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function details(Request $request)
     {
-
-        $user = auth("admin-api")->user();
-        return response()->json(['user' =>  $user, 'permissions' => $user->getAllPermissions()], 200);
+        $user = auth("sanctum")->user();
+        return $this->successResponse(new AdminResource($user));
 
     }
 

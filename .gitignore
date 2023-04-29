@@ -20,6 +20,7 @@ yarn-error.log
 rr
 .rr.yaml
 .htaccess
+.DS_Store
 docker-compose.override.yml
 /.docker
 /storage/db-data/*

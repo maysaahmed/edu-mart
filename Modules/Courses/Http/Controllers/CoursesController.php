@@ -20,6 +20,7 @@ use Modules\Courses\Transformers\CourseResource;
 use Modules\Courses\Imports\ImportCourses;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use App\Enums;
 
 class CoursesController extends ApiController
 {
@@ -31,10 +32,10 @@ class CoursesController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('ability:create_course', ['only' => ['store', 'import']]);
-        $this->middleware('ability:edit_course',   ['only' => ['update']]);
-        $this->middleware('ability:list_courses',   ['only' => ['index', 'show']]);
-        $this->middleware('ability:delete_course',   ['only' => ['destroy']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::createCourse->value, ['only' => ['store', 'import']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editCourse->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listCourses->value,   ['only' => ['index', 'show']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteCourse->value,   ['only' => ['destroy']]);
     }
 
     /**

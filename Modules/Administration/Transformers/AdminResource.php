@@ -44,6 +44,9 @@ class AdminResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'status' => $this->is_active,
+            'role' => $this->getRoleNames()->first() ?? '',
+            'permissions' => PermissionResource::collection($this->getAllPermissions())
         ];
     }
 }

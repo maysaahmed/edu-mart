@@ -37,7 +37,7 @@ class AdminRepository extends Repository implements IAdminRepository
         return $this->paginator(50, $page);
     }
 
-    public function createAdmin(string $name, string $email, string $password, int $type, int $roleId, int $createdBy): Admin
+    public function createAdmin(string $name, string $email, string $password, int $type, int $roleId, int $createdBy, int $isActive): Admin
     {
         $item = new Admin();
         $item->name = $name;
@@ -45,6 +45,7 @@ class AdminRepository extends Repository implements IAdminRepository
         $item->password = bcrypt($password);
         $item->type = $type;
         $item->created_by = $createdBy;
+        $item->is_active = $isActive;
         $item->save();
 
         $item->syncRoles([$roleId]);

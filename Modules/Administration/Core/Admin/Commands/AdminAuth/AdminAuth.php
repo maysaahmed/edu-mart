@@ -19,6 +19,10 @@ class AdminAuth implements IAdminAuth
         if ($admin) {
             if (Hash::check($model->password, $admin->password)) {
 
+                if(!$admin->is_active)
+                {
+                    throw new \Exception('The user account is blocked!');
+                }
                 $permissions = $admin->getAllPermissions();
                 $abilities = [];
                 foreach($permissions as $p) {
@@ -26,9 +30,7 @@ class AdminAuth implements IAdminAuth
                 }
 
                 $token = $admin->createToken('admin-token',$abilities)->plainTextToken;
-//                $token = $admin->createToken('authToken', ['guard-admin-api'])->plainTextToken;
-                $data = ['name' => $admin->name,'token' => $token, 'role' => 'admin'];
-
+                $data = ['user' => $admin,'token' => $token];
                 return $data;
             }
         }

@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Administration\Core\Role\Queries\GetRoles;
+namespace Modules\Administration\Core\Role\Queries\getRoles;
 use Illuminate\Support\Collection;
 
 interface IGetRoles
