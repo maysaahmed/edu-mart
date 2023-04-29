@@ -79,6 +79,7 @@ class AdministrationController extends ApiController
      *     summary="Returns paginated list of admins",
      *     description="Returns paginated list of admins",
      *     operationId="getAdminsList",
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="page",
      *         in="path",

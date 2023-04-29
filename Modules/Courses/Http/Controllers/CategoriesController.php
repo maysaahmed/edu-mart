@@ -30,7 +30,7 @@ class CategoriesController extends ApiController
         $this->middleware('ability:'.Enums\PermissionsEnum::createCategory->value, ['only' => ['store', 'import']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::editCategory->value,   ['only' => ['update']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::listCategories->value,   ['only' => ['index']]);
-        $this->middleware('ability:'.Enums\PermissionsEnumexit::deleteCategory->value,   ['only' => ['destroy']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteCategory->value,   ['only' => ['destroy']]);
     }
 
     /**
