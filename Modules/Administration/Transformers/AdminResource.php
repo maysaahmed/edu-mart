@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     title="AdminResource",
+ *     title="Admin Resource",
  *     description="Admin resource",
  *     @OA\Xml(
  *         name="AdminResource"
@@ -32,6 +32,32 @@ use OpenApi\Annotations as OA;
  *        description="Admin Email",
  *        nullable=false,
  *        format="admin@admin.com"
+ *    ),
+ *    @OA\Property(
+ *        property="status",
+ *        type="integer",
+ *        description="Admin status : 1->active, 0->notactive",
+ *        nullable=false,
+ *        format="1"
+ *    ),
+ *    @OA\Property(
+ *        property="role",
+ *        type="string",
+ *        description="Admin role",
+ *        nullable=false,
+ *        format="Editor"
+ *    ),
+ *    @OA\Property(
+ *        property="permissions",
+ *        type="array",
+ *        @OA\Items(
+ *               type="string",
+ *               description="the permission details",
+ *               @OA\Schema(ref="#/components/schemas/PermissionResource")
+ *         ),
+ *        description="Admin permissions",
+ *        nullable=false,
+ *        format="[]"
  *    ),
  * )
  */

@@ -11,8 +11,8 @@ use OpenApi\Annotations as OA;
 /**
  * @OA\Info(
  *     version="1.0.0",
- *     title="Edumart Api",
- *     description="Edumart Api Documentation",
+ *     title="Edumart APIs",
+ *     description="Edumart APIs Documentation",
  *     @OA\Contact(
  *         name="Edumart",
  *         email="info@edumart.com"
