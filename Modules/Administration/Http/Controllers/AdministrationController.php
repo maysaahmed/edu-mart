@@ -38,39 +38,7 @@ class AdministrationController extends ApiController
         $this->middleware('ability:'.Enums\PermissionsEnum::deleteAdmin->value,   ['only' => ['destroy']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::blockAdmin->value,   ['only' => ['updateStatus']]);
     }
-//    /**
-//     * Handles Registration Request
-//     *
-//     * @param Request $request
-//     * @return \Illuminate\Http\JsonResponse
-//     */
-//    public function register(Request $request)
-//    {
-//        $rules = [
-//            'name' => 'required|min:3',
-//            'email' => 'required|email|unique:users',
-//            'password' => 'required|min:6',
-//        ];
-//        $validator = $this->getValidationFactory()->make($request->all(), $rules);
-//
-//        if ($validator->fails()) {
-//            return $this->errorResponse($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
-//        }
-//
-//        try {
-//            $user = Admin::Create([
-//                'name' => $request->name,
-//                'email' => $request->email,
-//                'password' => bcrypt($request->password)
-//            ]);
-//
-//            $token = $user->createToken('authToken')->accessToken;
-//            return $this->successResponse(['token' => $token],'Admin saved successfully!' , Response::HTTP_CREATED);
-//
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
-//    }
+
 
     /**
      * @OA\Get(

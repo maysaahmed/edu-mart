@@ -14,6 +14,6 @@ class GetAdminPagination implements IGetAdminPagination
 
     public function execute(GetAdminPaginationModel $model): LengthAwarePaginator
     {
-        return $this->repository->getAdminsPagination($model->page, $model->name);
+        return $this->repository->getAdminsPagination($model->page, $model->name, $model->email);
     }
 }
