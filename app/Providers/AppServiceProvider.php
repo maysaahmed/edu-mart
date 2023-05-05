@@ -39,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Common\Date\IDateService::class,
             \App\Common\Date\DateService::class
         );
+
+
+        //other
+
     }
 
     /**

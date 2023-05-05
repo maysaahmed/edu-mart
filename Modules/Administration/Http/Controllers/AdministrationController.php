@@ -18,6 +18,7 @@ use Modules\Administration\Http\Requests\AdminLoginRequest;
 use Modules\Administration\Http\Requests\CreateAdminRequest;
 use Modules\Administration\Http\Requests\EditProfileRequest;
 use Modules\Administration\Transformers\AdminResource;
+use Modules\Administration\Transformers\AdminLoginResource;
 use Symfony\Component\HttpFoundation\Response;
 use OpenApi\Annotations as OA;
 use App\Enums;
@@ -31,46 +32,54 @@ class AdministrationController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('ability:create_admin', ['only' => ['store']]);
-        $this->middleware('ability:edit_admin',   ['only' => ['update']]);
-        $this->middleware('ability:list_admins',   ['only' => ['index']]);
-        $this->middleware('ability:delete_admin',   ['only' => ['destroy']]);
-        $this->middleware('ability:block_admin',   ['only' => ['updateStatus']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::createAdmin->value, ['only' => ['store']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editAdmin->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listAdmins->value,   ['only' => ['index']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteAdmin->value,   ['only' => ['destroy']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::blockAdmin->value,   ['only' => ['updateStatus']]);
     }
-//    /**
-//     * Handles Registration Request
-//     *
-//     * @param Request $request
-//     * @return \Illuminate\Http\JsonResponse
-//     */
-//    public function register(Request $request)
-//    {
-//        $rules = [
-//            'name' => 'required|min:3',
-//            'email' => 'required|email|unique:users',
-//            'password' => 'required|min:6',
-//        ];
-//        $validator = $this->getValidationFactory()->make($request->all(), $rules);
-//
-//        if ($validator->fails()) {
-//            return $this->errorResponse($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
-//        }
-//
-//        try {
-//            $user = Admin::Create([
-//                'name' => $request->name,
-//                'email' => $request->email,
-//                'password' => bcrypt($request->password)
-//            ]);
-//
-//            $token = $user->createToken('authToken')->accessToken;
-//            return $this->successResponse(['token' => $token],'Admin saved successfully!' , Response::HTTP_CREATED);
-//
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
-//    }
 
+
+    /**
+     * @OA\Get(
+     *     path="/api/administration",
+     *     tags={"Administration"},
+     *     summary="Returns paginated list of admins",
+     *     description="Returns paginated list of admins",
+     *     operationId="getAdminsList",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="path",
+     *         description="page number",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="path",
+     *         description="filter data by admin name",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              type="array",
+     *              @OA\Items(ref="#/components/schemas/AdminResource")
+     *          )
+     *       ),
+     * )
+     * @param Request $request
+     * @param GetAdminPagination\IGetAdminPagination $query
+     * @return JsonResponse
+     */
     public function index(Request $request, GetAdminPagination\IGetAdminPagination $query): JsonResponse
     {
         try {
@@ -83,6 +92,29 @@ class AdministrationController extends ApiController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/administration",
+     *     tags={"Administration"},
+     *     summary="Add Admin",
+     *     description="Add new admin",
+     *     operationId="AdministrationAddAdmin",
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/CreateAdminModel")
+     *     ),
+     *
+     *     @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/AdminResource")
+     *      )
+     * )
+     * @param CreateAdminRequest $request
+     * @param CreateAdmin\ICreateAdmin $command
+     * @return JsonResponse
+     */
     public function store(CreateAdminRequest $request, CreateAdmin\ICreateAdmin $command): JsonResponse
     {
         try {
@@ -105,6 +137,36 @@ class AdministrationController extends ApiController
 
     /**
      * Update the specified resource in storage.
+     * @OA\Post(
+     *     path="/api/administration/{id}",
+     *     tags={"Administration"},
+     *     summary="Update Admin",
+     *     description="Returns updated admin data",
+     *     operationId="updateAdmin",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="admin id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/EditAdminModel")
+     *     ),
+     *     @OA\Response(
+     *          response=202,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/AdminResource")
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation Error"
+     *      )
+     * )
      * @param CreateAdminRequest $request
      * @param int $id
      * @param EditAdmin\IEditAdmin $command
@@ -252,21 +314,36 @@ class AdministrationController extends ApiController
     }
 
     /**
-     * Handles Login Request
+     * @OA\Post(
+     *     path="/api/administration/login",
+     *     tags={"Auth"},
+     *     summary="Admin Login",
+     *     description="Admin Login and generate access token",
+     *     operationId="AuthAdminLogin",
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/AdminAuthModel")
+     *     ),
+     *
+     *     @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/AdminLoginResource")
+     *      )
+     * )
      * @param AdminLoginRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param AdminAuth\IAdminAuth $command
+     * @return JsonResponse
      */
     public function login(AdminLoginRequest $request, AdminAuth\IAdminAuth $command): JsonResponse
     {
-
         try {
             // map request to command.
             $commandModel = AdminAuth\AdminAuthModel::from($request->all());
             $result = $command->execute($commandModel);
-            return $this->successResponse($result);
+            return $this->successResponse((new AdminLoginResource($result['user']))->token($result['token']));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
-//            return $this->errorResponse('The provided credentials do not match our records.!', Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -289,13 +366,13 @@ class AdministrationController extends ApiController
     /**
      * Returns Authenticated User Details
      *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function details(Request $request)
     {
-
-        $user = auth("admin-api")->user();
-        return response()->json(['user' =>  $user, 'permissions' => $user->getAllPermissions()], 200);
+        $user = auth("sanctum")->user();
+        return $this->successResponse(new AdminResource($user));
 
     }
 

@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Enums;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/administration/login', 'Modules\Administration\Http\Controllers\AdministrationController@login')->name('login');
 Route::post('/administration/register', 'Modules\Administration\Http\Controllers\AdministrationController@register');
 
-Route::middleware(['auth:sanctum', 'token-name:admin-token'])->prefix('administration')->group( function () {
+Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->prefix('administration')->group( function () {
 
     Route::put('/updateStatus/{admin}', 'Modules\Administration\Http\Controllers\AdministrationController@updateStatus');
     Route::put('/updateProfile', 'Modules\Administration\Http\Controllers\AdministrationController@updateProfile');

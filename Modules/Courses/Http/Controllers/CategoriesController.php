@@ -15,6 +15,7 @@ use App\Http\Requests\ImportCSVRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Courses\Http\Requests\CategoryRequest;
 use Modules\Courses\Transformers\CategoryResource;
+use App\Enums;
 
 class CategoriesController extends ApiController
 {
@@ -26,10 +27,10 @@ class CategoriesController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('ability:create_category', ['only' => ['store', 'import']]);
-        $this->middleware('ability:edit_category',   ['only' => ['update']]);
-        $this->middleware('ability:list_categories',   ['only' => ['index']]);
-        $this->middleware('ability:delete_category',   ['only' => ['destroy']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::createCategory->value, ['only' => ['store', 'import']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editCategory->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listCategories->value,   ['only' => ['index']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteCategory->value,   ['only' => ['destroy']]);
     }
 
     /**

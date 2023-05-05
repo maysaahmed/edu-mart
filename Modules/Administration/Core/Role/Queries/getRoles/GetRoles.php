@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Administration\Core\Role\Queries\GetRoles;
+namespace Modules\Administration\Core\Role\Queries\getRoles;
 
 use Modules\Administration\Core\Role\Repositories\IRoleRepository;
 use Illuminate\Support\Collection;

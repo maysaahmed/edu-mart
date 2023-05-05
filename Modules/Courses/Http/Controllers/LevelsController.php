@@ -15,6 +15,7 @@ use App\Http\Requests\ImportCSVRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Courses\Http\Requests\CategoryRequest;
 use Modules\Courses\Transformers\CategoryResource;
+use App\Enums;
 
 class LevelsController extends ApiController
 {
@@ -25,10 +26,10 @@ class LevelsController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('ability:create_level', ['only' => ['store', 'import']]);
-        $this->middleware('ability:edit_level',   ['only' => ['update']]);
-        $this->middleware('ability:list_levels',   ['only' => ['index']]);
-        $this->middleware('ability:delete_level',   ['only' => ['destroy']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::createLevel->value, ['only' => ['store', 'import']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editLevel->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listLevels->value,   ['only' => ['index']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteLevel->value,   ['only' => ['destroy']]);
     }
 
     /**

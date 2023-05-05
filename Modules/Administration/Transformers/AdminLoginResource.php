@@ -3,22 +3,14 @@
 namespace Modules\Administration\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     title="Admin Resource",
- *     description="Admin resource",
+ *     title="Admin Login Resource",
+ *     description="Admin login resource",
  *     @OA\Xml(
- *         name="AdminResource"
+ *         name="AdminLoginResource"
  *     ),
- *    @OA\Property(
- *        property="id",
- *        type="integer",
- *        description="Admin ID",
- *        nullable=false,
- *        example="1"
- *    ),
  *   @OA\Property(
  *        property="name",
  *        type="string",
@@ -34,11 +26,11 @@ use OpenApi\Annotations as OA;
  *        format="admin@admin.com"
  *    ),
  *    @OA\Property(
- *        property="status",
- *        type="integer",
- *        description="Admin status : 1->active, 0->notactive",
+ *        property="token",
+ *        type="string",
+ *        description="Admin auth token",
  *        nullable=false,
- *        format="1"
+ *        format="1uhjkjg675"
  *    ),
  *    @OA\Property(
  *        property="role",
@@ -62,17 +54,24 @@ use OpenApi\Annotations as OA;
  * )
  */
 
-class AdminResource extends JsonResource
+class AdminLoginResource extends JsonResource
 {
+    protected string $token;
+
+    public function token($value)
+    {
+        $this->token = $value;
+        return $this;
+    }
+
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'status' => $this->is_active,
+            'token' => $this->token,
             'role' => $this->getRoleNames()->first() ?? '',
-            'permissions' => PermissionResource::collection($this->getAllPermissions())
+            'permissions' => PermissionResource::collection($this->getAllPermissions()),
         ];
     }
 }

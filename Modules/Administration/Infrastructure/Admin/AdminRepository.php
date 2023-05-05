@@ -6,8 +6,10 @@ use Modules\Administration\Core\Admin\Repositories\IAdminRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Administration\Domain\Entities\Admin\Admin;
+use Modules\Courses\Domain\Entities\Course;
 use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Role;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class AdminRepository extends Repository implements IAdminRepository
 {
@@ -27,17 +29,20 @@ class AdminRepository extends Repository implements IAdminRepository
         return Admin::find($id);
     }
 
-    public function getAdminsPagination(int $page, ?string $name = null): LengthAwarePaginator
+    public function getAdminsPagination(int $page, ?string $name = null, ?string $email = null): LengthAwarePaginator
     {
-        if ($name) {
-            $this->addCriteria(new NameCriteria($name));
-        }
-
-        $this->addCriteria(new OrderByLatest());
-        return $this->paginator(50, $page);
+//        if ($name) {
+//            $this->addCriteria(new NameCriteria($name));
+//        }
+//
+//        $this->addCriteria(new OrderByLatest());
+//        return $this->paginator(50, $page);
+        return  QueryBuilder::for(Admin::class)
+            ->allowedFilters('name', 'email')
+            ->paginate();
     }
 
-    public function createAdmin(string $name, string $email, string $password, int $type, int $roleId, int $createdBy): Admin
+    public function createAdmin(string $name, string $email, string $password, int $type, int $roleId, int $createdBy, int $isActive): Admin
     {
         $item = new Admin();
         $item->name = $name;
@@ -45,6 +50,7 @@ class AdminRepository extends Repository implements IAdminRepository
         $item->password = bcrypt($password);
         $item->type = $type;
         $item->created_by = $createdBy;
+        $item->is_active = $isActive;
         $item->save();
 
         $item->syncRoles([$roleId]);

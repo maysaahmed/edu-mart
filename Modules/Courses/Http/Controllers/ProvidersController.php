@@ -14,7 +14,7 @@ use Modules\Courses\Core\Provider\Commands\DeleteProvider;
 use Modules\Courses\Core\Provider\Commands\EditProvider;
 use Modules\Courses\Core\Provider\Commands\ImportProvider;
 use Modules\Courses\Core\Provider\Queries\GetProviderPagination;
-
+use App\Enums;
 
 class ProvidersController extends ApiController
 {
@@ -26,10 +26,10 @@ class ProvidersController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('ability:create_provider', ['only' => ['store', 'import']]);
-        $this->middleware('ability:edit_provider',   ['only' => ['update']]);
-        $this->middleware('ability:list_providers',   ['only' => ['index']]);
-        $this->middleware('ability:delete_provider',   ['only' => ['destroy']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::createProvider->value, ['only' => ['store', 'import']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editProvider->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listProviders->value,   ['only' => ['index']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteProvider->value,   ['only' => ['destroy']]);
     }
 
     /**

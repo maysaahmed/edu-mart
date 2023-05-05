@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Administration\Infrastructure\Role;
 
-use Modules\Administration\Core\Role\Queries\GetRoles\GetRoles;
+use Modules\Administration\Core\Role\Queries\getRoles\GetRoles;
 use Illuminate\Support\Collection;
 use Modules\Administration\Core\Role\Repositories\IRoleRepository;
 use App\Infrastructure\Repository\Repository;

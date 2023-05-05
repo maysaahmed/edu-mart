@@ -1,0 +1,410 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Edumart APIs",
+        "description": "Edumart APIs Documentation",
+        "contact": {
+            "name": "Edumart",
+            "email": "info@edumart.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/administration": {
+            "get": {
+                "tags": [
+                    "Administration"
+                ],
+                "summary": "Returns paginated list of admins",
+                "description": "Returns paginated list of admins",
+                "operationId": "getAdminsList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "description": "page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "filter data by admin name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AdminResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Administration"
+                ],
+                "summary": "Add Admin",
+                "description": "Add new admin",
+                "operationId": "AdministrationAddAdmin",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAdminModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdminResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/administration/{id}": {
+            "post": {
+                "tags": [
+                    "Administration"
+                ],
+                "summary": "Update Admin",
+                "description": "Returns updated admin data",
+                "operationId": "updateAdmin",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "admin id",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EditAdminModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdminResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/administration/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Admin Login",
+                "description": "Admin Login and generate access token",
+                "operationId": "AuthAdminLogin",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminAuthModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdminLoginResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AdminAuthModel": {
+                "title": "Admin Auth Request Model",
+                "description": "Admin Auth request",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "Admin Email",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "Admin password",
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "AdminAuthModel"
+                }
+            },
+            "CreateAdminModel": {
+                "title": "Create Admin Request Model",
+                "description": "Create Admin request",
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "roleId",
+                    "isActive"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Admin Name",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Admin Email",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "Admin password",
+                        "type": "string"
+                    },
+                    "roleId": {
+                        "description": "admin role id",
+                        "type": "integer"
+                    },
+                    "isActive": {
+                        "description": "admin status : 1->active, 0->notactive",
+                        "type": "integer"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "CreateAdminModel"
+                }
+            },
+            "EditAdminModel": {
+                "title": "Edit Admin Request Model",
+                "description": "Edit Admin request",
+                "required": [
+                    "name",
+                    "email",
+                    "roleId",
+                    "isActive",
+                    "_method"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "Admin Email",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Admin Name",
+                        "type": "string"
+                    },
+                    "roleId": {
+                        "description": "Role Id",
+                        "type": "integer"
+                    },
+                    "isActive": {
+                        "description": "Admin Status",
+                        "type": "integer"
+                    },
+                    "_method": {
+                        "description": "put method for update",
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "EditAdminModel"
+                }
+            },
+            "AdminLoginResource": {
+                "title": "Admin Login Resource",
+                "description": "Admin login resource",
+                "properties": {
+                    "name": {
+                        "description": "Admin Name",
+                        "type": "string",
+                        "format": "edumart admin",
+                        "nullable": false
+                    },
+                    "email": {
+                        "description": "Admin Email",
+                        "type": "string",
+                        "format": "admin@admin.com",
+                        "nullable": false
+                    },
+                    "token": {
+                        "description": "Admin auth token",
+                        "type": "string",
+                        "format": "1uhjkjg675",
+                        "nullable": false
+                    },
+                    "role": {
+                        "description": "Admin role",
+                        "type": "string",
+                        "format": "Editor",
+                        "nullable": false
+                    },
+                    "permissions": {
+                        "description": "Admin permissions",
+                        "type": "array",
+                        "format": "[]",
+                        "items": {
+                            "description": "the permission details",
+                            "type": "string"
+                        },
+                        "nullable": false
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "AdminLoginResource"
+                }
+            },
+            "AdminResource": {
+                "title": "Admin Resource",
+                "description": "Admin resource",
+                "properties": {
+                    "id": {
+                        "description": "Admin ID",
+                        "type": "integer",
+                        "example": "1",
+                        "nullable": false
+                    },
+                    "name": {
+                        "description": "Admin Name",
+                        "type": "string",
+                        "format": "edumart admin",
+                        "nullable": false
+                    },
+                    "email": {
+                        "description": "Admin Email",
+                        "type": "string",
+                        "format": "admin@admin.com",
+                        "nullable": false
+                    },
+                    "status": {
+                        "description": "Admin status : 1->active, 0->notactive",
+                        "type": "integer",
+                        "format": "1",
+                        "nullable": false
+                    },
+                    "role": {
+                        "description": "Admin role",
+                        "type": "string",
+                        "format": "Editor",
+                        "nullable": false
+                    },
+                    "permissions": {
+                        "description": "Admin permissions",
+                        "type": "array",
+                        "format": "[]",
+                        "items": {
+                            "description": "the permission details",
+                            "type": "string"
+                        },
+                        "nullable": false
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "AdminResource"
+                }
+            },
+            "PermissionResource": {
+                "title": "Permission Resource",
+                "description": "Permission resource",
+                "properties": {
+                    "name": {
+                        "description": "permission name",
+                        "type": "string",
+                        "format": "edit_admin",
+                        "nullable": false
+                    },
+                    "title": {
+                        "description": "permission title",
+                        "type": "string",
+                        "format": "edit admin",
+                        "nullable": false
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "PermissionResource"
+                }
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
+}
