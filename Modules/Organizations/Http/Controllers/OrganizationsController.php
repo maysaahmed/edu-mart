@@ -51,7 +51,7 @@ class OrganizationsController extends ApiController
         try {
             $queryModel = GetOrganizationPagination\GetOrganizationPaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
-            return $this->successResponse(OrganizationResource::collection($pagination));
+            return $this->paginationResponse(OrganizationResource::class,$pagination);
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());

@@ -85,8 +85,7 @@ class AdministrationController extends ApiController
         try {
             $queryModel = GetAdminPagination\GetAdminPaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
-
-            return $this->successResponse( AdminResource::collection($pagination));
+            return $this->paginationResponse(AdminResource::class,$pagination);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

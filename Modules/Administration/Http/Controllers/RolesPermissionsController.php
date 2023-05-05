@@ -69,9 +69,9 @@ class RolesPermissionsController extends ApiController
     public function getAllPermissions( GetPermissions\IGetPermissions $query, ?int $role_id = null): JsonResponse
     {
         try {
-            $pagination = $query->execute($role_id);
+            $permissions = $query->execute($role_id);
 
-            return $this->successResponse( PermissionResource::collection($pagination));
+            return $this->successResponse( PermissionResource::collection($permissions));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -84,9 +84,9 @@ class RolesPermissionsController extends ApiController
     public function getAllRoles(GetRoles\IGetRoles $query): JsonResponse
     {
         try {
-            $pagination = $query->execute();
+            $roles = $query->execute();
 
-            return $this->successResponse( RoleResource::collection($pagination));
+            return $this->successResponse( RoleResource::collection($roles));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
