@@ -29,6 +29,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class PermissionResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -39,6 +40,7 @@ class PermissionResource extends JsonResource
     {
         $permission = $this->name;
         return [
+            'id' => $this->id,
             'name' => $permission,
             'title' => ucwords(str_replace("_", " ", $this->name))
         ];

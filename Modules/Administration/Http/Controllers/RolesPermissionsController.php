@@ -15,6 +15,7 @@ use Modules\Administration\Http\Requests\RoleRequest;
 use Modules\Administration\Http\Requests\UpdateRoleRequest;
 use Modules\Administration\Transformers\RoleResource;
 use Modules\Administration\Transformers\PermissionResource;
+use Modules\Administration\Transformers\RolePermissionResourceCollection;
 use App\Enums;
 class RolesPermissionsController extends ApiController
 {
@@ -69,9 +70,11 @@ class RolesPermissionsController extends ApiController
     public function getAllPermissions( GetPermissions\IGetPermissions $query, ?int $role_id = null): JsonResponse
     {
         try {
-            $permissions = $query->execute($role_id);
-
-            return $this->successResponse( PermissionResource::collection($permissions));
+            $permissions = $query->execute();
+            if(isset($role_id))
+                return $this->successResponse(RolePermissionResourceCollection::make($permissions)->role($role_id));
+            else
+                return $this->successResponse(PermissionResource::collection($permissions));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
