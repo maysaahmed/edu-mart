@@ -49,7 +49,7 @@ class CoursesController extends ApiController
         try {
             $queryModel = GetCoursePagination\GetCoursePaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
-            return $this->successResponse(CourseResource::collection($pagination));
+            return $this->paginationResponse(CourseResource::class,$pagination);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

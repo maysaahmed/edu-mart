@@ -43,8 +43,7 @@ class LevelsController extends ApiController
         try {
             $queryModel = GetLevelPagination\GetLevelPaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
-
-            return $this->successResponse(CategoryResource::collection($pagination));
+            return $this->paginationResponse(CategoryResource::class,$pagination);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
