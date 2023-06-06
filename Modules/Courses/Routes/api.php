@@ -25,6 +25,7 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     Route::prefix('courses')->group(function () {
         Route::get('/getLists', 'CoursesController@getLists');
         Route::post('/import', 'CoursesController@import');
+        Route::get('/archived', 'CoursesController@archived');
         Route::post('/categories/import', 'CategoriesController@import');
         Route::resource('/categories', 'CategoriesController', ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::post('/providers/import', 'ProvidersController@import');

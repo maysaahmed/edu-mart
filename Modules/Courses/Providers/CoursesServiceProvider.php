@@ -145,6 +145,10 @@ class CoursesServiceProvider extends ServiceProvider
             \Modules\Courses\Core\Course\Queries\GetCoursePagination\GetCoursePagination::class
         );
         $this->app->bind(
+            \Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination\IGetArchivedCoursePagination::class,
+            \Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination\GetArchivedCoursePagination::class
+        );
+        $this->app->bind(
             \Modules\Courses\Core\Course\Queries\GetCourse\IGetCourse::class,
             \Modules\Courses\Core\Course\Queries\GetCourse\GetCourse::class
         );

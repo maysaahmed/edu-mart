@@ -10,6 +10,7 @@ use Modules\Courses\Core\Course\Commands\DeleteCourse;
 use Modules\Courses\Core\Course\Commands\EditCourse;
 use Modules\Courses\Core\Course\Commands\ImportCourse;
 use Modules\Courses\Core\Course\Queries\GetCoursePagination;
+use Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination;
 use Modules\Courses\Core\Course\Queries\GetCourse;
 use Modules\Courses\Core\Category\Queries\GetCategories;
 use Modules\Courses\Core\Provider\Queries\GetProviders;
@@ -48,6 +49,17 @@ class CoursesController extends ApiController
     {
         try {
             $queryModel = GetCoursePagination\GetCoursePaginationModel::from($request->all());
+            $pagination = $query->execute($queryModel);
+            return $this->paginationResponse(CourseResource::class,$pagination);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function archived(Request $request,GetArchivedCoursePagination\IGetArchivedCoursePagination $query): JsonResponse
+    {
+        try {
+            $queryModel = GetArchivedCoursePagination\GetArchivedCoursePaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
             return $this->paginationResponse(CourseResource::class,$pagination);
         } catch (\Throwable $th) {
