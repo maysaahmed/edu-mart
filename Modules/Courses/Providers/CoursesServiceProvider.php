@@ -136,8 +136,13 @@ class CoursesServiceProvider extends ServiceProvider
             \Modules\Courses\Core\Course\Commands\DeleteCourse\DeleteCourse::class
         );
         $this->app->bind(
-            \Modules\Courses\Core\Course\Commands\ImportCourse\IImportCourse::class,
-            \Modules\Courses\Core\Course\Commands\ImportCourse\ImportCourse::class
+            \Modules\Courses\Core\Course\Commands\DeleteCourse\IDeleteCourse::class,
+            \Modules\Courses\Core\Course\Commands\DeleteCourse\DeleteCourse::class
+        );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Commands\EditCourseVisibility\IEditCourseVisibility::class,
+            \Modules\Courses\Core\Course\Commands\EditCourseVisibility\EditCourseVisibility::class
         );
 
         $this->app->bind(
@@ -148,6 +153,12 @@ class CoursesServiceProvider extends ServiceProvider
             \Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination\IGetArchivedCoursePagination::class,
             \Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination\GetArchivedCoursePagination::class
         );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination\IGetOrganizationCoursesPagination::class,
+            \Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination\GetOrganizationCoursesPagination::class
+        );
+
         $this->app->bind(
             \Modules\Courses\Core\Course\Queries\GetCourse\IGetCourse::class,
             \Modules\Courses\Core\Course\Queries\GetCourse\GetCourse::class

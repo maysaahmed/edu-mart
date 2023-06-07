@@ -5,12 +5,15 @@ namespace Modules\Courses\Http\Controllers;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Http\JsonResponse;
+use Modules\Courses\Transformers\OrganizationCourseResourceCollection;
 use Modules\Courses\Core\Course\Commands\CreateCourse;
 use Modules\Courses\Core\Course\Commands\DeleteCourse;
 use Modules\Courses\Core\Course\Commands\EditCourse;
 use Modules\Courses\Core\Course\Commands\ImportCourse;
+use Modules\Courses\Core\Course\Commands\EditCourseVisibility;
 use Modules\Courses\Core\Course\Queries\GetCoursePagination;
 use Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination;
+use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination;
 use Modules\Courses\Core\Course\Queries\GetCourse;
 use Modules\Courses\Core\Category\Queries\GetCategories;
 use Modules\Courses\Core\Provider\Queries\GetProviders;
@@ -35,7 +38,7 @@ class CoursesController extends ApiController
     {
         $this->middleware('ability:'.Enums\PermissionsEnum::createCourse->value, ['only' => ['store', 'import']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::editCourse->value,   ['only' => ['update']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::listCourses->value,   ['only' => ['index', 'show']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listCourses->value,   ['only' => ['index', 'show', 'archived']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::deleteCourse->value,   ['only' => ['destroy']]);
     }
 
@@ -56,6 +59,12 @@ class CoursesController extends ApiController
         }
     }
 
+    /**
+     * Display a list of archived courses
+     * @param Request $request
+     * @param GetArchivedCoursePagination\IGetArchivedCoursePagination $query
+     * @return JsonResponse
+     */
     public function archived(Request $request,GetArchivedCoursePagination\IGetArchivedCoursePagination $query): JsonResponse
     {
         try {
@@ -183,5 +192,56 @@ class CoursesController extends ApiController
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
+    }
+
+    /**
+     * Display a list of organization courses
+     * @param Request $request
+     * @param GetOrganizationCoursesPagination\IGetOrganizationCoursesPagination $query
+     * @return JsonResponse
+     */
+    public function getOrganizationCourses(Request $request,GetOrganizationCoursesPagination\IGetOrganizationCoursesPagination $query): JsonResponse
+    {
+        try {
+            $queryModel = GetOrganizationCoursesPagination\GetOrganizationCoursesPaginationModel::from($request->all());
+            $pagination = $query->execute($queryModel);
+
+            //TODO: get the organization id from the authenticated user data.
+            $organization_id = 10;
+
+            $data = [
+                'paginatedData' =>  OrganizationCourseResourceCollection::make($pagination)->organization($organization_id),
+                'currentPage' => $pagination->currentPage(),
+                'lastPage' => $pagination->lastPage(),
+                'total' => $pagination->total()
+            ];
+            return $this->successResponse($data);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function updateVisibility($id, EditCourseVisibility\IEditCourseVisibility $command): JsonResponse
+    {
+        $validation_rules = [
+            'id' => 'required|integer|exists:courses'
+        ];
+        $validator = $this->getValidationFactory()->make(['id' => $id], $validation_rules);
+
+        if ($validator->fails()) {
+            $this->failedValidation($validator);
+        }
+
+        try{
+            //TODO: get the organization id from the authenticated user data.
+
+            $organization_id = 10;
+            $command->execute($id, $organization_id);
+            return $this->successResponse([],'Course visibility updated successfully!' , Response::HTTP_ACCEPTED);
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+
     }
 }

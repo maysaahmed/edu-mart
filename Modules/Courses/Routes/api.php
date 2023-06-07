@@ -14,9 +14,9 @@ use App\Enums;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:api')->get('/courses', function (Request $request) {
-    return $request->user();
+Route::prefix('organization')->group(function () {
+    Route::get('/courses', 'CoursesController@getOrganizationCourses');
+    Route::get('/courses/updateVisibility/{id}', 'CoursesController@updateVisibility');
 });
 
 Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->group(function () {

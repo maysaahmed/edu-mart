@@ -5,6 +5,7 @@ use Modules\Courses\Core\Course\Commands\CreateCourse\CreateCourseModel;
 use Modules\Courses\Core\Course\Commands\EditCourse\EditCourseModel;
 use Modules\Courses\Core\Course\Queries\GetCoursePagination\GetCoursePaginationModel;
 use Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination\GetArchivedCoursePaginationModel;
+use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination\GetOrganizationCoursesPaginationModel;
 use Modules\Courses\Core\Course\Repositories\ICourseRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -38,6 +39,13 @@ class CourseRepository extends Repository implements ICourseRepository
             ->onlyTrashed()
             ->paginate();
     }
+    public function getOrganizationCoursesPagination(GetOrganizationCoursesPaginationModel $model): LengthAwarePaginator
+    {
+        return  QueryBuilder::for(Course::class)
+            ->allowedFilters('title', 'duration', 'price', 'level_id', 'provider_id')
+            ->paginate();
+    }
+
 
     public function createCourse(CreateCourseModel $model): Course
     {
@@ -93,6 +101,22 @@ class CourseRepository extends Repository implements ICourseRepository
 
         return $import->getRowCount();
 
+    }
+
+    public function editCourseVisibility($course_id, $org_id): bool|null
+    {
+
+        $course = $this->getCourseById($course_id);
+
+        if($course){
+            if($course->organizations->contains($org_id))
+                $course->organizations()->detach($org_id);
+            else
+                $course->organizations()->attach([$org_id]);
+            return true;
+        }
+
+        return null;
     }
 
 
