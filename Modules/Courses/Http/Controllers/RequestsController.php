@@ -51,5 +51,25 @@ class RequestsController extends ApiController
         }
     }
 
+    public function updateRequestStatus($id, EditRequestStatus\IEditRequestStatus $command): JsonResponse
+    {
+        $validation_rules = [
+            'id' => 'required|integer|exists:courses,id,deleted_at,null'
+        ];
+//        $validator = $this->getValidationFactory()->make(['id' => $id], $validation_rules);
+//
+//        if ($validator->fails()) {
+//            $this->failedValidation($validator);
+//        }
+//
+//        try{
+//            $organization_id = request()->user()->organization_id;
+//            $command->execute($id, $organization_id);
+//            return $this->successResponse([],'Course visibility updated successfully!' , Response::HTTP_ACCEPTED);
+//
+//        } catch (\Throwable $th) {
+//            return $this->errorResponse($th->getMessage());
+//        }
 
+    }
 }
