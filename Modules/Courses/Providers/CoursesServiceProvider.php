@@ -164,6 +164,19 @@ class CoursesServiceProvider extends ServiceProvider
             \Modules\Courses\Core\Course\Queries\GetCourse\GetCourse::class
         );
 
+        //Requests
+        $this->app->bind(
+            \Modules\Courses\Core\Request\Commands\CreateRequest\ICreateRequest::class,
+            \Modules\Courses\Core\Request\Commands\CreateRequest\CreateRequest::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Request\Commands\EditRequestStatus\IEditRequestStatus::class,
+            \Modules\Courses\Core\Request\Commands\EditRequestStatus\EditRequestStatus::class
+        );
+        $this->app->bind(
+            \Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination\IGetOrganizationRequestsPagination::class,
+            \Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination\GetOrganizationRequestsPagination::class
+        );
         // Persistence
         $this->app->bind(
             \Modules\Courses\Core\Category\Repositories\ICategoryRepository::class,
@@ -180,6 +193,11 @@ class CoursesServiceProvider extends ServiceProvider
         $this->app->bind(
             \Modules\Courses\Core\Course\Repositories\ICourseRepository::class,
             \Modules\Courses\Infrastructure\Course\CourseRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Request\Repositories\IRequestRepository::class,
+            \Modules\Courses\Infrastructure\Request\RequestRepository::class
         );
 
 

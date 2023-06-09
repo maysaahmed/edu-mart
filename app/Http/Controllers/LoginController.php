@@ -2,29 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Entities\User\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
-class LoginController extends Controller
+class LoginController extends ApiController
 {
     /**
      * Handle an authentication attempt.
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws \Exception
      */
-    public function authenticate(Request $request): RedirectResponse
+    public function authenticate(Request $request): JsonResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        if (Auth::guard('admin-api')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
+        $user = User::where('email',$request->email)->first();
 
-            $request->session()->regenerate();
-            $token = auth()->guard('admin-api')->user()
-                ->createToken('authToken')->accessToken;
+        if ($user) {
+            if (Hash::check($request->password, $user->password)) {
 
-            return redirect()->intended('dashboard');
+                if(!$user->is_active)
+                {
+                    throw new \Exception('The user account is blocked!');
+                }
+                $user_type = 2;
+                if($user->type == $user_type){
+                    $token = 'manager-token';
+                }else{
+                    $token = 'user-token';
+                }
+                $user_token = $user->createToken($token,[])->plainTextToken;
+                $data = ['user' => $user,'token' => $user_token];
+
+                return $this->successResponse($data);
+            }
         }
 
         return back()->withErrors([

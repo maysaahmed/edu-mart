@@ -206,8 +206,7 @@ class CoursesController extends ApiController
             $queryModel = GetOrganizationCoursesPagination\GetOrganizationCoursesPaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
 
-            //TODO: get the organization id from the authenticated user data.
-            $organization_id = 10;
+            $organization_id = request()->user()->organization_id;
 
             $data = [
                 'paginatedData' =>  OrganizationCourseResourceCollection::make($pagination)->organization($organization_id),
@@ -233,9 +232,7 @@ class CoursesController extends ApiController
         }
 
         try{
-            //TODO: get the organization id from the authenticated user data.
-
-            $organization_id = 10;
+            $organization_id = request()->user()->organization_id;
             $command->execute($id, $organization_id);
             return $this->successResponse([],'Course visibility updated successfully!' , Response::HTTP_ACCEPTED);
 

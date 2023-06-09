@@ -23,4 +23,6 @@ Route::middleware('auth:'.Enums\EnumGuardNames::Admin->value)->group(function ()
     Route::get('user/user', 'App\Http\Controllers\UserAuthController@details');
 });
 
+Route::post('user/login', 'App\Http\Controllers\LoginController@authenticate');
+
 
