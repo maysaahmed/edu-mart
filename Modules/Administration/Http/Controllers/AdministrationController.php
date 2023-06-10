@@ -38,39 +38,7 @@ class AdministrationController extends ApiController
         $this->middleware('ability:'.Enums\PermissionsEnum::deleteAdmin->value,   ['only' => ['destroy']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::blockAdmin->value,   ['only' => ['updateStatus']]);
     }
-//    /**
-//     * Handles Registration Request
-//     *
-//     * @param Request $request
-//     * @return \Illuminate\Http\JsonResponse
-//     */
-//    public function register(Request $request)
-//    {
-//        $rules = [
-//            'name' => 'required|min:3',
-//            'email' => 'required|email|unique:users',
-//            'password' => 'required|min:6',
-//        ];
-//        $validator = $this->getValidationFactory()->make($request->all(), $rules);
-//
-//        if ($validator->fails()) {
-//            return $this->errorResponse($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
-//        }
-//
-//        try {
-//            $user = Admin::Create([
-//                'name' => $request->name,
-//                'email' => $request->email,
-//                'password' => bcrypt($request->password)
-//            ]);
-//
-//            $token = $user->createToken('authToken')->accessToken;
-//            return $this->successResponse(['token' => $token],'Admin saved successfully!' , Response::HTTP_CREATED);
-//
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
-//    }
+
 
     /**
      * @OA\Get(
@@ -108,19 +76,44 @@ class AdministrationController extends ApiController
      *          )
      *       ),
      * )
+     * @param Request $request
+     * @param GetAdminPagination\IGetAdminPagination $query
+     * @return JsonResponse
      */
     public function index(Request $request, GetAdminPagination\IGetAdminPagination $query): JsonResponse
     {
         try {
             $queryModel = GetAdminPagination\GetAdminPaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
-
-            return $this->successResponse( AdminResource::collection($pagination));
+            return $this->paginationResponse(AdminResource::class,$pagination);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/administration",
+     *     tags={"Administration"},
+     *     summary="Add Admin",
+     *     description="Add new admin",
+     *     operationId="AdministrationAddAdmin",
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/CreateAdminModel")
+     *     ),
+     *
+     *     @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/AdminResource")
+     *      )
+     * )
+     * @param CreateAdminRequest $request
+     * @param CreateAdmin\ICreateAdmin $command
+     * @return JsonResponse
+     */
     public function store(CreateAdminRequest $request, CreateAdmin\ICreateAdmin $command): JsonResponse
     {
         try {
@@ -143,6 +136,36 @@ class AdministrationController extends ApiController
 
     /**
      * Update the specified resource in storage.
+     * @OA\Post(
+     *     path="/api/administration/{id}",
+     *     tags={"Administration"},
+     *     summary="Update Admin",
+     *     description="Returns updated admin data",
+     *     operationId="updateAdmin",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="admin id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/EditAdminModel")
+     *     ),
+     *     @OA\Response(
+     *          response=202,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/AdminResource")
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation Error"
+     *      )
+     * )
      * @param CreateAdminRequest $request
      * @param int $id
      * @param EditAdmin\IEditAdmin $command
@@ -304,30 +327,12 @@ class AdministrationController extends ApiController
      *     @OA\Response(
      *          response=200,
      *          description="Successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(
-     *                  property="name",
-     *                  type="string",
-     *                  description="Admin Name",
-     *                  nullable=false,
-     *                  example="Admin"
-     *              ),
-     *              @OA\Property(
-     *                  property="token",
-     *                  type="string",
-     *                  description="Admin Access token",
-     *                  nullable=false
-     *              ),
-     *              @OA\Property(
-     *                  property="role",
-     *                  type="string",
-     *                  description="User Type",
-     *                  nullable=false,
-     *                  example="admin"
-     *              ),
-     *          )
+     *          @OA\JsonContent(ref="#/components/schemas/AdminLoginResource")
      *      )
      * )
+     * @param AdminLoginRequest $request
+     * @param AdminAuth\IAdminAuth $command
+     * @return JsonResponse
      */
     public function login(AdminLoginRequest $request, AdminAuth\IAdminAuth $command): JsonResponse
     {

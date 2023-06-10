@@ -14,10 +14,14 @@ use App\Enums;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:manager-token'])->prefix('organization')->group(function () {
 
-Route::middleware('auth:api')->get('/courses', function (Request $request) {
-    return $request->user();
+    Route::get('/courses', 'CoursesController@getOrganizationCourses');
+    Route::get('/courses/updateVisibility/{id}', 'CoursesController@updateVisibility');
+    Route::get('/requests', 'RequestsController@getOrganizationRequests');
+    Route::post('/requests', 'RequestsController@store');
 });
+ Route::post('/organization/requests', 'RequestsController@store');
 
 Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->group(function () {
 
@@ -25,6 +29,7 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     Route::prefix('courses')->group(function () {
         Route::get('/getLists', 'CoursesController@getLists');
         Route::post('/import', 'CoursesController@import');
+        Route::get('/archived', 'CoursesController@archived');
         Route::post('/categories/import', 'CategoriesController@import');
         Route::resource('/categories', 'CategoriesController', ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::post('/providers/import', 'ProvidersController@import');

@@ -6,7 +6,7 @@ use Spatie\LaravelData\Data;
 
 /**
  * @OA\Schema(
- *     title="AdminAuthRequestModel",
+ *     title="Admin Auth Request Model",
  *     description="Admin Auth request",
  *     required={"email", "password"},
  *     @OA\Xml(
@@ -19,7 +19,7 @@ use Spatie\LaravelData\Data;
  *    ),
  *   @OA\Property(
  *        property="password",
- *        type="passowrd",
+ *        type="string",
  *        description="Admin password"
  *    ),
  * )

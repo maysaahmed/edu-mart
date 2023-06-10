@@ -8,6 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use \Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 trait ApiResponser{
 
@@ -38,7 +39,7 @@ trait ApiResponser{
         throw new HttpResponseException(response()->json([
             'status'=> 'Error',
             'message' => 'Validation Errors',
-            'data' => $errors
+            'data' => $validator->errors()
         ], Response::HTTP_UNPROCESSABLE_ENTITY));
 
 
@@ -91,6 +92,22 @@ trait ApiResponser{
             array_push($errors, ['row' => $key, 'attributes' => rtrim($attributes, ", "), 'errors' => rtrim($msgs, ", ")]);
         }
         return $errors;
+    }
+
+
+    protected function paginationResponse($resource, LengthAwarePaginator $pagination, $message = '', $code = Response::HTTP_OK): JsonResponse
+    {
+        $data = [
+            'paginatedData' =>  $resource::collection($pagination),
+            'currentPage' => $pagination->currentPage(),
+            'lastPage' => $pagination->lastPage(),
+            'total' => $pagination->total()
+        ];
+        return response()->json([
+            'status'=> 'Success',
+            'message' => $message,
+            'data' => $data
+        ], $code);
     }
 
 }
