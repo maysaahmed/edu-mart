@@ -42,6 +42,7 @@ class LoginController extends ApiController
                 $user_token = $user->createToken($token,[])->plainTextToken;
                 $data = ['user' => $user,'token' => $user_token];
 
+
                 return $this->successResponse($data);
             }
         }
