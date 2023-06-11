@@ -15,9 +15,9 @@ class LevelSeeder extends Seeder
     {
 
         $levels = [
-            ['name' => 'Basic'],
-            ['name' => 'Advanced'],
-            ['name' => 'Senior'],
+            ['name' => 'Basic', '#7A67C5'],
+            ['name' => 'Advanced', '#0071C1'],
+            ['name' => 'Senior', '#FBD34D'],
         ];
         DB::table('levels')->insert($levels);
 

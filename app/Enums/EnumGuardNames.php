@@ -7,6 +7,7 @@ enum EnumGuardNames : string
 {
 
     case Admin = 'sanctum';
-    case Manager = '';
+    case Manager = 'manager';
+    case user = 'user';
 
 }

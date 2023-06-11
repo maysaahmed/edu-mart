@@ -39,7 +39,7 @@ trait ApiResponser{
         throw new HttpResponseException(response()->json([
             'status'=> 'Error',
             'message' => 'Validation Errors',
-            'data' => $errors
+            'data' => $validator->errors()
         ], Response::HTTP_UNPROCESSABLE_ENTITY));
 
 

@@ -4,12 +4,15 @@ namespace Modules\Courses\Infrastructure\Course;
 use Modules\Courses\Core\Course\Commands\CreateCourse\CreateCourseModel;
 use Modules\Courses\Core\Course\Commands\EditCourse\EditCourseModel;
 use Modules\Courses\Core\Course\Queries\GetCoursePagination\GetCoursePaginationModel;
+use Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination\GetArchivedCoursePaginationModel;
+use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination\GetOrganizationCoursesPaginationModel;
 use Modules\Courses\Core\Course\Repositories\ICourseRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Courses\Domain\Entities\Course;
 use Nwidart\Modules\Collection;
 use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Courses\Infrastructure\Course\Imports\ImportCourses;
 
 class CourseRepository extends Repository implements ICourseRepository
@@ -30,6 +33,34 @@ class CourseRepository extends Repository implements ICourseRepository
             ->allowedFilters('title', 'duration', 'price')
             ->paginate();
     }
+    public function getArchivedCoursesPagination(GetArchivedCoursePaginationModel $model): LengthAwarePaginator
+    {
+        return  QueryBuilder::for(Course::class)
+            ->allowedFilters('title')
+            ->onlyTrashed()
+            ->paginate();
+    }
+    public function getOrganizationCoursesPagination(GetOrganizationCoursesPaginationModel $model): LengthAwarePaginator
+    {
+        $query = QueryBuilder::for(Course::class);
+
+        if(isset($model->visibility) and $model->visibility){
+            $query = $query->whereDoesntHave('organizations', function (Builder $q) {
+                $q->where('id', request()->user()->organization_id);
+            });
+        }
+        if(isset($model->visibility) and $model->visibility == false){
+
+            $query = $query->whereHas('organizations', function (Builder $q) {
+                $q->where('id', request()->user()->organization_id);
+            });
+        }
+        return $query->allowedFilters('title', 'duration', 'price', 'level_id', 'provider_id')
+            ->paginate();
+
+
+    }
+
 
     public function createCourse(CreateCourseModel $model): Course
     {
@@ -85,6 +116,22 @@ class CourseRepository extends Repository implements ICourseRepository
 
         return $import->getRowCount();
 
+    }
+
+    public function editCourseVisibility($course_id, $org_id): bool|null
+    {
+
+        $course = $this->getCourseById($course_id);
+
+        if($course){
+            if($course->organizations->contains($org_id))
+                $course->organizations()->detach($org_id);
+            else
+                $course->organizations()->attach([$org_id]);
+            return true;
+        }
+
+        return null;
     }
 
 

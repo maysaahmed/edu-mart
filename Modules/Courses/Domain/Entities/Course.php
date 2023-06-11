@@ -5,10 +5,12 @@ namespace Modules\Courses\Domain\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Course extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ['title', 'desc', 'duration', 'price', 'level_id', 'provider_id', 'category_id', 'location'];
 
@@ -42,5 +44,13 @@ class Course extends Model
     public function provider(): BelongsTo
     {
         return $this->belongsTo(Provider::class, 'provider_id', 'id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany('Modules\Organizations\Domain\Entities\Organization\Organization', 'hidden_courses', 'course_id', 'organization_id');
     }
 }
