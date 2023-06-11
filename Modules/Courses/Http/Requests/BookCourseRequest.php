@@ -12,7 +12,7 @@ class BookCourseRequest extends ApiRequest
     public function rules()
     {
         return [
-            'course_id' => 'required|integer|exists:courses,id,deleted_at,null'
+            'course_id' => 'required|integer|exists:courses,id'
         ];
 
     }

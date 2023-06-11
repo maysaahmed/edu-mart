@@ -20,6 +20,10 @@ class EditRequestStatus implements IEditRequestStatus
             throw new \Exception('Request cannot be found!');
         }
 
+        if($item->user->organization_id !=  request()->user()->organization_id){
+            throw new \Exception('You are not allowed to change it!');
+        }
+
         $updated = $this->repository->editRequestStatus($id, $status);
 
         if ($updated){
