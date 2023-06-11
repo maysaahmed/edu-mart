@@ -357,8 +357,6 @@ class AdministrationController extends ApiController
 
         $request->user()->tokens()->delete();
 
-//        $token = $request->user()->token();
-//        $token->revoke();
         return $this->successResponse([], 'You have been successfully logged out!');
     }
 
