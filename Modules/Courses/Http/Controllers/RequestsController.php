@@ -43,7 +43,7 @@ class RequestsController extends ApiController
     public function store(BookCourseRequest $request, CreateRequest\ICreateRequest $command): JsonResponse
     {
         try {
-            $commandModel = CreateRequest\CreateRequestModel::from($request->all()+['user_id' => 7]);
+            $commandModel = CreateRequest\CreateRequestModel::from($request->all()+['user_id' => $request->user()->id]);
             $result = $command->execute($commandModel);
             return $this->successResponse(new RequestResource($result),'Course booked successfully!' , Response::HTTP_CREATED);
 
