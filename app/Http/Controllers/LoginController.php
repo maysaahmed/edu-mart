@@ -24,7 +24,7 @@ class LoginController extends ApiController
             'password' => ['required'],
         ]);
 
-        $user = User::where('email',$request->email)->first();
+        $user = User::where('email',$request->email)->whereIn('type', [2,3])->first();
 
         if ($user) {
             if (Hash::check($request->password, $user->password)) {

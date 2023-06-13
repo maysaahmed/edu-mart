@@ -21,7 +21,7 @@ class AdminRepository extends Repository implements IAdminRepository
 
     public function getAdminByEmail(string $email): Admin|null
     {
-        return Admin::Where('email', $email)->first();
+        return Admin::Where('email', $email)->where('type', 1)->first();
     }
 
     public function getAdminByID($id): Admin|null
@@ -38,6 +38,7 @@ class AdminRepository extends Repository implements IAdminRepository
 //        $this->addCriteria(new OrderByLatest());
 //        return $this->paginator(50, $page);
         return  QueryBuilder::for(Admin::class)
+            ->where('type', 1)
             ->allowedFilters('name', 'email')
             ->paginate();
     }
