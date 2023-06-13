@@ -1,5 +1,6 @@
 {
     "Organizations": true,
     "Administration": true,
-    "Courses": true
+    "Courses": true,
+    "Users": true
 }
