@@ -14,14 +14,17 @@ use App\Enums;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:manager-token'])->prefix('organization')->group(function () {
+Route::middleware(['token-name:manager-token'])->prefix('organization')->group(function () {
 
     Route::get('/courses', 'CoursesController@getOrganizationCourses');
     Route::get('/courses/updateVisibility/{id}', 'CoursesController@updateVisibility');
     Route::get('/requests', 'RequestsController@getOrganizationRequests');
+    Route::post('/requests/{id}', 'RequestsController@updateRequestStatus');
+});
+
+Route::middleware(['token-name:user-token'])->group(function () {
     Route::post('/requests', 'RequestsController@store');
 });
- Route::post('/organization/requests', 'RequestsController@store');
 
 Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->group(function () {
 

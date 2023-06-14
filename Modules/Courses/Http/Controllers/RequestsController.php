@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Modules\Courses\Http\Requests\BookCourseRequest;
 use Modules\Courses\Transformers\RequestResource;
 use Modules\Courses\Core\Request\Commands\CreateRequest;
+use Modules\Courses\Core\Request\Commands\EditRequestStatus;
 use Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
@@ -42,7 +43,7 @@ class RequestsController extends ApiController
     public function store(BookCourseRequest $request, CreateRequest\ICreateRequest $command): JsonResponse
     {
         try {
-            $commandModel = CreateRequest\CreateRequestModel::from($request->all()+['user_id' => 7]);
+            $commandModel = CreateRequest\CreateRequestModel::from($request->all()+['user_id' => $request->user()->id]);
             $result = $command->execute($commandModel);
             return $this->successResponse(new RequestResource($result),'Course booked successfully!' , Response::HTTP_CREATED);
 
@@ -51,25 +52,26 @@ class RequestsController extends ApiController
         }
     }
 
-    public function updateRequestStatus($id, EditRequestStatus\IEditRequestStatus $command): JsonResponse
+    public function updateRequestStatus(Request $request, $id, EditRequestStatus\IEditRequestStatus $command): JsonResponse
     {
         $validation_rules = [
-            'id' => 'required|integer|exists:courses,id,deleted_at,null'
+            'id' => 'required|integer|exists:course_requests,id',
+            'status' => 'required|integer|in:1,2'
+
         ];
-//        $validator = $this->getValidationFactory()->make(['id' => $id], $validation_rules);
-//
-//        if ($validator->fails()) {
-//            $this->failedValidation($validator);
-//        }
-//
-//        try{
-//            $organization_id = request()->user()->organization_id;
-//            $command->execute($id, $organization_id);
-//            return $this->successResponse([],'Course visibility updated successfully!' , Response::HTTP_ACCEPTED);
-//
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
+        $validator = $this->getValidationFactory()->make(['id' => $id, 'status' => $request->status], $validation_rules);
+
+        if ($validator->fails()) {
+            $this->failedValidation($validator);
+        }
+
+        try{
+            $command->execute($id, $request->status);
+            return $this->successResponse([],'Course request status updated successfully!' , Response::HTTP_ACCEPTED);
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
 
     }
 }

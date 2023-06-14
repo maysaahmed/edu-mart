@@ -26,7 +26,7 @@ class RequestRepository extends Repository implements IRequestRepository
     {
         return  QueryBuilder::for(Request::class)
             ->allowedIncludes('user')
-            ->select('course_requests.*', DB::raw('users.organization_id as organization_id'))
+            ->select('course_requests.*', DB::raw('users.organization_id as organization_id'), DB::raw('users.name as user_name') )
             ->join('users', 'course_requests.user_id', '=', 'users.id')
             ->where('organization_id', $model->org_id)
             ->allowedFilters('user.name')
@@ -48,11 +48,10 @@ class RequestRepository extends Repository implements IRequestRepository
     public function editRequestStatus($id, $status): bool|null
     {
 
-        $request = $this->getRequestById($id);
+        $item = $this->getRequestById($id);
 
-        if($request){
-            $request->status = $status;
-            $request->save;
+        if($item){
+            $item->update(['status' => (int) $status]);
             return true;
         }
 

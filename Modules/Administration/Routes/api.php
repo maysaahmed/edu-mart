@@ -28,7 +28,6 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     Route::put('/changePassword', 'Modules\Administration\Http\Controllers\AdministrationController@changePassword');
 
     Route::get('/user', 'Modules\Administration\Http\Controllers\AdministrationController@details');
-    Route::post('/logout', 'Modules\Administration\Http\Controllers\AdministrationController@logout');
 
     Route::get('/roles/permissions/{role_id?}', 'RolesPermissionsController@getAllPermissions');
     Route::get('/roles', 'RolesPermissionsController@getAllRoles');
@@ -39,3 +38,6 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
         '' => 'admin' // this to fix resource parameter name, as it come without name because the resource name no follow the convention naming.
     ]);
 });
+
+    Route::post('/administration/logout', 'Modules\Administration\Http\Controllers\AdministrationController@logout');
+

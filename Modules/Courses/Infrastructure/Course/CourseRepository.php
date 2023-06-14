@@ -12,6 +12,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Courses\Domain\Entities\Course;
 use Nwidart\Modules\Collection;
 use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Courses\Infrastructure\Course\Imports\ImportCourses;
 
 class CourseRepository extends Repository implements ICourseRepository
@@ -41,9 +42,23 @@ class CourseRepository extends Repository implements ICourseRepository
     }
     public function getOrganizationCoursesPagination(GetOrganizationCoursesPaginationModel $model): LengthAwarePaginator
     {
-        return  QueryBuilder::for(Course::class)
-            ->allowedFilters('title', 'duration', 'price', 'level_id', 'provider_id')
+        $query = QueryBuilder::for(Course::class);
+
+        if(isset($model->visibility) and $model->visibility){
+            $query = $query->whereDoesntHave('organizations', function (Builder $q) {
+                $q->where('id', request()->user()->organization_id);
+            });
+        }
+        if(isset($model->visibility) and $model->visibility == false){
+
+            $query = $query->whereHas('organizations', function (Builder $q) {
+                $q->where('id', request()->user()->organization_id);
+            });
+        }
+        return $query->allowedFilters('title', 'duration', 'price', 'level_id', 'provider_id')
             ->paginate();
+
+
     }
 
 

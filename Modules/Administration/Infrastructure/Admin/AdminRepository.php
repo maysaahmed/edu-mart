@@ -1,15 +1,12 @@
 <?php
 namespace Modules\Administration\Infrastructure\Admin;
 
-use Modules\Administration\Core\Admin\Queries\GetAdminPagination\GetAdminPaginationModel;
 use Modules\Administration\Core\Admin\Repositories\IAdminRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Administration\Domain\Entities\Admin\Admin;
-use Modules\Courses\Domain\Entities\Course;
-use Spatie\Permission\Guard;
-use Spatie\Permission\Models\Role;
 use Spatie\QueryBuilder\QueryBuilder;
+use App\Enums\EnumUserTypes;
 
 class AdminRepository extends Repository implements IAdminRepository
 {
@@ -21,7 +18,7 @@ class AdminRepository extends Repository implements IAdminRepository
 
     public function getAdminByEmail(string $email): Admin|null
     {
-        return Admin::Where('email', $email)->first();
+        return Admin::Where('email', $email)->where('type', EnumUserTypes::Admin)->first();
     }
 
     public function getAdminByID($id): Admin|null
@@ -38,6 +35,7 @@ class AdminRepository extends Repository implements IAdminRepository
 //        $this->addCriteria(new OrderByLatest());
 //        return $this->paginator(50, $page);
         return  QueryBuilder::for(Admin::class)
+            ->where('type', EnumUserTypes::Admin)
             ->allowedFilters('name', 'email')
             ->paginate();
     }
