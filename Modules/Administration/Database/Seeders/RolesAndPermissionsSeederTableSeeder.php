@@ -27,12 +27,12 @@ class RolesAndPermissionsSeederTableSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         //create default super admin
-        $user = Admin::Create([
-            'name' => 'super-admin',
-            'email' => 'superAdmin@gmail.com',
-            'password' => bcrypt('admin'),
-            'type'     => EnumUserTypes::Admin
-        ]);
+//        $user = Admin::Create([
+//            'name' => 'super-admin',
+//            'email' => 'superAdmin@gmail.com',
+//            'password' => bcrypt('admin'),
+//            'type'     => EnumUserTypes::Admin
+//        ]);
 
         // Create permissions from enums.
         $reflector = new \ReflectionClass('App\Enums\PermissionsEnum');
@@ -42,10 +42,10 @@ class RolesAndPermissionsSeederTableSeeder extends Seeder
         }
 
         // or may be done by chaining
-        Role::create(['name' => 'super-admin'])
-            ->givePermissionTo(Permission::all());
+//        Role::create(['name' => 'super-admin'])
+//            ->givePermissionTo(Permission::all());
 
-        $user->assignRole('super-admin');
+//        $user->assignRole('super-admin');
 
 
 

@@ -16,7 +16,7 @@ class DeleteAdmin implements IDeleteAdmin
         $_id = $model->id;
 
         if($_id == $model->deletedBy){
-            throw new \Exception('Admin cannot update himself!');
+            throw new \Exception('Admin cannot delete himself!');
         }
 
         $item =$this->repository->getAdminByID($_id);

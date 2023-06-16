@@ -25,12 +25,12 @@ Route::middleware(['token-name:manager-token'])->prefix('organization')->group(f
 Route::middleware(['token-name:user-token'])->group(function () {
     Route::post('/requests', 'RequestsController@store');
 });
+Route::get('/courses/getLists', 'CoursesController@getLists');
 
 Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->group(function () {
 
     Route::get('/courses/show/{id}', 'CoursesController@show');
     Route::prefix('courses')->group(function () {
-        Route::get('/getLists', 'CoursesController@getLists');
         Route::post('/import', 'CoursesController@import');
         Route::get('/archived', 'CoursesController@archived');
         Route::post('/categories/import', 'CategoriesController@import');
@@ -43,3 +43,5 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
 
     Route::resource('/courses', 'CoursesController',['only'=>['index', 'store', 'update', 'destroy']]);
 });
+
+

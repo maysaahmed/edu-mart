@@ -42,6 +42,12 @@ enum PermissionsEnum: string
 
     case listPermissions = 'list_permissions';
 
+    case listManagers = 'list_managers';
+    case createManager = 'create_manager';
+    case editManager = 'edit_manager';
+    case deleteManager = 'delete_manager';
+    case blockManager = 'block_manager';
+
 
 
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly
