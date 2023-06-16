@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware(['token-name:manager-token'])->prefix('users')->group(function () {
-
-    Route::resource('/', 'UsersController');
+    Route::resource('/', 'UsersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
+        '' => 'user'
+    ]);
 });

@@ -3,11 +3,15 @@
 namespace Modules\Users\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Users\Http\Requests\EditUserRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
+use Modules\Users\Core\User\Commands\DeleteUser;
+use Modules\Users\Core\User\Commands\EditUser;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class UsersController extends ApiController
 {
@@ -30,63 +34,49 @@ class UsersController extends ApiController
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('users::create');
-    }
 
     /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the specified resource.
+     * @param EditUserRequest $request
      * @param int $id
-     * @return Renderable
+     * @param EditUser\IEditUser $command
+     * @return JsonResponse
      */
-    public function show($id)
+    public function update(EditUserRequest $request, int $id, EditUser\IEditUser $command) : JsonResponse
     {
-        return view('users::show');
-    }
+        try{
+            $currentUserID = $request->user()->id;
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('users::edit');
-    }
+            $additionalModelData = [
+                "id" => $id,
+                "updatedBy" => $currentUserID,
+            ];
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
+            $commandModel = EditUser\EditUserModel::from($request->except(["_method"]) + $additionalModelData);
+            $result = $command->execute($commandModel);
+
+            return $this->successResponse(new UserResource($result),'User updated successfully!' , Response::HTTP_ACCEPTED);
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Renderable
+     * @param DeleteUser\IDeleteUser $command
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id, DeleteUser\IDeleteUser $command):JsonResponse
     {
-        //
+        try {
+            $currentUserID = request()->user()->id;
+            $command->execute($id, $currentUserID);
+            return $this->successResponse([],'User removed successfully!');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 }

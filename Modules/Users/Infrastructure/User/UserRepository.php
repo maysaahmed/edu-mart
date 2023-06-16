@@ -1,7 +1,6 @@
 <?php
 namespace Modules\Users\Infrastructure\User;
 
-use Modules\Courses\Domain\Entities\Request;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
 use Modules\Users\Core\User\Commands\EditUser\EditUserModel;
 use Modules\Users\Core\User\Queries\GetUserPagination\GetUserPaginationModel;
@@ -35,11 +34,39 @@ class UserRepository extends Repository implements IUserRepository
             ->paginate();
     }
 
+    public function editUser($model): EndUser|null
+    {
+        $item = $this->getUserByID($model->id);
 
-    public function deleteUser(int $id): bool
+        if($item){
+
+            $item->name = $model->name;
+            $item->email = $model->email;
+
+            if(filled($model->password)){
+                $item->password = bcrypt($model->password);
+            }
+
+            $item->is_active = $model->isActive;
+            $item->updated_by = $model->updatedBy;
+            $save = $item->save();
+
+            if ($save) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    public function deleteUser(int $id, int $deletedBy): bool
     {
         $item = $this->getUserById($id);
-        return  $item && $item->delete();
+        $item->deleted_at = now();
+        $item->deleted_by = $deletedBy;
+
+        return  $item && $item->save();
+
     }
 
     public function importUsers($file_path): int
