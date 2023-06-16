@@ -22,7 +22,9 @@ Route::middleware(['token-name:manager-token'])->group(function () {
 });
 
 Route::middleware(['token-name:admin-token'])->group(function () {
+    Route::post('/managers/updateStatus/{manager}', 'ManagersController@updateStatus');
     Route::resource('/managers', 'ManagersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
         '' => 'manager'
     ]);
+
 });

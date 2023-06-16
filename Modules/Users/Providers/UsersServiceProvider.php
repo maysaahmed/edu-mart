@@ -59,6 +59,20 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\Manager\Queries\GetManagerPagination\IGetManagerPagination::class,
             \Modules\Users\Core\Manager\Queries\GetManagerPagination\GetManagerPagination::class
         );
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\DeleteManager\IDeleteManager::class,
+            \Modules\Users\Core\Manager\Commands\DeleteManager\DeleteManager::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\EditManager\IEditManager::class,
+            \Modules\Users\Core\Manager\Commands\EditManager\EditManager::class
+        );
+
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\EditManagerStatus\IEditManagerStatus::class,
+            \Modules\Users\Core\Manager\Commands\EditManagerStatus\EditManagerStatus::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\Users\Core\User\Repositories\IUserRepository::class,
