@@ -13,8 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware(['token-name:manager-token'])->prefix('users')->group(function () {
-    Route::resource('/', 'UsersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
+Route::middleware(['token-name:manager-token'])->group(function () {
+    Route::resource('/users', 'UsersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
         '' => 'user'
+    ]);
+    Route::get('/organization/managers', 'ManagersController@getOrganizationManagers');
+
+});
+
+Route::middleware(['token-name:admin-token'])->group(function () {
+    Route::resource('/managers', 'ManagersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
+        '' => 'manager'
     ]);
 });

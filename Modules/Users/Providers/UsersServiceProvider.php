@@ -50,6 +50,15 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\User\Queries\GetUserPagination\IGetUserPagination::class,
             \Modules\Users\Core\User\Queries\GetUserPagination\GetUserPagination::class
         );
+
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Queries\GetOrganizationManagers\IGetOrganizationManagers::class,
+            \Modules\Users\Core\Manager\Queries\GetOrganizationManagers\GetOrganizationManagers::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Queries\GetManagerPagination\IGetManagerPagination::class,
+            \Modules\Users\Core\Manager\Queries\GetManagerPagination\GetManagerPagination::class
+        );
         // Persistence
         $this->app->bind(
             \Modules\Users\Core\User\Repositories\IUserRepository::class,
