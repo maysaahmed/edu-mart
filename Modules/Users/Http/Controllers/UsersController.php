@@ -6,11 +6,29 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Users\Http\Requests\CreateUserRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
+use Modules\Users\Core\User\Commands\CreateUser;
+use App\Enums;
 
 class UsersController extends ApiController
 {
+
+    /**
+     * Instantiate a new UseristrationController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('ability:'.Enums\PermissionsEnum::createUser->value, ['only' => ['store']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editUser->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listUsers->value,   ['only' => ['index']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteUser->value,   ['only' => ['destroy']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::blockUser->value,   ['only' => ['updateStatus']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @param Request $request
@@ -31,22 +49,48 @@ class UsersController extends ApiController
     }
 
     /**
-     * Show the form for creating a new resource.
-     * @return Renderable
+     * @OA\Post(
+     *     path="/api/administration",
+     *     tags={"Users"},
+     *     summary="Add User",
+     *     description="Add new admin",
+     *     operationId="UseristrationAddUser",
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/CreateUserModel")
+     *     ),
+     *
+     *     @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/UserResource")
+     *      )
+     * )
+     * @param CreateUserRequest $request
+     * @param CreateUser\ICreateUser $command
+     * @return JsonResponse
      */
-    public function create()
+    public function store(CreateUserRequest $request, CreateUser\ICreateUser $command): JsonResponse
     {
-        return view('users::create');
-    }
+        try {
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
+            $currentUserID = $request->user()->id;
+            $currentUserOrganizationId = $request->user()->organization_id;
+
+            $additionalModelData = [
+                "createdBy" => $currentUserID,
+                "organizationId" => $currentUserOrganizationId,
+                "type"  => Enums\EnumUserTypes::User->value
+            ];
+
+            $commandModel = CreateUser\CreateUserModel::from($request->all() + $additionalModelData);
+            $result = $command->execute($commandModel);
+
+            return $this->successResponse( new UserResource($result));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 
     /**

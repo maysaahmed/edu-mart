@@ -1,8 +1,9 @@
 <?php
 namespace Modules\Users\Core\User\Commands\CreateUser;
 
+use Illuminate\Support\Str;
 use Modules\Users\Core\User\Repositories\IUserRepository;
-use Modules\Users\Domain\Entities\User\User;
+use Modules\Users\Domain\Entities\EndUser;
 
 class CreateUser implements ICreateUser
 {
@@ -12,9 +13,9 @@ class CreateUser implements ICreateUser
     {
     }
 
-    public function execute(CreateUserModel $model): User
+    public function execute(CreateUserModel $model): EndUser
     {
-
-        return $this->repository->createUser($model->name, $model->email, $model->password, $model->type, $model->roleId, $model->createdBy, $model->isActive);
+        $randomPassword = Str::random(12);
+        return $this->repository->createUser($model->name, $model->email, $randomPassword, $model->organizationId, $model->createdBy, $model->isActive);
     }
 }

@@ -10,7 +10,7 @@ interface IUserRepository extends IRepository
 {
     public function getUserById($id): EndUser|null;
     public function getUsersPagination(GetUserPaginationModel $model): LengthAwarePaginator;
-//    public function createUser(CreateUserModel $model): EndUser;
+    public function createUser(string $name, string $email, string $password, int $organizationId, int $createdBy, int $isActive): EndUser;
 //    public function editUser(EditUserModel $model): EndUser|null;
     public function deleteUser(int $id): bool;
     public function importUsers(string $file_path): int;

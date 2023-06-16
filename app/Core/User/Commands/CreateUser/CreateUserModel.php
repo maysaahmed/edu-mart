@@ -11,5 +11,5 @@ class CreateUserModel extends Data
         public string $password,
     ) {
     }
-    
+
 }

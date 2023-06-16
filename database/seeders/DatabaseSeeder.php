@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('user'),
             'type'     => EnumUserTypes::User,
             'organization_id' => 2,
-            'created_by' => 6
+            'created_by' => 4
         ]);
     }
 }

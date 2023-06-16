@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Administration\Http\Requests;
+namespace Modules\Users\Http\Requests;
 use App\Http\Requests\ApiRequest;
 
-class CreateAdminRequest extends ApiRequest
+class CreateUserRequest extends ApiRequest
 {
     public function rules()
     {
@@ -12,7 +12,7 @@ class CreateAdminRequest extends ApiRequest
             'roleId' => 'required|integer'
         ];
 
-        $id = $this->route('admin');
+        $id = $this->route('user');
 
         $passRule =  (!isset($id) ? 'required' : 'nullable'). '|string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/';
         $rules["password"] = $passRule;
