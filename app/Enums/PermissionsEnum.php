@@ -42,6 +42,13 @@ enum PermissionsEnum: string
 
     case listPermissions = 'list_permissions';
 
+
+    case createUser = 'create_user';
+    case listUsers = 'list_users';
+    case editUser = 'edit_user';
+    case deleteUser = 'delete_user';
+    case blockUser = 'block_user';
+
     case listManagers = 'list_managers';
     case createManager = 'create_manager';
     case editManager = 'edit_manager';

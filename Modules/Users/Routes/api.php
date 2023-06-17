@@ -27,4 +27,6 @@ Route::middleware(['token-name:admin-token'])->group(function () {
         '' => 'manager'
     ]);
 
+    Route::resource('/', 'Modules\Users\Http\Controllers\UsersController');
+
 });

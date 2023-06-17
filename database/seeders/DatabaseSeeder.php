@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
 //        \App\Domain\Entities\User\User::Create([
 //            'name' => 'org2-manager',
 //            'email' => 'manager@gmail.com',
@@ -29,5 +30,6 @@ class DatabaseSeeder extends Seeder
 //            'organization_id' => 2,
 //            'created_by' => 6
 //        ]);
+
     }
 }
