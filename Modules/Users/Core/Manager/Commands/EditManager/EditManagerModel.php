@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Users\Core\User\Commands\EditUser;
+namespace Modules\Users\Core\Manager\Commands\EditManager;
 use Spatie\LaravelData\Data;
 
-class EditUserModel extends Data
+class EditManagerModel extends Data
 {
     public function __construct(
         public int $id,

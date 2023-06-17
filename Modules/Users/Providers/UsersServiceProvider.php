@@ -39,13 +39,48 @@ class UsersServiceProvider extends ServiceProvider
     {
         $this->app->register(RouteServiceProvider::class);
         $this->app->bind(
+            \Modules\Users\Core\User\Commands\DeleteUser\IDeleteUser::class,
+            \Modules\Users\Core\User\Commands\DeleteUser\DeleteUser::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\EditUser\IEditUser::class,
+            \Modules\Users\Core\User\Commands\EditUser\EditUser::class
+        );
+        $this->app->bind(
             \Modules\Users\Core\User\Queries\GetUserPagination\IGetUserPagination::class,
             \Modules\Users\Core\User\Queries\GetUserPagination\GetUserPagination::class
         );
+
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Queries\GetOrganizationManagers\IGetOrganizationManagers::class,
+            \Modules\Users\Core\Manager\Queries\GetOrganizationManagers\GetOrganizationManagers::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Queries\GetManagerPagination\IGetManagerPagination::class,
+            \Modules\Users\Core\Manager\Queries\GetManagerPagination\GetManagerPagination::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\DeleteManager\IDeleteManager::class,
+            \Modules\Users\Core\Manager\Commands\DeleteManager\DeleteManager::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\EditManager\IEditManager::class,
+            \Modules\Users\Core\Manager\Commands\EditManager\EditManager::class
+        );
+
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\EditManagerStatus\IEditManagerStatus::class,
+            \Modules\Users\Core\Manager\Commands\EditManagerStatus\EditManagerStatus::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\Users\Core\User\Repositories\IUserRepository::class,
             \Modules\Users\Infrastructure\User\UserRepository::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Repositories\IManagerRepository::class,
+            \Modules\Users\Infrastructure\Manager\ManagerRepository::class
         );
     }
 

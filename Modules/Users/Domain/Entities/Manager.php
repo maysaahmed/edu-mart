@@ -4,6 +4,7 @@ namespace Modules\Users\Domain\Entities;
 
 use App\Domain\Entities\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Administration\Domain\Entities\Admin\Admin;
 use Modules\Organizations\Domain\Entities\Organization\Organization;
 
 class Manager extends User
@@ -25,5 +26,14 @@ class Manager extends User
     public function users(): HasMany
     {
         return $this->hasMany(EndUser::class, 'created_by', 'id');
+    }
+
+    /**
+     * Organization relationship
+     * @return BelongsTo
+     */
+    public function editor(): BelongsTo
+    {
+        return $this->belongsTo(Admin::class, 'created_by', 'id');
     }
 }

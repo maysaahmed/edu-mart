@@ -42,11 +42,20 @@ enum PermissionsEnum: string
 
     case listPermissions = 'list_permissions';
 
+
     case createUser = 'create_user';
     case listUsers = 'list_users';
     case editUser = 'edit_user';
     case deleteUser = 'delete_user';
     case blockUser = 'block_user';
+
+    case listManagers = 'list_managers';
+    case createManager = 'create_manager';
+    case editManager = 'edit_manager';
+    case deleteManager = 'delete_manager';
+    case blockManager = 'block_manager';
+
+
 
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly
     public static function label(): string

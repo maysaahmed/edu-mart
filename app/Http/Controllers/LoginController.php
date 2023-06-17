@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Enums\EnumUserTypes;
+use Modules\Organizations\Domain\Entities\Organization\Organization;
 
 class LoginController extends ApiController
 {
@@ -29,13 +30,14 @@ class LoginController extends ApiController
 
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
-
-                if(!$user->is_active)
+                //check user organization is blocked or user is blocked
+                $organization = Organization::find($user->organization_id);
+                if(!$user->is_active || !$organization->status)
                 {
-                    throw new \Exception('The user account is blocked!');
+                    return $this->errorResponse('The user account is blocked!');
                 }
-                $user_type = 2;
-                if($user->type == $user_type){
+
+                if($user->type == EnumUserTypes::Manager->value){
                     $token = 'manager-token';
                 }else{
                     $token = 'user-token';
