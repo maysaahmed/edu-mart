@@ -91,6 +91,7 @@ class CoursesController extends ApiController
             $categories = $query->execute();
             $providers = $providerQuery->execute();
             $levels = $levelQuery->execute();
+
             return $this->successResponse([
                 'levels' => CategoryResource::collection($levels),
                 'categories' => CategoryResource::collection($categories),

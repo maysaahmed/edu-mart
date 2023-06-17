@@ -22,6 +22,7 @@ use Modules\Administration\Transformers\AdminLoginResource;
 use Symfony\Component\HttpFoundation\Response;
 use OpenApi\Annotations as OA;
 use App\Enums;
+use Auth;
 
 class AdministrationController extends ApiController
 {
@@ -355,7 +356,8 @@ class AdministrationController extends ApiController
      */
     public function logout (Request $request) {
 
-        $request->user()->tokens()->delete();
+        if(Auth::check())
+            $request->user()->tokens()->delete();
 
         return $this->successResponse([], 'You have been successfully logged out!');
     }
