@@ -5,6 +5,10 @@ namespace Modules\Users\Http\Controllers;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+
+use Modules\Users\Http\Requests\CreateUserRequest;
+use Modules\Users\Core\User\Commands\CreateUser;
+use App\Enums;
 use Modules\Users\Http\Requests\EditUserRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
@@ -15,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends ApiController
 {
+
     /**
      * Display a listing of the resource.
      * @param Request $request
@@ -29,6 +34,52 @@ class UsersController extends ApiController
             $pagination = $query->execute($queryModel);
 
             return $this->paginationResponse(UserResource::class,$pagination);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/administration",
+     *     tags={"Users"},
+     *     summary="Add User",
+     *     description="Add new admin",
+     *     operationId="UseristrationAddUser",
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/CreateUserModel")
+     *     ),
+     *
+     *     @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/UserResource")
+     *      )
+     * )
+     * @param CreateUserRequest $request
+     * @param CreateUser\ICreateUser $command
+     * @return JsonResponse
+     */
+    public function store(CreateUserRequest $request, CreateUser\ICreateUser $command): JsonResponse
+    {
+        try {
+
+            $currentUserID = $request->user()->id;
+            $currentUserOrganizationId = $request->user()->organization_id;
+
+            $additionalModelData = [
+                "createdBy" => $currentUserID,
+                "organizationId" => $currentUserOrganizationId,
+                "type"  => Enums\EnumUserTypes::User->value
+            ];
+
+            $commandModel = CreateUser\CreateUserModel::from($request->all() + $additionalModelData);
+            $result = $command->execute($commandModel);
+
+            return $this->successResponse( new UserResource($result));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

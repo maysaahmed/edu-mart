@@ -78,4 +78,19 @@ class UserRepository extends Repository implements IUserRepository
 
     }
 
+    public function createUser(string $name, string $email, string $password, int $organizationId, int $createdBy, int $isActive): EndUser
+    {
+        $item = new EndUser();
+        $item->name = $name;
+        $item->email = $email;
+        $item->password = bcrypt($password);
+
+        $item->type = EnumUserTypes::User;
+        $item->created_by = $createdBy;
+        $item->Organization_id = $organizationId;
+        $item->is_active = $isActive;
+        $item->save();
+
+        return $item;
+    }
 }

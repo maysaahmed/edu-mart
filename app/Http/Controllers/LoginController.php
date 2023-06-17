@@ -36,7 +36,8 @@ class LoginController extends ApiController
                 {
                     return $this->errorResponse('The user account is blocked!');
                 }
-                if($user->type == EnumUserTypes::Manager){
+
+                if($user->type == EnumUserTypes::Manager->value){
                     $token = 'manager-token';
                 }else{
                     $token = 'user-token';
