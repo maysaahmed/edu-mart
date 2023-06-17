@@ -29,10 +29,10 @@ class AppServiceProvider extends ServiceProvider
         );
 
         // Infrastructure
-//        $this->app->bind(
-//            \App\Core\Interfaces\IImageOptimizeService::class,
-//            \App\Infrastructure\ImageOptimize\ImageOptimizeService::class
-//        );
+        $this->app->bind(
+            \App\Core\Interfaces\Services\IMailService::class,
+            \App\Infrastructure\Services\MailService::class
+        );
 
         // Common
         $this->app->bind(

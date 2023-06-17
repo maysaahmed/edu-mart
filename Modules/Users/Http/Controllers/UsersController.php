@@ -21,20 +21,6 @@ class UsersController extends ApiController
 {
 
     /**
-     * Instantiate a new UseristrationController instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('ability:'.Enums\PermissionsEnum::createUser->value, ['only' => ['store']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::editUser->value,   ['only' => ['update']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::listUsers->value,   ['only' => ['index']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::deleteUser->value,   ['only' => ['destroy']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::blockUser->value,   ['only' => ['updateStatus']]);
-    }
-
-    /**
      * Display a listing of the resource.
      * @param Request $request
      * @param GetUserPagination\IGetUserPagination $query
