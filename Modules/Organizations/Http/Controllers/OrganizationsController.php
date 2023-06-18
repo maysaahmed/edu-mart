@@ -11,6 +11,7 @@ use Modules\Organizations\Core\Organization\Commands\EditOrganization;
 use Modules\Organizations\Core\Organization\Commands\EditOrganizationStatus;
 use Modules\Organizations\Core\Organization\Commands\ImportOrganization;
 use Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination;
+use Modules\Organizations\Core\Organization\Queries\GetOrganizationList;
 use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Validation\ValidationException;
 
@@ -18,6 +19,7 @@ use Modules\Organizations\Entities\Organization;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Organizations\Http\Requests\CreateOrganizationRequest;
 use Modules\Organizations\Transformers\OrganizationResource;
+use Modules\Organizations\Transformers\OrganizationListResource;
 
 
 
@@ -58,6 +60,15 @@ class OrganizationsController extends ApiController
         }
     }
 
+    public function getOrganizations(GetOrganizationList\IGetOrganizationList $query): JsonResponse
+    {
+        try {
+            $list = $query->execute();
+            return $this->successResponse(OrganizationListResource::collection($list));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 
     /**
      * Store a newly created resource in storage.

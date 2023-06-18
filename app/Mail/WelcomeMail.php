@@ -62,9 +62,7 @@ class WelcomeMail extends Mailable
     public function attachments(): array
     {
         return [
-            Attachment::fromPath('https://mailtrap.io/wp-content/uploads/2021/04/mailtrap-new-logo.svg')
-                ->as('logo.svg')
-                ->withMime('image/svg+xml'),
+
         ];
     }
 

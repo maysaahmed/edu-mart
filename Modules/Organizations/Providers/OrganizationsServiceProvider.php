@@ -67,6 +67,11 @@ class OrganizationsServiceProvider extends ServiceProvider
             \Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination\GetOrganizationPagination::class
         );
 
+        $this->app->bind(
+            \Modules\Organizations\Core\Organization\Queries\GetOrganizationList\IGetOrganizationList::class,
+            \Modules\Organizations\Core\Organization\Queries\GetOrganizationList\GetOrganizationList::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\Organizations\Core\Organization\Repositories\IOrganizationRepository::class,
