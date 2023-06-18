@@ -36,6 +36,7 @@ class ManagerRepository extends Repository implements IManagerRepository
     public function getManagersPagination(GetManagerPaginationModel $model): LengthAwarePaginator
     {
         return  QueryBuilder::for(Manager::class)
+            ->allowedIncludes('organization')
             ->select('users.*',  DB::raw('organizations.name as organization_name') )
             ->join('organizations', 'users.organization_id', '=', 'organizations.id')
             ->where('type', EnumUserTypes::Manager)
