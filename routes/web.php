@@ -25,7 +25,7 @@ Route::get('/testroute', function () {
     $name = "Funny Coder";
 
     // The email sending is done using the to method on the Mail facade
-    Mail::to('maysa.ahmed.iti@gmail.com’')->send(new VerifyMail($name));
+    Mail::to('maysa.ahmed.iti@gmail.com')->send(new VerifyMail($name));
 });
 
 

@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Users\Infrastructure\User;
 
+use App\Domain\Entities\User\User;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
 use Modules\Users\Core\User\Commands\EditUser\EditUserModel;
 use Modules\Users\Core\User\Queries\GetUserPagination\GetUserPaginationModel;
@@ -9,6 +10,7 @@ use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Users\Domain\Entities\EndUser;
 use App\Enums\EnumUserTypes;
+use Modules\Users\Domain\Entities\VerifyUser;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Users\Infrastructure\User\Imports\ImportUsers;
@@ -24,16 +26,38 @@ class UserRepository extends Repository implements IUserRepository
     {
         return EndUser::find($id);
     }
+    public function getVerifyUserByToken($token): VerifyUser|null
+    {
+        return VerifyUser::where('token', $token)->first();
+    }
 
     public function getUsersPagination(GetUserPaginationModel $model): LengthAwarePaginator
     {
         return  QueryBuilder::for(EndUser::class)
             ->where('organization_id', $model->org_id)
-            ->where('type', EnumUserTypes::User)
+            ->where('type', EnumUserTypes::User->value)
             ->allowedFilters('name', 'email', 'created_by')
             ->paginate();
     }
+    public function createUser(CreateUserModel $model): EndUser
+    {
+        $user = new EndUser();
+        $user->name = $model->name;
+        $user->email = $model->email;
+        $user->password = bcrypt($model->password);
+        $user->created_by = $model->createdBy;
+        $user->organization_id = $model->organization_id;
+        $user->check_email_status = 0;  // 1 for verified
+        $user->type =$model->type;
+        $user->save();
 
+        VerifyUser::create([
+            'user_id' => $user->id,
+            'token' => sha1(time())
+        ]);
+
+        return $user;
+    }
     public function editUser($model): EndUser|null
     {
         $item = $this->getUserByID($model->id);
@@ -53,6 +77,23 @@ class UserRepository extends Repository implements IUserRepository
 
             if ($save) {
                 return $item;
+            }
+        }
+
+        return null;
+    }
+    public function verifyUser($token, $password): bool|null
+    {
+        $verifyUser = $this->getVerifyUserByToken($token);
+
+        if($verifyUser){
+
+            $verifyUser->user->check_email_status = 1;
+            $verifyUser->user->password = bcrypt($password);
+            $save = $verifyUser->user->save();
+
+            if ($save) {
+                return true;
             }
         }
 
@@ -78,19 +119,4 @@ class UserRepository extends Repository implements IUserRepository
 
     }
 
-    public function createUser(string $name, string $email, string $password, int $organizationId, int $createdBy, int $isActive): EndUser
-    {
-        $item = new EndUser();
-        $item->name = $name;
-        $item->email = $email;
-        $item->password = bcrypt($password);
-
-        $item->type = EnumUserTypes::User;
-        $item->created_by = $createdBy;
-        $item->Organization_id = $organizationId;
-        $item->is_active = $isActive;
-        $item->save();
-
-        return $item;
-    }
 }

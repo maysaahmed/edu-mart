@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Users\Core\User\Commands\CreateUser;
+namespace Modules\Users\Core\Manager\Commands\CreateManager;
 use Spatie\LaravelData\Data;
 
-class CreateUserModel extends Data
+class CreateManagerModel extends Data
 {
     public function __construct(
         public string $name,

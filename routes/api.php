@@ -25,4 +25,3 @@ Route::middleware('auth:'.Enums\EnumGuardNames::Admin->value)->group(function ()
 
 Route::post('user/login', 'App\Http\Controllers\LoginController@authenticate');
 
-

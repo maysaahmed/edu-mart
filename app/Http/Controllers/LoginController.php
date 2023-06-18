@@ -29,6 +29,10 @@ class LoginController extends ApiController
         $user = User::where('email',$request->email)->whereIn('type', [EnumUserTypes::Manager,EnumUserTypes::User])->first();
 
         if ($user) {
+//            if($user->check_email_status == 0)
+//            {
+//                return $this->errorResponse('You need to confirm your account. We have sent you an email, please check your email.');
+//            }
             if (Hash::check($request->password, $user->password)) {
                 //check user organization is blocked or user is blocked
                 $organization = Organization::find($user->organization_id);
@@ -49,9 +53,10 @@ class LoginController extends ApiController
                 return $this->successResponse($data);
             }
         }
+        return $this->errorResponse('The credentials are invalid!');
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
     }
+
+
+
 }

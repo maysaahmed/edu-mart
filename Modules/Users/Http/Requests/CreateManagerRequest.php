@@ -3,15 +3,14 @@
 namespace Modules\Users\Http\Requests;
 use App\Http\Requests\ApiRequest;
 
-class CreateUserRequest extends ApiRequest
+class CreateManagerRequest extends ApiRequest
 {
     public function rules()
     {
 
         return ['name'=> 'required|unique:users|max:255',
-            'email'=> 'required|email|unique:users|max:255'];
-
-
+            'email'=> 'required|email|unique:users|max:255',
+            'organization_id'=>'required|exists:organizations,id'];
     }
 
 

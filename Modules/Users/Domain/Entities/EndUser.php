@@ -26,4 +26,5 @@ class EndUser extends User
     {
         return $this->belongsTo(Manager::class, 'created_by', 'id');
     }
+
 }

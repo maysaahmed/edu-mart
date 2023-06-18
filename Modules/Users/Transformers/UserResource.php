@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email ?? '',
             'organization' => $this->organization ? $this->organization->name : '',
+            'verified' => $this->check_email_status ? 'Verified' : 'Resend Mail'
         ];
     }
 }

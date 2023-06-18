@@ -39,12 +39,24 @@ class UsersServiceProvider extends ServiceProvider
     {
         $this->app->register(RouteServiceProvider::class);
         $this->app->bind(
+            \Modules\Users\Core\User\Commands\CreateUser\ICreateUser::class,
+            \Modules\Users\Core\User\Commands\CreateUser\CreateUser::class
+        );
+        $this->app->bind(
             \Modules\Users\Core\User\Commands\DeleteUser\IDeleteUser::class,
             \Modules\Users\Core\User\Commands\DeleteUser\DeleteUser::class
         );
         $this->app->bind(
             \Modules\Users\Core\User\Commands\EditUser\IEditUser::class,
             \Modules\Users\Core\User\Commands\EditUser\EditUser::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\VerifyUser\IVerifyUser::class,
+            \Modules\Users\Core\User\Commands\VerifyUser\VerifyUser::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\ResendMail\IResendMail::class,
+            \Modules\Users\Core\User\Commands\ResendMail\ResendMail::class
         );
         $this->app->bind(
             \Modules\Users\Core\User\Queries\GetUserPagination\IGetUserPagination::class,
@@ -60,6 +72,10 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\Manager\Queries\GetManagerPagination\GetManagerPagination::class
         );
         $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\CreateManager\ICreateManager::class,
+            \Modules\Users\Core\Manager\Commands\CreateManager\CreateManager::class
+        );
+        $this->app->bind(
             \Modules\Users\Core\Manager\Commands\DeleteManager\IDeleteManager::class,
             \Modules\Users\Core\Manager\Commands\DeleteManager\DeleteManager::class
         );
@@ -72,7 +88,10 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\Manager\Commands\EditManagerStatus\IEditManagerStatus::class,
             \Modules\Users\Core\Manager\Commands\EditManagerStatus\EditManagerStatus::class
         );
-
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\ResendMail\IResendMail::class,
+            \Modules\Users\Core\Manager\Commands\ResendMail\ResendMail::class
+        );
         // Persistence
         $this->app->bind(
             \Modules\Users\Core\User\Repositories\IUserRepository::class,

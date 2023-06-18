@@ -12,21 +12,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Application/Core
-        $this->app->bind(
-            \App\Core\User\Commands\CreateUser\ICreateUser::class,
-            \App\Core\User\Commands\CreateUser\CreateUser::class
-        );
-        $this->app->bind(
-            \App\Core\User\Queries\GetUserPagination\IGetUserPagination::class,
-            \App\Core\User\Queries\GetUserPagination\GetUserPagination::class
-        );
+
 
         // Persistence
-        $this->app->bind(
-            \App\Core\User\Repositories\IUserRepository::class,
-            \App\Infrastructure\User\UserRepository::class
-        );
+
 
         // Infrastructure
         $this->app->bind(

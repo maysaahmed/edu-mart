@@ -3,6 +3,7 @@ namespace Modules\Users\Infrastructure\Manager;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Users\Core\Manager\Commands\EditManager\EditManagerModel;
+use Modules\Users\Core\Manager\Commands\CreateManager\CreateManagerModel;
 use Modules\Users\Core\Manager\Commands\EditManagerStatus\EditManagerStatusModel;
 use Modules\Users\Core\Manager\Repositories\IManagerRepository;
 use App\Infrastructure\Repository\Repository;
@@ -11,6 +12,7 @@ use Modules\Users\Domain\Entities\EndUser;
 use Modules\Users\Domain\Entities\Manager;
 use App\Enums\EnumUserTypes;
 use Illuminate\Database\Eloquent\Collection;
+use Modules\Users\Domain\Entities\VerifyUser;
 use Spatie\QueryBuilder\QueryBuilder;
 use DB;
 
@@ -23,7 +25,7 @@ class ManagerRepository extends Repository implements IManagerRepository
 
     public function getManagerById($id): Manager|null
     {
-        return Manager::find($id);
+        return Manager::where(['id'=>$id, 'type' => EnumUserTypes::Manager->value])->first();
     }
 
     public function getOrganizationManagers($org_id): Collection
@@ -91,5 +93,25 @@ class ManagerRepository extends Repository implements IManagerRepository
         }
 
         return null;
+    }
+
+    public function createManager(CreateManagerModel $model): Manager
+    {
+        $user = new Manager();
+        $user->name = $model->name;
+        $user->email = $model->email;
+        $user->password = bcrypt($model->password);
+        $user->created_by = $model->createdBy;
+        $user->organization_id = $model->organization_id;
+        $user->check_email_status = 0;  // 1 for verified
+        $user->type =$model->type;
+        $user->save();
+
+        VerifyUser::create([
+            'user_id' => $user->id,
+            'token' => sha1(time())
+        ]);
+
+        return $user;
     }
 }
