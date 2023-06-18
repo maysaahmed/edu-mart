@@ -7,11 +7,13 @@ use Modules\Organizations\Core\Organization\Commands\EditOrganization\EditOrgani
 use Modules\Organizations\Core\Organization\Queries\GetOrganizationPagination\GetOrganizationPaginationModel;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Organizations\Domain\Entities\Organization\Organization;
+use Illuminate\Database\Eloquent\Collection;
 
 interface IOrganizationRepository extends IRepository
 {
     public function getOrganizationById($id): Organization|null;
     public function getOrganizationsPagination(GetOrganizationPaginationModel $model): LengthAwarePaginator;
+    public function getOrganizationList(): Collection;
     public function createOrganization(CreateOrganizationModel $model): Organization;
     public function editOrganization(EditOrganizationModel $model): Organization|null;
     public function deleteOrganization(int $id): bool;
