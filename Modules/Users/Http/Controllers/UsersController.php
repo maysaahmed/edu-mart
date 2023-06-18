@@ -8,14 +8,16 @@ use Illuminate\Http\Request;
 
 use Modules\Users\Http\Requests\CreateUserRequest;
 use Modules\Users\Core\User\Commands\CreateUser;
+use Modules\Users\Core\User\Commands\VerifyUser;
 use App\Enums;
 use Modules\Users\Http\Requests\EditUserRequest;
+use Modules\Users\Http\Requests\VerifyUserRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
 use Symfony\Component\HttpFoundation\Response;
-
+use Str;
 
 class UsersController extends ApiController
 {
@@ -72,8 +74,9 @@ class UsersController extends ApiController
 
             $additionalModelData = [
                 "createdBy" => $currentUserID,
-                "organizationId" => $currentUserOrganizationId,
-                "type"  => Enums\EnumUserTypes::User->value
+                "organization_id" => $currentUserOrganizationId,
+                "type"  => Enums\EnumUserTypes::User->value,
+                "password" => Str::random(3)
             ];
 
             $commandModel = CreateUser\CreateUserModel::from($request->all() + $additionalModelData);
@@ -129,5 +132,17 @@ class UsersController extends ApiController
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
+    }
+
+
+    public function verifyUser(VerifyUserRequest $request,$token, VerifyUser\IVerifyUser $command): JsonResponse
+    {
+//        try {
+            $command->execute($token, $request->password);
+            return $this->successResponse([],'Your e-mail is verified. You can now login.');
+
+//        } catch (\Throwable $th) {
+//            return $this->errorResponse($th->getMessage());
+//        }
     }
 }

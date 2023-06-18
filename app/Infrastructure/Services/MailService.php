@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Infrastructure\Services;
-
-use Carbon\Carbon;
-
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
+use  App\Core\Interfaces\Services\IMailService;
 
 class MailService implements IMailService
 {
-    public function sendMail(): string
+    public function sendMail(string $email, string $name, string $link = null): bool
     {
-        return Carbon::parse($datetime)->diffForHumans();
+        Mail::to($email)->send(new WelcomeMail($name, $link));
+        return true;
     }
 }

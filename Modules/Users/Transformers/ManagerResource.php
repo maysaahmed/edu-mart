@@ -20,7 +20,9 @@ class ManagerResource extends JsonResource
             'email' => $this->email ?? '',
             'editor' => $this->editor ? $this->editor->name : '',
             'organization' => $this->organization_name ? $this->organization_name : '',
-            'status' => $this->is_active ? 'active' : 'blocked'
+            'status' => $this->is_active ? 'active' : 'blocked',
+             'verified' => $this->check_email_status ? 'Verified' : 'Resend Mail'
+
         ];
     }
 }

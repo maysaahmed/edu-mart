@@ -39,12 +39,20 @@ class UsersServiceProvider extends ServiceProvider
     {
         $this->app->register(RouteServiceProvider::class);
         $this->app->bind(
+            \Modules\Users\Core\User\Commands\CreateUser\ICreateUser::class,
+            \Modules\Users\Core\User\Commands\CreateUser\CreateUser::class
+        );
+        $this->app->bind(
             \Modules\Users\Core\User\Commands\DeleteUser\IDeleteUser::class,
             \Modules\Users\Core\User\Commands\DeleteUser\DeleteUser::class
         );
         $this->app->bind(
             \Modules\Users\Core\User\Commands\EditUser\IEditUser::class,
             \Modules\Users\Core\User\Commands\EditUser\EditUser::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\VerifyUser\IVerifyUser::class,
+            \Modules\Users\Core\User\Commands\VerifyUser\VerifyUser::class
         );
         $this->app->bind(
             \Modules\Users\Core\User\Queries\GetUserPagination\IGetUserPagination::class,

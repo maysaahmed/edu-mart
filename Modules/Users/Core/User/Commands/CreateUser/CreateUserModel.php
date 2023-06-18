@@ -9,9 +9,10 @@ class CreateUserModel extends Data
         public string $name,
         public string $email,
         public string $password,
-        public int $organizationId,
         public int $createdBy,
-        public int $isActive,
+        public int $organization_id,
+        public int $type,
+
     ) {
     }
 
