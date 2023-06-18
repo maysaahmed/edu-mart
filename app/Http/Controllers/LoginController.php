@@ -53,10 +53,8 @@ class LoginController extends ApiController
                 return $this->successResponse($data);
             }
         }
+        return $this->errorResponse('The credentials are invalid!');
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
     }
 
 

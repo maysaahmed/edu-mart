@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Modules\Users\Http\Requests\CreateUserRequest;
 use Modules\Users\Core\User\Commands\CreateUser;
 use Modules\Users\Core\User\Commands\VerifyUser;
+use Modules\Users\Core\User\Commands\ResendMail;
 use App\Enums;
 use Modules\Users\Http\Requests\EditUserRequest;
 use Modules\Users\Http\Requests\VerifyUserRequest;
@@ -137,12 +138,23 @@ class UsersController extends ApiController
 
     public function verifyUser(VerifyUserRequest $request,$token, VerifyUser\IVerifyUser $command): JsonResponse
     {
-//        try {
+        try {
             $command->execute($token, $request->password);
             return $this->successResponse([],'Your e-mail is verified. You can now login.');
 
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function resendMail($id, ResendMail\IResendMail $command): JsonResponse
+    {
+        try {
+            $command->execute($id);
+            return $this->successResponse([],'The email sent successfully');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 }

@@ -35,7 +35,7 @@ class UserRepository extends Repository implements IUserRepository
     {
         return  QueryBuilder::for(EndUser::class)
             ->where('organization_id', $model->org_id)
-            ->where('type', EnumUserTypes::User)
+            ->where('type', EnumUserTypes::User->value)
             ->allowedFilters('name', 'email', 'created_by')
             ->paginate();
     }
@@ -89,6 +89,7 @@ class UserRepository extends Repository implements IUserRepository
         if($verifyUser){
 
             $verifyUser->user->check_email_status = 1;
+            $verifyUser->user->password = bcrypt($password);
             $save = $verifyUser->user->save();
 
             if ($save) {

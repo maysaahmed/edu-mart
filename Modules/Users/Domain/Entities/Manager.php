@@ -36,4 +36,5 @@ class Manager extends User
     {
         return $this->belongsTo(Admin::class, 'created_by', 'id');
     }
+
 }

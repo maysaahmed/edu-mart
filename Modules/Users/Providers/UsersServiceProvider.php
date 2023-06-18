@@ -55,6 +55,10 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\User\Commands\VerifyUser\VerifyUser::class
         );
         $this->app->bind(
+            \Modules\Users\Core\User\Commands\ResendMail\IResendMail::class,
+            \Modules\Users\Core\User\Commands\ResendMail\ResendMail::class
+        );
+        $this->app->bind(
             \Modules\Users\Core\User\Queries\GetUserPagination\IGetUserPagination::class,
             \Modules\Users\Core\User\Queries\GetUserPagination\GetUserPagination::class
         );
@@ -66,6 +70,10 @@ class UsersServiceProvider extends ServiceProvider
         $this->app->bind(
             \Modules\Users\Core\Manager\Queries\GetManagerPagination\IGetManagerPagination::class,
             \Modules\Users\Core\Manager\Queries\GetManagerPagination\GetManagerPagination::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\CreateManager\ICreateManager::class,
+            \Modules\Users\Core\Manager\Commands\CreateManager\CreateManager::class
         );
         $this->app->bind(
             \Modules\Users\Core\Manager\Commands\DeleteManager\IDeleteManager::class,
@@ -80,7 +88,10 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\Manager\Commands\EditManagerStatus\IEditManagerStatus::class,
             \Modules\Users\Core\Manager\Commands\EditManagerStatus\EditManagerStatus::class
         );
-
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\ResendMail\IResendMail::class,
+            \Modules\Users\Core\Manager\Commands\ResendMail\ResendMail::class
+        );
         // Persistence
         $this->app->bind(
             \Modules\Users\Core\User\Repositories\IUserRepository::class,

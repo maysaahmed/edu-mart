@@ -19,11 +19,13 @@ Route::middleware(['token-name:manager-token'])->group(function () {
         '' => 'user'
     ]);
     Route::get('/organization/managers', 'ManagersController@getOrganizationManagers');
+    Route::get('/users/resendMail/{id}', 'UsersController@resendMail');
 
 });
 
 Route::middleware(['token-name:admin-token'])->group(function () {
     Route::post('/managers/updateStatus/{manager}', 'ManagersController@updateStatus');
+    Route::get('/managers/resendMail/{id}', 'ManagersController@resendMail');
     Route::resource('/managers', 'ManagersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
         '' => 'manager'
     ]);
