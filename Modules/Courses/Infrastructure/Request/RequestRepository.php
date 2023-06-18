@@ -30,6 +30,7 @@ class RequestRepository extends Repository implements IRequestRepository
             ->join('users', 'course_requests.user_id', '=', 'users.id')
             ->where('organization_id', $model->org_id)
             ->allowedFilters('user.name')
+            ->latest()
             ->paginate();
     }
 

@@ -41,6 +41,7 @@ class ManagerRepository extends Repository implements IManagerRepository
             ->join('organizations', 'users.organization_id', '=', 'organizations.id')
             ->where('type', EnumUserTypes::Manager)
             ->allowedFilters('name', 'email', 'organization.name')
+            ->latest()
             ->paginate();
     }
 
@@ -106,6 +107,7 @@ class ManagerRepository extends Repository implements IManagerRepository
         $user->organization_id = $model->organization_id;
         $user->check_email_status = 0;  // 1 for verified
         $user->type =$model->type;
+        $user->is_active = 1;
         $user->save();
 
         VerifyUser::create([

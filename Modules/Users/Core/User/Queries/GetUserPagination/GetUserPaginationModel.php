@@ -10,7 +10,8 @@ class GetUserPaginationModel extends Data
         public ?int $org_id = null,
         public ?string $name = null,
         public ?string $email = null,
-        public ?string $created_by = null,
+        public ?int $created_by = null,
+        public ?bool $check_email_status = null,
     ) {
     }
 

@@ -37,6 +37,7 @@ class AdminRepository extends Repository implements IAdminRepository
         return  QueryBuilder::for(Admin::class)
             ->where('type', EnumUserTypes::Admin)
             ->allowedFilters('name', 'email')
+            ->latest()
             ->paginate();
     }
 

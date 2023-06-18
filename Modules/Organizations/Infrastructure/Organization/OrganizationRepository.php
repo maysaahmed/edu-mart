@@ -29,6 +29,7 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
     {
         return  QueryBuilder::for(Organization::class)
             ->allowedFilters('name', 'phone', 'address')
+            ->latest()
             ->paginate();
     }
 
