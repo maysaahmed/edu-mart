@@ -34,6 +34,12 @@ class RequestRepository extends Repository implements IRequestRepository
             ->paginate();
     }
 
+    public function getOrganizationRequestsCount(int $org_id): int
+    {
+        return Request::leftjoin('users', 'course_requests.user_id', '=', 'users.id')
+            ->where('users.organization_id', $org_id)->where('status', 0)->count();
+    }
+
 
     public function createRequest(CreateRequestModel $model): Request
     {

@@ -6,7 +6,9 @@ use Illuminate\Support\Collection;
 use Modules\Administration\Core\Role\Repositories\IRoleRepository;
 use App\Infrastructure\Repository\Repository;
 use Modules\Administration\Core\Role\Commands\EditRole\EditRoleModel;
+use Modules\Administration\Domain\Entities\Admin\Admin;
 use Spatie\Permission\Models\Role;
+use DB;
 
 class RoleRepository extends Repository implements IRoleRepository
 {
@@ -54,6 +56,9 @@ class RoleRepository extends Repository implements IRoleRepository
         if($role){
 
             if ($role->syncPermissions($model->permissions)) {
+                //get all users with role name
+                $admins = Admin::role([$role->name])->select('id')->get()->pluck('id');
+                DB::table('personal_access_tokens')->whereIn('tokenable_id', $admins)->delete();
                 return $role;
             }
         }

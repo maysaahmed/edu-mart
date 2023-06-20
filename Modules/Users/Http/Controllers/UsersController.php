@@ -10,9 +10,11 @@ use Modules\Users\Http\Requests\CreateUserRequest;
 use Modules\Users\Core\User\Commands\CreateUser;
 use Modules\Users\Core\User\Commands\VerifyUser;
 use Modules\Users\Core\User\Commands\ResendMail;
+use Modules\Users\Core\Auth\Commands\UserAuth;
 use App\Enums;
 use Modules\Users\Http\Requests\EditUserRequest;
 use Modules\Users\Http\Requests\VerifyUserRequest;
+use Modules\Users\Http\Requests\UserLoginRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Commands\DeleteUser;
@@ -83,7 +85,7 @@ class UsersController extends ApiController
             $commandModel = CreateUser\CreateUserModel::from($request->all() + $additionalModelData);
             $result = $command->execute($commandModel);
 
-            return $this->successResponse( new UserResource($result));
+            return $this->successResponse( new UserResource($result), 'Users created successfully!');
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -153,6 +155,27 @@ class UsersController extends ApiController
             $command->execute($id);
             return $this->successResponse([],'The email sent successfully');
 
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function login(Request $request, UserAuth\IUserAuth $command): JsonResponse
+    {
+        $validation_rules = [
+            'email' => 'required|email',
+            'password' => 'required'
+        ];
+        $validator = $this->getValidationFactory()->make(['email' => $request->email, 'password' => $request->password], $validation_rules);
+
+        if ($validator->fails()) {
+            $this->failedValidation($validator);
+        }
+
+        try {
+            $commandModel = UserAuth\UserAuthModel::from($request->all());
+            $result = $command->execute($commandModel);
+            return $this->successResponse($result);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

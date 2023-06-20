@@ -18,8 +18,10 @@ Route::middleware(['token-name:manager-token'])->prefix('organization')->group(f
 
     Route::get('/courses', 'CoursesController@getOrganizationCourses');
     Route::get('/courses/updateVisibility/{id}', 'CoursesController@updateVisibility');
-    Route::get('/requests', 'RequestsController@getOrganizationRequests');
     Route::post('/requests/{id}', 'RequestsController@updateRequestStatus');
+    Route::get('/requests/count', 'RequestsController@getOrganizationRequestsCount');
+    Route::get('/requests', 'RequestsController@getOrganizationRequests');
+
 });
 
 Route::middleware(['token-name:user-token'])->group(function () {

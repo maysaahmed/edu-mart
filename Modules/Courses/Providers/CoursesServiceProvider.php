@@ -177,6 +177,10 @@ class CoursesServiceProvider extends ServiceProvider
             \Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination\IGetOrganizationRequestsPagination::class,
             \Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination\GetOrganizationRequestsPagination::class
         );
+        $this->app->bind(
+            \Modules\Courses\Core\Request\Queries\GetOrganizationRequestsCount\IGetOrganizationRequestsCount::class,
+            \Modules\Courses\Core\Request\Queries\GetOrganizationRequestsCount\GetOrganizationRequestsCount::class
+        );
         // Persistence
         $this->app->bind(
             \Modules\Courses\Core\Category\Repositories\ICategoryRepository::class,

@@ -35,7 +35,7 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
 
     public function getOrganizationList(): Collection
     {
-        return  Organization::select(['id', 'name'])->get();
+        return  Organization::select(['id', 'name'])->latest()->get();
     }
 
     public function createOrganization(CreateOrganizationModel $model): Organization
