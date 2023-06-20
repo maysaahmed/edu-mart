@@ -9,6 +9,7 @@ use Modules\Courses\Transformers\RequestResource;
 use Modules\Courses\Core\Request\Commands\CreateRequest;
 use Modules\Courses\Core\Request\Commands\EditRequestStatus;
 use Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination;
+use Modules\Courses\Core\Request\Queries\GetOrganizationRequestsCount;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 
@@ -29,6 +30,18 @@ class RequestsController extends ApiController
             $pagination = $query->execute($queryModel);
 
             return $this->paginationResponse(RequestResource::class,$pagination);;
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+    public function getOrganizationRequestsCount(Request $request,GetOrganizationRequestsCount\IGetOrganizationRequestsCount $query): JsonResponse
+    {
+        try {
+            $org_id = $request->user()->organization_id;
+
+            $count = $query->execute($org_id);
+
+            return $this->successResponse(['count' => $count]);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

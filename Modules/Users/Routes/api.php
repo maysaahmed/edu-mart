@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
 */
 Route::post('/user/verify/{token}', 'UsersController@verifyUser');
 
+Route::post('user/login', 'UsersController@login');
+
+
 Route::middleware(['token-name:manager-token'])->group(function () {
     Route::resource('/users', 'UsersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
         '' => 'user'

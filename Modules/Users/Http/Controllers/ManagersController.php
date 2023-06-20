@@ -91,7 +91,7 @@ class ManagersController extends ApiController
             $commandModel = CreateManager\CreateManagerModel::from($request->all() + $additionalModelData);
             $result = $command->execute($commandModel);
 
-            return $this->successResponse( new ManagerResource($result));
+            return $this->successResponse( new ManagerResource($result), 'Manager created successfully!');
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

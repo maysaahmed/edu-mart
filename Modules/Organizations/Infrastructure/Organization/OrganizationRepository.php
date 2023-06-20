@@ -29,12 +29,13 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
     {
         return  QueryBuilder::for(Organization::class)
             ->allowedFilters('name', 'phone', 'address')
+            ->latest()
             ->paginate();
     }
 
     public function getOrganizationList(): Collection
     {
-        return  Organization::select(['id', 'name'])->get();
+        return  Organization::select(['id', 'name'])->latest()->get();
     }
 
     public function createOrganization(CreateOrganizationModel $model): Organization

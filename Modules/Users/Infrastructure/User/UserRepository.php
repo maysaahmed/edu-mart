@@ -12,7 +12,7 @@ use Modules\Users\Domain\Entities\EndUser;
 use App\Enums\EnumUserTypes;
 use Modules\Users\Domain\Entities\VerifyUser;
 use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Database\Eloquent\Builder;
+use Spatie\QueryBuilder\AllowedFilter;
 use Modules\Users\Infrastructure\User\Imports\ImportUsers;
 
 class UserRepository extends Repository implements IUserRepository
@@ -36,7 +36,11 @@ class UserRepository extends Repository implements IUserRepository
         return  QueryBuilder::for(EndUser::class)
             ->where('organization_id', $model->org_id)
             ->where('type', EnumUserTypes::User->value)
-            ->allowedFilters('name', 'email', 'created_by')
+            ->allowedFilters(['name', 'email',
+                AllowedFilter::exact('created_by'),
+                AllowedFilter::exact('check_email_status'),
+            ])
+            ->latest()
             ->paginate();
     }
     public function createUser(CreateUserModel $model): EndUser
@@ -49,6 +53,7 @@ class UserRepository extends Repository implements IUserRepository
         $user->organization_id = $model->organization_id;
         $user->check_email_status = 0;  // 1 for verified
         $user->type =$model->type;
+        $user->is_active = 1;
         $user->save();
 
         VerifyUser::create([

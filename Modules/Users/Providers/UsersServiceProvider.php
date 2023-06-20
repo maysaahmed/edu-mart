@@ -92,6 +92,10 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\Manager\Commands\ResendMail\IResendMail::class,
             \Modules\Users\Core\Manager\Commands\ResendMail\ResendMail::class
         );
+        $this->app->bind(
+            \Modules\Users\Core\Auth\Commands\UserAuth\IUserAuth::class,
+            \Modules\Users\Core\Auth\Commands\UserAuth\UserAuth::class
+        );
         // Persistence
         $this->app->bind(
             \Modules\Users\Core\User\Repositories\IUserRepository::class,
@@ -100,6 +104,10 @@ class UsersServiceProvider extends ServiceProvider
         $this->app->bind(
             \Modules\Users\Core\Manager\Repositories\IManagerRepository::class,
             \Modules\Users\Infrastructure\Manager\ManagerRepository::class
+        );
+        $this->app->bind(
+            \Modules\Users\Core\Auth\Repositories\IAuthRepository::class,
+            \Modules\Users\Infrastructure\Auth\AuthRepository::class
         );
     }
 
