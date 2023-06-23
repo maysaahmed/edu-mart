@@ -8,31 +8,22 @@ use Illuminate\Http\Request;
 
 use Modules\Users\Http\Requests\CreateUserRequest;
 use Modules\Users\Core\User\Commands\CreateUser;
+use Modules\Users\Core\User\Commands\VerifyUser;
+use Modules\Users\Core\User\Commands\ResendMail;
+use Modules\Users\Core\Auth\Commands\UserAuth;
 use App\Enums;
 use Modules\Users\Http\Requests\EditUserRequest;
+use Modules\Users\Http\Requests\VerifyUserRequest;
+use Modules\Users\Http\Requests\UserLoginRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
 use Symfony\Component\HttpFoundation\Response;
-
+use Str;
 
 class UsersController extends ApiController
 {
-
-    /**
-     * Instantiate a new UseristrationController instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('ability:'.Enums\PermissionsEnum::createUser->value, ['only' => ['store']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::editUser->value,   ['only' => ['update']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::listUsers->value,   ['only' => ['index']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::deleteUser->value,   ['only' => ['destroy']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::blockUser->value,   ['only' => ['updateStatus']]);
-    }
 
     /**
      * Display a listing of the resource.
@@ -86,14 +77,15 @@ class UsersController extends ApiController
 
             $additionalModelData = [
                 "createdBy" => $currentUserID,
-                "organizationId" => $currentUserOrganizationId,
-                "type"  => Enums\EnumUserTypes::User->value
+                "organization_id" => $currentUserOrganizationId,
+                "type"  => Enums\EnumUserTypes::User->value,
+                "password" => Str::random(3)
             ];
 
             $commandModel = CreateUser\CreateUserModel::from($request->all() + $additionalModelData);
             $result = $command->execute($commandModel);
 
-            return $this->successResponse( new UserResource($result));
+            return $this->successResponse( new UserResource($result), 'Users created successfully!');
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -140,6 +132,50 @@ class UsersController extends ApiController
             $command->execute($id, $currentUserID);
             return $this->successResponse([],'User removed successfully!');
 
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+
+    public function verifyUser(VerifyUserRequest $request,$token, VerifyUser\IVerifyUser $command): JsonResponse
+    {
+        try {
+            $command->execute($token, $request->password);
+            return $this->successResponse([],'Your e-mail is verified. You can now login.');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function resendMail($id, ResendMail\IResendMail $command): JsonResponse
+    {
+        try {
+            $command->execute($id);
+            return $this->successResponse([],'The email sent successfully');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function login(Request $request, UserAuth\IUserAuth $command): JsonResponse
+    {
+        $validation_rules = [
+            'email' => 'required|email',
+            'password' => 'required'
+        ];
+        $validator = $this->getValidationFactory()->make(['email' => $request->email, 'password' => $request->password], $validation_rules);
+
+        if ($validator->fails()) {
+            $this->failedValidation($validator);
+        }
+
+        try {
+            $commandModel = UserAuth\UserAuthModel::from($request->all());
+            $result = $command->execute($commandModel);
+            return $this->successResponse($result);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

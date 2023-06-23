@@ -52,4 +52,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function verifyUser(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne('Modules\Users\Domain\Entities\VerifyUser', 'user_id', 'id');
+    }
 }

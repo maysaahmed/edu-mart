@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Organizations\Infrastructure\Organization;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Organizations\Core\Organization\Commands\CreateOrganization\CreateOrganizationModel;
 use Modules\Organizations\Core\Organization\Commands\EditOrganization\EditOrganizationModel;
 use Modules\Organizations\Core\Organization\Commands\EditOrganizationStatus\EditOrganizationStatusModel;
@@ -28,7 +29,13 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
     {
         return  QueryBuilder::for(Organization::class)
             ->allowedFilters('name', 'phone', 'address')
+            ->latest()
             ->paginate();
+    }
+
+    public function getOrganizationList(): Collection
+    {
+        return  Organization::select(['id', 'name'])->latest()->get();
     }
 
     public function createOrganization(CreateOrganizationModel $model): Organization

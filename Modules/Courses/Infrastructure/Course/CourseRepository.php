@@ -31,6 +31,7 @@ class CourseRepository extends Repository implements ICourseRepository
     {
         return  QueryBuilder::for(Course::class)
             ->allowedFilters('title', 'duration', 'price')
+            ->latest()
             ->paginate();
     }
     public function getArchivedCoursesPagination(GetArchivedCoursePaginationModel $model): LengthAwarePaginator
@@ -38,6 +39,7 @@ class CourseRepository extends Repository implements ICourseRepository
         return  QueryBuilder::for(Course::class)
             ->allowedFilters('title')
             ->onlyTrashed()
+            ->latest()
             ->paginate();
     }
     public function getOrganizationCoursesPagination(GetOrganizationCoursesPaginationModel $model): LengthAwarePaginator
@@ -56,6 +58,7 @@ class CourseRepository extends Repository implements ICourseRepository
             });
         }
         return $query->allowedFilters('title', 'duration', 'price', 'level_id', 'provider_id')
+            ->latest()
             ->paginate();
 
 

@@ -24,6 +24,7 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
 
     Route::post('/organizations/updateStatus/{organization}', 'OrganizationsController@updateStatus');
     Route::post('/organizations/import', 'OrganizationsController@import');
+    Route::get('/organizations/list', 'OrganizationsController@getOrganizations');
     Route::resource('organizations', 'Modules\Organizations\Http\Controllers\OrganizationsController',['only'=>['index', 'store', 'update', 'destroy']]);
 
 });

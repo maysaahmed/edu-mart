@@ -12,17 +12,23 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('/user/verify/{token}', 'UsersController@verifyUser');
+
+Route::post('user/login', 'UsersController@login');
+
 
 Route::middleware(['token-name:manager-token'])->group(function () {
     Route::resource('/users', 'UsersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
         '' => 'user'
     ]);
     Route::get('/organization/managers', 'ManagersController@getOrganizationManagers');
+    Route::get('/users/resendMail/{id}', 'UsersController@resendMail');
 
 });
 
 Route::middleware(['token-name:admin-token'])->group(function () {
     Route::post('/managers/updateStatus/{manager}', 'ManagersController@updateStatus');
+    Route::get('/managers/resendMail/{id}', 'ManagersController@resendMail');
     Route::resource('/managers', 'ManagersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
         '' => 'manager'
     ]);
@@ -30,3 +36,6 @@ Route::middleware(['token-name:admin-token'])->group(function () {
     Route::resource('/', 'Modules\Users\Http\Controllers\UsersController');
 
 });
+
+
+

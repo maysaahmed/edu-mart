@@ -39,6 +39,7 @@ class UserAuthController extends ApiController
      */
     public function login(Request $request)
     {
+
         $credentials = [
             'email' => $request->email,
             'password' => $request->password

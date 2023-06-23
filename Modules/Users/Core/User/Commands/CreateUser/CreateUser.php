@@ -1,21 +1,35 @@
 <?php
 namespace Modules\Users\Core\User\Commands\CreateUser;
 
-use Illuminate\Support\Str;
 use Modules\Users\Core\User\Repositories\IUserRepository;
+use App\Core\Interfaces\Services\IMailService;
 use Modules\Users\Domain\Entities\EndUser;
 
 class CreateUser implements ICreateUser
 {
-    public function __construct(
-        private IUserRepository $repository
-    )
+    private IUserRepository $repository;
+    private IMailService $mail;
+
+    public function __construct(IUserRepository $repository, IMailService $mail)
     {
+        $this->repository = $repository;
+        $this->mail = $mail;
     }
 
     public function execute(CreateUserModel $model): EndUser
     {
-        $randomPassword = Str::random(12);
-        return $this->repository->createUser($model->name, $model->email, $randomPassword, $model->organizationId, $model->createdBy, $model->isActive);
+
+        $user = $this->repository->createUser($model);
+        $name = $user->name;
+        $email = $user->email;
+        $link = env('VERIFY_FRONT_URL').'/'. $user->verifyUser->token;
+
+        $sent = $this->mail->sendMail($email,$name,$link);
+        if(!$sent)
+        {
+            throw new \Exception('Email is invalid!');
+        }
+
+        return $user;
     }
 }

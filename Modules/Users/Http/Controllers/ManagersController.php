@@ -6,14 +6,19 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Users\Http\Requests\EditManagerRequest;
+use Modules\Users\Http\Requests\CreateManagerRequest;
 use Modules\Users\Transformers\ManagerListResource;
 use Modules\Users\Transformers\ManagerResource;
 use Modules\Users\Core\Manager\Queries\GetManagerPagination;
+use Modules\Users\Core\Manager\Queries\GetOrganizationManagers;
 use Modules\Users\Core\Manager\Commands\EditManager;
+use Modules\Users\Core\Manager\Commands\CreateManager;
 use Modules\Users\Core\Manager\Commands\DeleteManager;
 use Modules\Users\Core\Manager\Commands\EditManagerStatus;
+use Modules\Users\Core\Manager\Commands\ResendMail;
 use Symfony\Component\HttpFoundation\Response;
-
+use App\Enums;
+use Str;
 
 class ManagersController extends ApiController
 {
@@ -57,7 +62,7 @@ class ManagersController extends ApiController
     public function getOrganizationManagers(GetOrganizationManagers\IGetOrganizationManagers $query): JsonResponse
     {
         try {
-            $organization_id = request()->Manager()->organization_id;
+            $organization_id = request()->user()->organization_id;
             $list = $query->execute($organization_id);
 
             return $this->successResponse(ManagerListResource::collection($list));
@@ -66,7 +71,31 @@ class ManagersController extends ApiController
         }
     }
 
+    /**
+     * @param CreateManagerRequest $request
+     * @param CreateManager\ICreateManager $command
+     * @return JsonResponse
+     */
+    public function store(CreateManagerRequest $request, CreateManager\ICreateManager $command): JsonResponse
+    {
+        try {
 
+            $currentUserID = $request->user()->id;
+
+            $additionalModelData = [
+                "createdBy" => $currentUserID,
+                "type"  => Enums\EnumUserTypes::Manager->value,
+                "password" => Str::random(3)
+            ];
+
+            $commandModel = CreateManager\CreateManagerModel::from($request->all() + $additionalModelData);
+            $result = $command->execute($commandModel);
+
+            return $this->successResponse( new ManagerResource($result), 'Manager created successfully!');
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
     /**
      * @param EditManagerRequest $request
      * @param int $id
@@ -142,6 +171,17 @@ class ManagersController extends ApiController
             return $this->errorResponse($th->getMessage());
         }
 
+    }
+
+    public function resendMail($id, ResendMail\IResendMail $command): JsonResponse
+    {
+        try {
+            $command->execute($id);
+            return $this->successResponse([],'The email sent successfully');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 
 

@@ -30,7 +30,14 @@ class RequestRepository extends Repository implements IRequestRepository
             ->join('users', 'course_requests.user_id', '=', 'users.id')
             ->where('organization_id', $model->org_id)
             ->allowedFilters('user.name')
+            ->latest()
             ->paginate();
+    }
+
+    public function getOrganizationRequestsCount(int $org_id): int
+    {
+        return Request::leftjoin('users', 'course_requests.user_id', '=', 'users.id')
+            ->where('users.organization_id', $org_id)->where('status', 0)->count();
     }
 
 
