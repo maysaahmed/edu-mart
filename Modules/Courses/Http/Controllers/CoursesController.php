@@ -22,6 +22,7 @@ use Modules\Courses\Core\Level\Queries\GetLevels;
 use Modules\Courses\Http\Requests\CourseRequest;
 use Modules\Courses\Transformers\CategoryResource;
 use Modules\Courses\Transformers\CourseResource;
+use Modules\Courses\Transformers\UserCourseResource;
 use Modules\Courses\Imports\ImportCourses;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
@@ -257,8 +258,8 @@ class CoursesController extends ApiController
             $queryModel = GetUserCoursesPagination\GetUserCoursesPaginationModel::from( $request->all() + ['organization_id' => request()->user()->organization_id] );
 
             $pagination = $query->execute($queryModel);
-//            dd($pagination);
-            return $this->paginationResponse(CourseResource::class,$pagination);
+
+            return $this->paginationResponse(UserCourseResource::class,$pagination);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
