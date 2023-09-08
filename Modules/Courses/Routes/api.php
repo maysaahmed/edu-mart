@@ -26,7 +26,9 @@ Route::middleware(['token-name:manager-token'])->prefix('organization')->group(f
 
 Route::middleware(['token-name:user-token'])->group(function () {
     Route::post('/requests', 'RequestsController@store');
+    Route::get('/users/courses', 'CoursesController@getUserCourses');
 });
+
 Route::get('/courses/getLists', 'CoursesController@getLists');
 
 Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->group(function () {

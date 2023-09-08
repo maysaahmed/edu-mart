@@ -14,6 +14,7 @@ use Modules\Courses\Core\Course\Commands\EditCourseVisibility;
 use Modules\Courses\Core\Course\Queries\GetCoursePagination;
 use Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination;
 use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination;
+use Modules\Courses\Core\Course\Queries\GetUserCoursesPagination;
 use Modules\Courses\Core\Course\Queries\GetCourse;
 use Modules\Courses\Core\Category\Queries\GetCategories;
 use Modules\Courses\Core\Provider\Queries\GetProviders;
@@ -241,5 +242,25 @@ class CoursesController extends ApiController
             return $this->errorResponse($th->getMessage());
         }
 
+    }
+
+
+    /**
+     * Display a list of organization courses
+     * @param Request $request
+     * @param GetUserCoursesPagination\IGetUserCoursesPagination $query
+     * @return JsonResponse
+     */
+    public function getUserCourses(Request $request,GetUserCoursesPagination\IGetUserCoursesPagination $query): JsonResponse
+    {
+        try {
+            $queryModel = GetUserCoursesPagination\GetUserCoursesPaginationModel::from( $request->all() + ['organization_id' => request()->user()->organization_id] );
+
+            $pagination = $query->execute($queryModel);
+//            dd($pagination);
+            return $this->paginationResponse(CourseResource::class,$pagination);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 }

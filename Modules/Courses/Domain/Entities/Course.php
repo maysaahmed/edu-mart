@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use JetBrains\PhpStorm\NoReturn;
 
 class Course extends Model
 {
@@ -53,4 +55,14 @@ class Course extends Model
     {
         return $this->belongsToMany('Modules\Organizations\Domain\Entities\Organization\Organization', 'hidden_courses', 'course_id', 'organization_id');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function requests(): HasMany
+    {
+        return $this->hasMany(Request::class, 'course_id', 'id');
+    }
+
+
 }

@@ -57,8 +57,8 @@ class RoleRepository extends Repository implements IRoleRepository
 
             if ($role->syncPermissions($model->permissions)) {
                 //get all users with role name
-                $admins = Admin::role([$role->name])->select('id')->get()->pluck('id');
-                DB::table('personal_access_tokens')->whereIn('tokenable_id', $admins)->delete();
+//                $admins = Admin::role([$role->name])->select('id')->get()->pluck('id');
+//                DB::table('personal_access_tokens')->whereIn('tokenable_id', $admins)->delete();
                 return $role;
             }
         }
