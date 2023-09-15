@@ -22,6 +22,14 @@ class RequestRepository extends Repository implements IRequestRepository
         return Request::find($id);
     }
 
+
+    public function getRequestByCourseId($user_id, $course_id): Request|null
+    {
+        return Request::where(['user_id' => $user_id, 'course_id' => $course_id])->latest()->first();
+    }
+
+
+
     public function getOrganizationRequestsPagination(GetOrganizationRequestsPaginationModel $model): LengthAwarePaginator
     {
         return  QueryBuilder::for(Request::class)
