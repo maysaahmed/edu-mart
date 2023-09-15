@@ -177,5 +177,18 @@ class CourseRepository extends Repository implements ICourseRepository
         return null;
     }
 
+    public function checkCourseVisibility($course_id, $org_id): bool|null
+    {
+
+        $course = $this->getCourseById($course_id);
+
+        if($course){
+            if($course->organizations->contains($org_id))
+                return false;
+        }
+
+        return true;
+    }
+
 
 }

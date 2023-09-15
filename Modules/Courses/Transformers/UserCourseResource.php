@@ -16,7 +16,7 @@ class UserCourseResource extends JsonResource
     public function toArray($request)
     {
         $user_id = $request->user()->id;
-        $request = Request::where(['user_id' => $user_id, 'course_id' => $this->id])->first();
+        $request = Request::where(['user_id' => $user_id, 'course_id' => $this->id])->latest()->first();
         if($request)
         {
             $request_status = match ($request->status) {
