@@ -41,7 +41,9 @@ class UserAuth implements IUserAuth
                 $token = ($user->type == EnumUserTypes::Manager->value) ? 'manager-token' : 'user-token';
 
                 $user_token = $user->createToken($token, [])->plainTextToken;
-                return ['user' => $user, 'token' => $user_token];
+                //check user complete data
+                $complete_data = ($user->type == EnumUserTypes::User->value && !isset($user->account)) ? 0 : 1;
+                return ['user' => $user, 'token' => $user_token, 'complete_data' => $complete_data];
             }
 
         }

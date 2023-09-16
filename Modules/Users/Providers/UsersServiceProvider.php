@@ -50,6 +50,11 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\User\Commands\EditUser\IEditUser::class,
             \Modules\Users\Core\User\Commands\EditUser\EditUser::class
         );
+
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\CompleteUserData\ICompleteUserData::class,
+            \Modules\Users\Core\User\Commands\CompleteUserData\CompleteUserData::class
+        );
         $this->app->bind(
             \Modules\Users\Core\User\Commands\VerifyUser\IVerifyUser::class,
             \Modules\Users\Core\User\Commands\VerifyUser\VerifyUser::class

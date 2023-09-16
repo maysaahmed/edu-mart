@@ -27,4 +27,9 @@ class EndUser extends User
         return $this->belongsTo(Manager::class, 'created_by', 'id');
     }
 
+    public function account(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(UserAccount::class, 'user_id', 'id');
+    }
+
 }

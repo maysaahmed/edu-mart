@@ -10,6 +10,7 @@ use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Users\Domain\Entities\EndUser;
 use App\Enums\EnumUserTypes;
+use Modules\Users\Domain\Entities\UserAccount;
 use Modules\Users\Domain\Entities\VerifyUser;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -123,5 +124,40 @@ class UserRepository extends Repository implements IUserRepository
         return $import->getRowCount();
 
     }
+
+    public function completeUserData($model): EndUser|null
+    {
+        $item = $this->getUserByID($model->user_id);
+
+        if($item){
+            $item->name = $model->name ?? $item->name;
+            $save = $item->save();
+            if($item->account)
+            {
+                $account = $item->account;
+                $account->job_title = $model->jobTitle;
+                $account->area = $model->area;
+                $account->date_of_birth = $model->DOB;
+                $account->gender = $model->gender;
+                $account->save();
+            }else{
+                UserAccount::create([
+                    'user_id' => $model->user_id,
+                    'job_title' => $model->jobTitle,
+                    'area' =>  $model->area,
+                    'date_of_birth' => $model->DOB,
+                    'gender' => $model->gender
+                ]);
+            }
+
+            if ($save) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+
 
 }

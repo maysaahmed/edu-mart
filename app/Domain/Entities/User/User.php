@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->hasOne('Modules\Users\Domain\Entities\VerifyUser', 'user_id', 'id');
     }
+
+    public function account(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne('Modules\Users\Domain\Entities\UserAccount', 'user_id', 'id');
+    }
 }

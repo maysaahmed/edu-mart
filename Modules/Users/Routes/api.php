@@ -26,6 +26,10 @@ Route::middleware(['token-name:manager-token'])->group(function () {
 
 });
 
+Route::middleware(['token-name:user-token'])->group(function () {
+    Route::post('/user/completeData', 'UsersController@completeUserData');
+});
+
 Route::middleware(['token-name:admin-token'])->group(function () {
     Route::post('/managers/updateStatus/{manager}', 'ManagersController@updateStatus');
     Route::get('/managers/resendMail/{id}', 'ManagersController@resendMail');
