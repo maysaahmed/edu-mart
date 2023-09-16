@@ -2,6 +2,7 @@
 namespace Modules\Users\Core\User\Repositories;
 
 use App\Core\Repository\IRepository;
+use Modules\Users\Core\User\Commands\CompleteUserData\CompleteUserDataModel;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
 use Modules\Users\Core\User\Queries\GetUserPagination\GetUserPaginationModel;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -16,6 +17,7 @@ interface IUserRepository extends IRepository
 
     public function createUser(CreateUserModel $model): EndUser;
     public function editUser(EditUserModel $model): EndUser|null;
+    public function completeUserData(CompleteUserDataModel $model): EndUser|null;
     public function deleteUser(int $id, int $deletedBy): bool;
     public function verifyUser(string $token, string $password): bool|null;
 

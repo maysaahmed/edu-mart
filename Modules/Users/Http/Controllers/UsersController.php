@@ -11,11 +11,14 @@ use Modules\Users\Core\User\Commands\CreateUser;
 use Modules\Users\Core\User\Commands\VerifyUser;
 use Modules\Users\Core\User\Commands\ResendMail;
 use Modules\Users\Core\Auth\Commands\UserAuth;
+use Modules\Users\Core\User\Commands\CompleteUserData;
 use App\Enums;
 use Modules\Users\Http\Requests\EditUserRequest;
+use Modules\Users\Http\Requests\CompleteUserDataRequest;
 use Modules\Users\Http\Requests\VerifyUserRequest;
 use Modules\Users\Http\Requests\UserLoginRequest;
 use Modules\Users\Transformers\UserResource;
+use Modules\Users\Transformers\UserAccountResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
@@ -180,4 +183,31 @@ class UsersController extends ApiController
             return $this->errorResponse($th->getMessage());
         }
     }
+
+
+    /**
+     * @param CompleteUserDataRequest $request
+     * @param CompleteUserData\ICompleteUserData $command
+     * @return JsonResponse
+     */
+    public function completeUserData(CompleteUserDataRequest $request, CompleteUserData\ICompleteUserData $command) : JsonResponse
+    {
+//        try{
+            $user_id = $request->user()->id;
+
+            $additionalModelData = [
+                "user_id" => $user_id,
+            ];
+
+            $commandModel = CompleteUserData\CompleteUserDataModel::from($request->except(["_method"]) + $additionalModelData);
+            $result = $command->execute($commandModel);
+
+            return $this->successResponse(new UserAccountResource($result),'Your data updated successfully!' , Response::HTTP_ACCEPTED);
+
+//        } catch (\Throwable $th) {
+//            return $this->errorResponse($th->getMessage());
+//        }
+
+    }
+
 }
