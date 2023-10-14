@@ -3,5 +3,5 @@ namespace Modules\Courses\Core\Course\Queries\GetMinMaxCoursePrice;
 
 interface IGetMinMaxCoursePrice
 {
-    public function execute(): array|null;
+    public function execute(int $org_id): array|null;
 }

@@ -28,10 +28,12 @@ class CourseRepository extends Repository implements ICourseRepository
         return Course::find($id);
     }
 
-    public function getMinMaxCoursePrice(): array|null
+    public function getMinMaxCoursePrice($org_id): array|null
     {
         return Course::select(\DB::raw("MIN(price) AS priceFrom, MAX(price) AS priceTo"))
-        ->get()->toArray();
+            ->whereDoesntHave('organizations', function (Builder $q) use( $org_id) {
+                $q->where('id', $org_id);
+            })->get()->toArray();
     }
 
     public function getCoursesPagination(GetCoursePaginationModel $model): LengthAwarePaginator
