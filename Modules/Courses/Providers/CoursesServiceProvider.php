@@ -169,6 +169,11 @@ class CoursesServiceProvider extends ServiceProvider
             \Modules\Courses\Core\Course\Queries\GetCourse\GetCourse::class
         );
 
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Queries\GetMinMaxCoursePrice\IGetMinMaxCoursePrice::class,
+            \Modules\Courses\Core\Course\Queries\GetMinMaxCoursePrice\GetMinMaxCoursePrice::class
+        );
+
         //Requests
         $this->app->bind(
             \Modules\Courses\Core\Request\Commands\CreateRequest\ICreateRequest::class,
