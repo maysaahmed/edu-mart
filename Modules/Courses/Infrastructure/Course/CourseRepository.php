@@ -28,6 +28,12 @@ class CourseRepository extends Repository implements ICourseRepository
         return Course::find($id);
     }
 
+    public function getMinMaxCoursePrice(): array|null
+    {
+        return Course::select(\DB::raw("MIN(price) AS priceFrom, MAX(price) AS priceTo"))
+        ->get()->toArray();
+    }
+
     public function getCoursesPagination(GetCoursePaginationModel $model): LengthAwarePaginator
     {
         return  QueryBuilder::for(Course::class)
@@ -100,7 +106,7 @@ class CourseRepository extends Repository implements ICourseRepository
         return $query->allowedFilters('title', 'location', 'level_id', 'provider_id', 'category_id')
             ->allowedSorts(['title', 'price'])
             ->latest()
-            ->paginate();
+            ->paginate(9);
 
     }
 

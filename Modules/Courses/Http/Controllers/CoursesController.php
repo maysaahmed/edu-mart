@@ -16,6 +16,7 @@ use Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination;
 use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination;
 use Modules\Courses\Core\Course\Queries\GetUserCoursesPagination;
 use Modules\Courses\Core\Course\Queries\GetCourse;
+use Modules\Courses\Core\Course\Queries\GetMinMaxCoursePrice;
 use Modules\Courses\Core\Category\Queries\GetCategories;
 use Modules\Courses\Core\Provider\Queries\GetProviders;
 use Modules\Courses\Core\Level\Queries\GetLevels;
@@ -87,17 +88,18 @@ class CoursesController extends ApiController
      * @return JsonResponse
      */
     public function getLists(GetCategories\IGetCategories $query, GetProviders\IGetProviders $providerQuery,
-    GetLevels\IGetLevels $levelQuery): JsonResponse
+    GetLevels\IGetLevels $levelQuery, GetMinMaxCoursePrice\IGetMinMaxCoursePrice $priceQuery): JsonResponse
     {
         try {
             $categories = $query->execute();
             $providers = $providerQuery->execute();
             $levels = $levelQuery->execute();
-
+            $prices = $priceQuery->execute();
             return $this->successResponse([
                 'levels' => CategoryResource::collection($levels),
                 'categories' => CategoryResource::collection($categories),
                 'providers' => CategoryResource::collection($providers),
+                'prices' => $prices
             ]);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
