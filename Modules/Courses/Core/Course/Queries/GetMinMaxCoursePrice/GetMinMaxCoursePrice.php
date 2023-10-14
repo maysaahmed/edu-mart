@@ -12,8 +12,8 @@ class GetMinMaxCoursePrice implements IGetMinMaxCoursePrice
         $this->repository = $repository;
     }
 
-    public function execute(): array|null
+    public function execute(int $org_id): array|null
     {
-        return $this->repository->getMinMaxCoursePrice();
+        return $this->repository->getMinMaxCoursePrice($org_id);
     }
 }

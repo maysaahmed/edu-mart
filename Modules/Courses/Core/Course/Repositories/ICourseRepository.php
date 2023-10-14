@@ -24,5 +24,5 @@ interface ICourseRepository extends IRepository
     public function importCourses(string $file_path): int;
     public function editCourseVisibility(int $course_id, int $org_id): bool|null;
     public function checkCourseVisibility(int $course_id, int $org_id): bool|null;
-    public function getMinMaxCoursePrice(): array|null;
+    public function getMinMaxCoursePrice(int $org_id): array|null;
 }

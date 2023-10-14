@@ -85,6 +85,7 @@ class CoursesController extends ApiController
      * @param GetCategories\IGetCategories $query
      * @param GetProviders\IGetProviders $providerQuery
      * @param GetLevels\IGetLevels $levelQuery
+     * @param GetMinMaxCoursePrice\IGetMinMaxCoursePrice $priceQuery
      * @return JsonResponse
      */
     public function getLists(GetCategories\IGetCategories $query, GetProviders\IGetProviders $providerQuery,
@@ -94,7 +95,7 @@ class CoursesController extends ApiController
             $categories = $query->execute();
             $providers = $providerQuery->execute();
             $levels = $levelQuery->execute();
-            $prices = $priceQuery->execute();
+            $prices = $priceQuery->execute(request()->user()->organization_id);
             return $this->successResponse([
                 'levels' => CategoryResource::collection($levels),
                 'categories' => CategoryResource::collection($categories),
