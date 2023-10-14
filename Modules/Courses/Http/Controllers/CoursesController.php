@@ -89,17 +89,49 @@ class CoursesController extends ApiController
      * @return JsonResponse
      */
     public function getLists(GetCategories\IGetCategories $query, GetProviders\IGetProviders $providerQuery,
-    GetLevels\IGetLevels $levelQuery, GetMinMaxCoursePrice\IGetMinMaxCoursePrice $priceQuery): JsonResponse
+    GetLevels\IGetLevels $levelQuery): JsonResponse
+    {
+        try {
+            $categories = $query->execute();
+
+            $providers = $providerQuery->execute();
+            $levels = $levelQuery->execute();
+            return $this->successResponse([
+                'levels' => CategoryResource::collection($levels),
+                'categories' => CategoryResource::collection($categories),
+                'providers' => CategoryResource::collection($providers),
+            ]);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * @param GetCategories\IGetCategories $query
+     * @param GetProviders\IGetProviders $providerQuery
+     * @param GetLevels\IGetLevels $levelQuery
+     * @param GetMinMaxCoursePrice\IGetMinMaxCoursePrice $priceQuery
+     * @return JsonResponse
+     */
+    public function getFilterLists(GetCategories\IGetCategories $query, GetProviders\IGetProviders $providerQuery,
+                             GetLevels\IGetLevels $levelQuery, GetMinMaxCoursePrice\IGetMinMaxCoursePrice $priceQuery): JsonResponse
     {
         try {
             $categories = $query->execute();
             $providers = $providerQuery->execute();
             $levels = $levelQuery->execute();
-            $prices = $priceQuery->execute(request()->user()->organization_id);
+            $prices = (request()->user()->organization_id) ? $priceQuery->execute(request()->user()->organization_id) : [];
+
+            $categories = $categories->toArray();
+            $providers = $providers->toArray();
+            $levels = $levels->toArray();
+            array_unshift($categories,(object)['id' => "", 'name' => 'All Categories']);
+            array_unshift($providers,(object)['id' => "", 'name' => 'All Providers']);
+            array_unshift($levels,(object)['id' => "", 'name' => 'All Levels']);
             return $this->successResponse([
-                'levels' => CategoryResource::collection($levels),
-                'categories' => CategoryResource::collection($categories),
-                'providers' => CategoryResource::collection($providers),
+                'levels' => $levels,
+                'categories' => $categories,
+                'providers' => $providers,
                 'prices' => $prices
             ]);
         } catch (\Throwable $th) {

@@ -74,7 +74,7 @@ class CategoryRepository extends Repository implements ICategoryRepository
 
     public function getCategories(): Collection
     {
-        return Category::all();
+        return Category::select('id', 'name')->get();
 
     }
 

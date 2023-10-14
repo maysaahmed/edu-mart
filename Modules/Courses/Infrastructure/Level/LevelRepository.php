@@ -74,7 +74,7 @@ class LevelRepository extends Repository implements ILevelRepository
 
     public function getLevels(): Collection
     {
-        return Level::all();
+        return Level::select('id', 'name')->get();
 
     }
 
