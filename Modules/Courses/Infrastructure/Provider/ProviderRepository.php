@@ -74,6 +74,6 @@ class ProviderRepository extends Repository implements IProviderRepository
 
     public function getProviders(): Collection
     {
-        return Provider::all();
+        return Provider::select('id', 'name')->get();
     }
 }

@@ -27,6 +27,7 @@ Route::middleware(['token-name:manager-token'])->prefix('organization')->group(f
 Route::middleware(['token-name:user-token'])->group(function () {
     Route::post('/requests', 'RequestsController@store');
     Route::get('/users/courses', 'CoursesController@getUserCourses');
+    Route::get('/courses/getFilterLists', 'CoursesController@getFilterLists');
 });
 
 Route::get('/courses/getLists', 'CoursesController@getLists');
