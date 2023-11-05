@@ -40,6 +40,10 @@ class CreateRequest implements ICreateRequest
             throw new \Exception('You already have an approved request on this course');
         }
 
+        if($courseReq && $courseReq->status == 2){
+            throw new \Exception('You already have a rejected request on this course');
+        }
+
         return $this->repository->createRequest($model);
     }
 }
