@@ -89,8 +89,9 @@ class CourseRepository extends Repository implements ICourseRepository
                 "pending" => 0,
                 "rejected" => 2,
             };
+
             $query = $query->whereHas('requests', function (Builder $q) use ($status){
-                $q->where(['user_id' => request()->user()->id, 'status' => $status]);
+                $q->latest()->limit(1)->where(['user_id' => request()->user()->id, 'status' => $status]);
             });
         }
 
