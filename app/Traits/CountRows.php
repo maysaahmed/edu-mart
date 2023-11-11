@@ -12,6 +12,6 @@ trait CountRows{
      */
     public function getRowCount(): int
     {
-        return $this->rows;
+        return $this->rows ?? 0;
     }
 }

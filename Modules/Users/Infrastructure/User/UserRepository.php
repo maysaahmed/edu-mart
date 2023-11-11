@@ -64,6 +64,7 @@ class UserRepository extends Repository implements IUserRepository
 
         return $user;
     }
+
     public function editUser($model): EndUser|null
     {
         $item = $this->getUserByID($model->id);
@@ -116,7 +117,7 @@ class UserRepository extends Repository implements IUserRepository
 
     }
 
-    public function importUsers($file_path): int
+    public function importUsers($file_path): int|null
     {
         $import = new ImportUsers;
         $import->import($file_path);
