@@ -29,6 +29,8 @@ class User extends Authenticatable
         'password',
         'organization_id',
         'type',
+        'check_email_status',
+        'is_active',
         'createdBy',
         'updatedBy',
         'deletedBy'

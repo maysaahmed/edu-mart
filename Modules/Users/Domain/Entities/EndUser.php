@@ -9,7 +9,18 @@ use Modules\Organizations\Domain\Entities\Organization\Organization;
 class EndUser extends User
 {
     protected $table = 'users';
-
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'organization_id',
+        'type',
+        'check_email_status',
+        'is_active',
+        'created_by',
+        'updated_by',
+        'deleted_by'
+    ];
     /**
      * Organization relationship
      * @return BelongsTo

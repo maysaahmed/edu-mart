@@ -1,9 +1,7 @@
 <?php
 namespace Modules\Users\Infrastructure\User;
 
-use App\Domain\Entities\User\User;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
-use Modules\Users\Core\User\Commands\EditUser\EditUserModel;
 use Modules\Users\Core\User\Queries\GetUserPagination\GetUserPaginationModel;
 use Modules\Users\Core\User\Repositories\IUserRepository;
 use App\Infrastructure\Repository\Repository;
@@ -64,6 +62,7 @@ class UserRepository extends Repository implements IUserRepository
 
         return $user;
     }
+
     public function editUser($model): EndUser|null
     {
         $item = $this->getUserByID($model->id);
@@ -116,7 +115,7 @@ class UserRepository extends Repository implements IUserRepository
 
     }
 
-    public function importUsers($file_path): int
+    public function importUsers($file_path): int|null
     {
         $import = new ImportUsers;
         $import->import($file_path);

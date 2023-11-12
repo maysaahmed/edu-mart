@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use Modules\Users\Http\Requests\CreateUserRequest;
 use Modules\Users\Core\User\Commands\CreateUser;
+use Modules\Users\Core\User\Commands\ImportUser;
 use Modules\Users\Core\User\Commands\VerifyUser;
 use Modules\Users\Core\User\Commands\ResendMail;
 use Modules\Users\Core\Auth\Commands\UserAuth;
@@ -17,12 +18,14 @@ use Modules\Users\Http\Requests\EditUserRequest;
 use Modules\Users\Http\Requests\CompleteUserDataRequest;
 use Modules\Users\Http\Requests\VerifyUserRequest;
 use Modules\Users\Http\Requests\UserLoginRequest;
+use App\Http\Requests\ImportCSVRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Transformers\UserAccountResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
 use Symfony\Component\HttpFoundation\Response;
+use Modules\Users\Imports\ImportUsers;
 use Str;
 
 class UsersController extends ApiController
@@ -192,7 +195,7 @@ class UsersController extends ApiController
      */
     public function completeUserData(CompleteUserDataRequest $request, CompleteUserData\ICompleteUserData $command) : JsonResponse
     {
-//        try{
+        try{
             $user_id = $request->user()->id;
 
             $additionalModelData = [
@@ -204,9 +207,29 @@ class UsersController extends ApiController
 
             return $this->successResponse(new UserAccountResource($result),'Your data updated successfully!' , Response::HTTP_ACCEPTED);
 
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+
+    }
+
+    /**
+     * upload multiple from excel
+     * @param ImportCSVRequest $request
+     * @param ImportUser\IImportUser $command
+     * @return JsonResponse
+     */
+    public function import(ImportCSVRequest $request, ImportUser\IImportUser $command): JsonResponse
+    {
+        $file = $request->file('file')->store('import');
+        try {
+            $rowCount = $command->execute($file);
+            return $this->successResponse([],$rowCount.' Users have been uploaded successfully!' , Response::HTTP_CREATED);
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+
+            return $this->importFailures($e->failures());
+        }
 
     }
 

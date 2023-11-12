@@ -42,6 +42,12 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\User\Commands\CreateUser\ICreateUser::class,
             \Modules\Users\Core\User\Commands\CreateUser\CreateUser::class
         );
+
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\ImportUser\IImportUser::class,
+            \Modules\Users\Core\User\Commands\ImportUser\ImportUser::class
+        );
+
         $this->app->bind(
             \Modules\Users\Core\User\Commands\DeleteUser\IDeleteUser::class,
             \Modules\Users\Core\User\Commands\DeleteUser\DeleteUser::class
@@ -87,6 +93,11 @@ class UsersServiceProvider extends ServiceProvider
         $this->app->bind(
             \Modules\Users\Core\Manager\Commands\EditManager\IEditManager::class,
             \Modules\Users\Core\Manager\Commands\EditManager\EditManager::class
+        );
+
+        $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\ImportManager\IImportManager::class,
+            \Modules\Users\Core\Manager\Commands\ImportManager\ImportManager::class
         );
 
         $this->app->bind(

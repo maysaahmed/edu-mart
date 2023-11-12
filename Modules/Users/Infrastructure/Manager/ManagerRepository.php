@@ -8,13 +8,13 @@ use Modules\Users\Core\Manager\Commands\EditManagerStatus\EditManagerStatusModel
 use Modules\Users\Core\Manager\Repositories\IManagerRepository;
 use App\Infrastructure\Repository\Repository;
 use Modules\Users\Core\Manager\Queries\GetManagerPagination\GetManagerPaginationModel;
-use Modules\Users\Domain\Entities\EndUser;
 use Modules\Users\Domain\Entities\Manager;
 use App\Enums\EnumUserTypes;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Users\Domain\Entities\VerifyUser;
 use Spatie\QueryBuilder\QueryBuilder;
 use DB;
+use Modules\Users\Infrastructure\Manager\Imports\ImportManagers;
 
 class ManagerRepository extends Repository implements IManagerRepository
 {
@@ -116,5 +116,14 @@ class ManagerRepository extends Repository implements IManagerRepository
         ]);
 
         return $user;
+    }
+
+    public function importManagers($file_path): int|null
+    {
+        $import = new ImportManagers;
+        $import->import($file_path);
+
+        return $import->getRowCount();
+
     }
 }

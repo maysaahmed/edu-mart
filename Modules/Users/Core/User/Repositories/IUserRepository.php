@@ -21,5 +21,5 @@ interface IUserRepository extends IRepository
     public function deleteUser(int $id, int $deletedBy): bool;
     public function verifyUser(string $token, string $password): bool|null;
 
-    public function importUsers(string $file_path): int;
+    public function importUsers(string $file_path): int|null;
 }
