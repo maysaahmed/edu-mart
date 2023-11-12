@@ -96,6 +96,11 @@ class UsersServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Modules\Users\Core\Manager\Commands\ImportManager\IImportManager::class,
+            \Modules\Users\Core\Manager\Commands\ImportManager\ImportManager::class
+        );
+
+        $this->app->bind(
             \Modules\Users\Core\Manager\Commands\EditManagerStatus\IEditManagerStatus::class,
             \Modules\Users\Core\Manager\Commands\EditManagerStatus\EditManagerStatus::class
         );

@@ -34,6 +34,7 @@ Route::middleware(['token-name:user-token'])->group(function () {
 Route::middleware(['token-name:admin-token'])->group(function () {
     Route::post('/managers/updateStatus/{manager}', 'ManagersController@updateStatus');
     Route::get('/managers/resendMail/{id}', 'ManagersController@resendMail');
+    Route::post('managers/import', 'ManagersController@import');
     Route::resource('/managers', 'ManagersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
         '' => 'manager'
     ]);

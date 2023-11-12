@@ -3,6 +3,7 @@
 namespace Modules\Users\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Users\Http\Requests\EditManagerRequest;
@@ -19,6 +20,8 @@ use Modules\Users\Core\Manager\Commands\ResendMail;
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums;
 use Str;
+use Modules\Managers\Imports\ImportManagers;
+use Modules\Users\Core\Manager\Commands\ImportManager;
 
 class ManagersController extends ApiController
 {
@@ -182,6 +185,20 @@ class ManagersController extends ApiController
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
+    }
+
+    public function import(ImportCSVRequest $request, ImportManager\IImportManager $command): JsonResponse
+    {
+        $file = $request->file('file')->store('import');
+        try {
+            $rowCount = $command->execute($file);
+            return $this->successResponse([],$rowCount.' Managers have been uploaded successfully!' , Response::HTTP_CREATED);
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+
+            return $this->importFailures($e->failures());
+        }
+
     }
 
 

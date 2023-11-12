@@ -224,7 +224,6 @@ class UsersController extends ApiController
         $file = $request->file('file')->store('import');
         try {
             $rowCount = $command->execute($file);
-//            dd($rowCount);
             return $this->successResponse([],$rowCount.' Users have been uploaded successfully!' , Response::HTTP_CREATED);
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {

@@ -19,5 +19,5 @@ interface IManagerRepository extends IRepository
     public function editManager(EditManagerModel $model): Manager|null;
     public function deleteManager(int $id, int $deletedBy): bool;
     public function editManagerStatus(EditManagerStatusModel $model): Manager|null;
-
+    public function importManagers(string $file_path): int|null;
 }
