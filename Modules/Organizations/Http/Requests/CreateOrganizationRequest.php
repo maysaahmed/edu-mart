@@ -8,8 +8,8 @@ class CreateOrganizationRequest extends ApiRequest
     public function rules()
     {
         $rules = [
-            'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|numeric',
-            'address' => 'nullable|regex:/([- ,\/0-9a-zA-Z]+)/|min:8',
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|numeric',
+            'address' => 'required|regex:/([- ,\/0-9a-zA-Z]+)/|min:8',
             'status' => 'in:1,0'
             ];
 
