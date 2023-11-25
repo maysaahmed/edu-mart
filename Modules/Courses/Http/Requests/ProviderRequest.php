@@ -3,19 +3,18 @@
 namespace Modules\Courses\Http\Requests;
 use App\Http\Requests\ApiRequest;
 
-class CategoryRequest extends ApiRequest
+class ProviderRequest extends ApiRequest
 {
     public function rules()
     {
         $rules = [];
         if (!isset($id))
         {
-            $rules += ['name'=> 'required|unique:categories|max:255'];
+            $rules += ['name'=> 'required|unique:providers|max:255'];
         }else{
-            $rules += ['name'=> 'required|max:255|unique:categories,name,'.$id,];
+            $rules += ['name'=> 'required|max:255|unique:providers,name,'.$id,];
         }
         return $rules;
-
 
     }
 
