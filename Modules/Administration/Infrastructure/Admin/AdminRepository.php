@@ -50,6 +50,7 @@ class AdminRepository extends Repository implements IAdminRepository
         $item->type = $type;
         $item->created_by = $createdBy;
         $item->is_active = $isActive;
+        $item->check_email_status = 1;
         $item->save();
 
         $item->syncRoles([$roleId]);

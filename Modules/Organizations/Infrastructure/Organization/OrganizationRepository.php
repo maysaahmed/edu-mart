@@ -28,8 +28,7 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
     public function getOrganizationsPagination(GetOrganizationPaginationModel $model): LengthAwarePaginator
     {
         return  QueryBuilder::for(Organization::class)
-            ->allowedFilters(['phone'])
-            ->allowedFilters(['name', 'address'], QueryBuilder::FILTER_OR)
+            ->allowedFilters(['phone', 'name', 'address'])
             ->latest()
             ->paginate();
     }

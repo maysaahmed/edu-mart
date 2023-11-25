@@ -6,7 +6,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Http\JsonResponse;
 use Modules\Courses\Transformers\CategoryResource;
-use Modules\Courses\Http\Requests\CategoryRequest;
+use Modules\Courses\Http\Requests\ProviderRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Modules\Courses\Core\Provider\Commands\CreateProvider;
@@ -56,7 +56,7 @@ class ProvidersController extends ApiController
      * @param CreateProvider\ICreateProvider $command
      * @return JsonResponse
      */
-    public function store(CategoryRequest $request, CreateProvider\ICreateProvider $command): JsonResponse
+    public function store(ProviderRequest $request, CreateProvider\ICreateProvider $command): JsonResponse
     {
         try {
             $provider = $command->execute($request->name);
@@ -93,7 +93,7 @@ class ProvidersController extends ApiController
      * @param EditProvider\IEditProvider $command
      * @return JsonResponse
      */
-    public function update(CategoryRequest $request,int $id, EditProvider\IEditProvider $command): JsonResponse
+    public function update(ProviderRequest $request,int $id, EditProvider\IEditProvider $command): JsonResponse
     {
         try{
             $commandModel = EditProvider\EditProviderModel::from($request->all() + ['id' => $id]);
