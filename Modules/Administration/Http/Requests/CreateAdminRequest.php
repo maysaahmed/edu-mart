@@ -41,6 +41,7 @@ class CreateAdminRequest extends ApiRequest
             'name.max' => 'The name length must not be greater than 255 characters.',
             'email.required' => 'The email is required.',
             'email.unique' => 'The email has already been taken.',
+            'password.regex' => 'The password must contain small letters, capital letter and numbers.',
         ];
 
     }
