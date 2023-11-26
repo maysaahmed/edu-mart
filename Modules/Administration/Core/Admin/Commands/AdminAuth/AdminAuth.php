@@ -28,7 +28,8 @@ class AdminAuth implements IAdminAuth
                 foreach($permissions as $p) {
                     $abilities[] = $p->name;
                 }
-
+                if($model->rememberMe)
+                    $abilities[] = 'remember';
                 $token = $admin->createToken('admin-token',$abilities)->plainTextToken;
                 $data = ['user' => $admin,'token' => $token];
                 return $data;

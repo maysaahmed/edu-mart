@@ -339,8 +339,12 @@ class AdministrationController extends ApiController
     {
         try {
             // map request to command.
-            $commandModel = AdminAuth\AdminAuthModel::from($request->all());
+            $additionalModelData = [
+                "rememberMe" => $request->has('remember_me'),
+            ];
+            $commandModel = AdminAuth\AdminAuthModel::from($request->all() + $additionalModelData);
             $result = $command->execute($commandModel);
+
             return $this->successResponse((new AdminLoginResource($result['user']))->token($result['token']));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -358,7 +362,7 @@ class AdministrationController extends ApiController
 
         if(Auth::check())
             $request->user()->tokens()->delete();
-
+        $request->session()->invalidate();
         return $this->successResponse([], 'You have been successfully logged out!');
     }
 
