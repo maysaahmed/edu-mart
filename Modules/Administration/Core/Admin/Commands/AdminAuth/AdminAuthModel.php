@@ -2,6 +2,7 @@
 
 namespace Modules\Administration\Core\Admin\Commands\AdminAuth;
 use OpenApi\Annotations as OA;
+use phpDocumentor\Reflection\Types\Boolean;
 use Spatie\LaravelData\Data;
 
 /**
@@ -30,6 +31,7 @@ class AdminAuthModel extends Data
      public function __construct(
         public string $email,
         public string $password,
+        public bool $rememberMe
     ) {
     }
 

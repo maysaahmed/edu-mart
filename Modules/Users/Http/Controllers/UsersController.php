@@ -179,7 +179,10 @@ class UsersController extends ApiController
         }
 
         try {
-            $commandModel = UserAuth\UserAuthModel::from($request->all());
+            $additionalModelData = [
+                "rememberMe" => $request->has('remember_me'),
+            ];
+            $commandModel = UserAuth\UserAuthModel::from($request->all()+$additionalModelData);
             $result = $command->execute($commandModel);
             return $this->successResponse($result);
         } catch (\Throwable $th) {

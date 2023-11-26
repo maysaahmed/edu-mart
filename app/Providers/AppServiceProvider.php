@@ -39,6 +39,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Sanctum::authenticateAccessTokensUsing(function (PersonalAccessToken $token, $isValid) {
+            if($isValid) return true;
+            return $token->can('remember') && $token->created_at->gt(now()->subYears(1));
+        });
     }
 }
