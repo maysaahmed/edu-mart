@@ -18,12 +18,14 @@ use Modules\Users\Http\Requests\EditUserRequest;
 use Modules\Users\Http\Requests\CompleteUserDataRequest;
 use Modules\Users\Http\Requests\VerifyUserRequest;
 use Modules\Users\Http\Requests\UserLoginRequest;
+use Modules\Users\Http\Requests\ForgetPasswordRequest;
 use App\Http\Requests\ImportCSVRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Transformers\UserAccountResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
+use Modules\Users\Core\User\Commands\ForgetPassword;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Users\Imports\ImportUsers;
 use Str;
@@ -149,6 +151,17 @@ class UsersController extends ApiController
         try {
             $command->execute($token, $request->password);
             return $this->successResponse([],'Your e-mail is verified. You can now login.');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function forgetPassword(ForgetPasswordRequest $request, ForgetPassword\IForgetPassword $command): JsonResponse
+    {
+        try {
+            $command->execute($request->email);
+            return $this->successResponse([],'You have received an email to reset your password, check your email.');
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());

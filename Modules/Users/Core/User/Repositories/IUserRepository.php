@@ -12,6 +12,7 @@ use Modules\Users\Domain\Entities\VerifyUser;
 interface IUserRepository extends IRepository
 {
     public function getUserById($id): EndUser|null;
+    public function getUserByEmail($email): EndUser|null;
     public function getVerifyUserByToken($token): VerifyUser|null;
     public function getUsersPagination(GetUserPaginationModel $model): LengthAwarePaginator;
 
@@ -20,6 +21,8 @@ interface IUserRepository extends IRepository
     public function completeUserData(CompleteUserDataModel $model): EndUser|null;
     public function deleteUser(int $id, int $deletedBy): bool;
     public function verifyUser(string $token, string $password): bool|null;
+    public function createUserToken($email): string|null;
+    public function generateToken(): string;
 
     public function importUsers(string $file_path): int|null;
 }

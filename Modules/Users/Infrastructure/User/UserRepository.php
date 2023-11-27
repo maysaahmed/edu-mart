@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Users\Infrastructure\User;
 
+use Mockery\Generator\StringManipulation\Pass\Pass;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
 use Modules\Users\Core\User\Queries\GetUserPagination\GetUserPaginationModel;
 use Modules\Users\Core\User\Repositories\IUserRepository;
@@ -8,11 +9,15 @@ use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Users\Domain\Entities\EndUser;
 use App\Enums\EnumUserTypes;
+use Modules\Users\Domain\Entities\PasswordReset;
 use Modules\Users\Domain\Entities\UserAccount;
 use Modules\Users\Domain\Entities\VerifyUser;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Modules\Users\Infrastructure\User\Imports\ImportUsers;
+use DB;
+use Str;
+use Hash;
 
 class UserRepository extends Repository implements IUserRepository
 {
@@ -24,6 +29,11 @@ class UserRepository extends Repository implements IUserRepository
     public function getUserById($id): EndUser|null
     {
         return EndUser::find($id);
+    }
+
+    public function getUserByEmail($email): EndUser|null
+    {
+        return EndUser::where('email' , $email)->first();
     }
     public function getVerifyUserByToken($token): VerifyUser|null
     {
@@ -85,6 +95,34 @@ class UserRepository extends Repository implements IUserRepository
             }
         }
 
+        return null;
+    }
+
+    public function generateToken(): string
+    {
+        do {
+            $token = Str::random(16);
+        } while (PasswordReset::where("token", $token)->first() instanceof PasswordReset);
+        return $token;
+    }
+
+    public function createUserToken($email):  string|null
+    {
+        $item = $this->getUserByEmail($email);
+        if($item)
+        {
+            $userCheckPasswordReset = PasswordReset::where('email', $email)->count();
+
+            $token = $this->generateToken();
+            if ($userCheckPasswordReset > 0) {
+                PasswordReset::where('email', $email)->delete();
+            }
+
+            DB::table('password_reset_tokens')->insert(
+                ['email' => $email, 'token' =>  Hash::make($token)]
+            );
+            return $token;
+        }
         return null;
     }
     public function verifyUser($token, $password): bool|null
