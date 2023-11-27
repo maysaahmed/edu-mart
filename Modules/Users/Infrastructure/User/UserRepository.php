@@ -41,7 +41,7 @@ class UserRepository extends Repository implements IUserRepository
     }
     public function getResetByToken($token): PasswordReset|null
     {
-        return PasswordReset::where('token', Hash::make($token))->first();
+        return PasswordReset::where('token', $token)->first();
     }
 
     public function getUsersPagination(GetUserPaginationModel $model): LengthAwarePaginator
@@ -105,7 +105,7 @@ class UserRepository extends Repository implements IUserRepository
     public function generateToken(): string
     {
         do {
-            $token = Str::random(16);
+            $token = Str::random(30);
         } while (PasswordReset::where("token", $token)->first() instanceof PasswordReset);
         return $token;
     }
@@ -123,7 +123,7 @@ class UserRepository extends Repository implements IUserRepository
             }
 
             DB::table('password_reset_tokens')->insert(
-                ['email' => $email, 'token' =>  Hash::make($token)]
+                ['email' => $email, 'token' => $token]
             );
             return $token;
         }
