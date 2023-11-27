@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 Route::post('/user/verify/{token}', 'UsersController@verifyUser');
 Route::post('/forgetPassword', 'UsersController@forgetPassword');
+Route::post('/resetPassword/{token}', 'UsersController@ResetPassword');
 
 Route::post('user/login', 'UsersController@login');
 

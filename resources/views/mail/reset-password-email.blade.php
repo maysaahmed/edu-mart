@@ -146,7 +146,7 @@
                                 <tr>
                                     <td align="center" style="font-family: sans-serif; vertical-align: top; font-size: 16px; border-radius: 3px 3px 0 0; color: #ffffff; font-weight: 500; padding: 20px; text-align: center; background-color:  #5680de;" valign="top" bgcolor=" #5680de">
                                         <!-- <img src="">  -->
-                                        Welcome  to Edumart
+                                        Edumart Password Reset
 
                                     </td>
                                 </tr>
@@ -159,11 +159,9 @@
                                 <tr>
                                     <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">
                                         <p style="font-family: sans-serif; font-size: 14px;text-align: right;  font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                                            You have been added as a user to edumart application,
-                                            you can follow the below link to finish the registration process
-                                            reset password
+                                            To Reset your Edumart Password, please click the button
                                         </p>
-                                        <a href="{{$link}}" target="_blank">follow link</a>
+                                        <a href="{{$link}}" target="_blank">Reset password</a>
                                     </td>
                                 </tr>
                             </table>
