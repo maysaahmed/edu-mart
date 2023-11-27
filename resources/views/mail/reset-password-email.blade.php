@@ -159,7 +159,7 @@
                                 <tr>
                                     <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">
                                         <p style="font-family: sans-serif; font-size: 14px;text-align: right;  font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                                            To Reset your Edumart Password, please click the button
+                                            To Reset your Edumart Password, please click the link
                                         </p>
                                         <a href="{{$link}}" target="_blank">Reset password</a>
                                     </td>
