@@ -39,6 +39,10 @@ class UserRepository extends Repository implements IUserRepository
     {
         return VerifyUser::where('token', $token)->first();
     }
+    public function getResetByToken($token): PasswordReset|null
+    {
+        return PasswordReset::where('token', Hash::make($token))->first();
+    }
 
     public function getUsersPagination(GetUserPaginationModel $model): LengthAwarePaginator
     {
@@ -134,6 +138,23 @@ class UserRepository extends Repository implements IUserRepository
             $verifyUser->user->check_email_status = 1;
             $verifyUser->user->password = bcrypt($password);
             $save = $verifyUser->user->save();
+
+            if ($save) {
+                return true;
+            }
+        }
+
+        return null;
+    }
+
+    public function resetPassword($token, $password): bool|null
+    {
+        $resetToken = $this->getResetByToken($token);
+
+        if($resetToken){
+            $user = $this->getUserByEmail($resetToken->email);
+            $user->password = bcrypt($password);
+            $save = $user->save();
 
             if ($save) {
                 return true;

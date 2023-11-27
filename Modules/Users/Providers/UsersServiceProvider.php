@@ -117,6 +117,11 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\User\Commands\ForgetPassword\IForgetPassword::class,
             \Modules\Users\Core\User\Commands\ForgetPassword\ForgetPassword::class
         );
+
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\ResetPassword\IResetPassword::class,
+            \Modules\Users\Core\User\Commands\ResetPassword\ResetPassword::class
+        );
         // Persistence
         $this->app->bind(
             \Modules\Users\Core\User\Repositories\IUserRepository::class,

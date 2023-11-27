@@ -26,6 +26,7 @@ use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
 use Modules\Users\Core\User\Commands\ForgetPassword;
+use Modules\Users\Core\User\Commands\ResetPassword;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Users\Imports\ImportUsers;
 use Str;
@@ -162,6 +163,17 @@ class UsersController extends ApiController
         try {
             $command->execute($request->email);
             return $this->successResponse([],'You have received an email to reset your password, check your email.');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function resetPassword(VerifyUserRequest $request,$token, ResetPassword\IResetPassword $command): JsonResponse
+    {
+        try {
+            $command->execute($token, $request->password);
+            return $this->successResponse([],'You have reset your password successfully. You can now login.');
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
