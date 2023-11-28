@@ -4,5 +4,5 @@ namespace Modules\Users\Core\User\Commands\ResetPassword;
 
 interface IResetPassword
 {
-    public function execute(string $token, string $password): bool;
+    public function execute(string $token, string $password): int|bool|null;
 }

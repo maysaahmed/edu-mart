@@ -23,12 +23,12 @@ class ResetPassword implements IResetPassword
             throw new \Exception('User cannot be found!');
         }
 
-        $resetPassword = $this->repository->resetPassword($token, $password);
+        $userType = $this->repository->resetPassword($token, $password);
 
-        if (!$resetPassword){
+        if (!$userType){
             throw new \Exception('password failed to reset!');
         }
 
-        return true;
+        return $userType;
     }
 }

@@ -105,7 +105,7 @@ class UserRepository extends Repository implements IUserRepository
     public function generateToken(): string
     {
         do {
-            $token = Str::random(30);
+            $token = Str::random(40);
         } while (PasswordReset::where("token", $token)->first() instanceof PasswordReset);
         return $token;
     }
@@ -147,7 +147,7 @@ class UserRepository extends Repository implements IUserRepository
         return null;
     }
 
-    public function resetPassword($token, $password): bool|null
+    public function resetPassword($token, $password): int|null
     {
         $resetToken = $this->getResetByToken($token);
 
@@ -157,7 +157,7 @@ class UserRepository extends Repository implements IUserRepository
             $save = $user->save();
 
             if ($save) {
-                return true;
+                return $user->type;
             }
         }
 
