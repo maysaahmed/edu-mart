@@ -23,7 +23,7 @@ interface IUserRepository extends IRepository
     public function completeUserData(CompleteUserDataModel $model): EndUser|null;
     public function deleteUser(int $id, int $deletedBy): bool;
     public function verifyUser(string $token, string $password): bool|null;
-    public function resetPassword(string $token, string $password): bool|null;
+    public function resetPassword(string $token, string $password): int|null;
     public function createUserToken($email): string|null;
     public function generateToken(): string;
 
