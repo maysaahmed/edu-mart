@@ -17,7 +17,14 @@ class VerifyUserRequest extends ApiRequest
 
     }
 
+    public function messages()
+    {
 
+        return [
+            'password.regex' => 'The password must contain small letters, capital letters and numbers.',
+        ];
+
+    }
     /**
      * Determine if the user is authorized to make this request.
      *

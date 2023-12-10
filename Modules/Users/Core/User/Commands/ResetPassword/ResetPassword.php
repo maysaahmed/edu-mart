@@ -11,7 +11,7 @@ class ResetPassword implements IResetPassword
     {
     }
 
-    public function execute($token, $password): bool
+    public function execute($token, $password): int|bool
     {
         $resetToken = $this->repository->getResetByToken($token);
         if(!$resetToken){
@@ -29,6 +29,6 @@ class ResetPassword implements IResetPassword
             throw new \Exception('password failed to reset!');
         }
 
-        return $userType;
+        return $item->type;
     }
 }

@@ -12,6 +12,14 @@ class ForgetPasswordRequest extends ApiRequest
         ];
     }
 
+    public function messages()
+    {
+
+        return [
+            'email.exists' => 'The email you have entered is not registered before.',
+        ];
+
+    }
 
     /**
      * Determine if the user is authorized to make this request.

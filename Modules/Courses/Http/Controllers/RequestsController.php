@@ -6,15 +6,28 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Modules\Courses\Http\Requests\BookCourseRequest;
 use Modules\Courses\Transformers\RequestResource;
+use Modules\Courses\Transformers\ApprovedRequestResource;
 use Modules\Courses\Core\Request\Commands\CreateRequest;
 use Modules\Courses\Core\Request\Commands\EditRequestStatus;
 use Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination;
+use Modules\Courses\Core\Request\Queries\GetApprovedRequestsPagination;
 use Modules\Courses\Core\Request\Queries\GetOrganizationRequestsCount;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use App\Enums;
 
 class RequestsController extends ApiController
 {
+
+    /**
+     * Instantiate a new RequestsController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('ability:'.Enums\PermissionsEnum::listRequests->value,   ['only' => ['getApprovedRequests']]);
+    }
 
     /**
      * Display a list of organization requests
@@ -34,6 +47,20 @@ class RequestsController extends ApiController
             return $this->errorResponse($th->getMessage());
         }
     }
+
+    public function getApprovedRequests(Request $request,GetApprovedRequestsPagination\IGetApprovedRequestsPagination $query): JsonResponse
+    {
+        try {
+            $queryModel = GetApprovedRequestsPagination\GetApprovedRequestsPaginationModel::from($request->all());
+
+            $pagination = $query->execute($queryModel);
+
+            return $this->paginationResponse(ApprovedRequestResource::class,$pagination);;
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
     public function getOrganizationRequestsCount(Request $request,GetOrganizationRequestsCount\IGetOrganizationRequestsCount $query): JsonResponse
     {
         try {

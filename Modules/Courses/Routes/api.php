@@ -45,7 +45,7 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
         Route::post('/levels/import', 'LevelsController@import');
         Route::resource('/levels', 'LevelsController', ['only' => ['index', 'store', 'update', 'destroy']]);
     });
-
+    Route::get('/approvedRequests', 'RequestsController@getApprovedRequests');
     Route::resource('/courses', 'CoursesController',['only'=>['index', 'store', 'update', 'destroy']]);
 });
 
