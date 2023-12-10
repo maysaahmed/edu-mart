@@ -64,4 +64,10 @@ class User extends Authenticatable
     {
         return $this->hasOne('Modules\Users\Domain\Entities\UserAccount', 'user_id', 'id');
     }
+
+    public function organization(): \Illuminate\Database\Eloquent\Relations\belongsTo
+    {
+        return $this->belongsTo('Modules\Organizations\Domain\Entities\Organization\Organization', 'organization_id', 'id');
+    }
+
 }

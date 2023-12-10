@@ -157,6 +157,7 @@ class UserRepository extends Repository implements IUserRepository
             $save = $user->save();
 
             if ($save) {
+                $resetToken->delete();
                 return $user->type;
             }
         }
