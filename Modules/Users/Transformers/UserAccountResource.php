@@ -14,16 +14,17 @@ class UserAccountResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email ?? '',
             'organization' => $this->organization ? $this->organization->name : '',
             'status' => $this->is_active ? 'active' : 'blocked',
-            'jobTitle' => $this->account->job_title ?? '',
-            'area' => $this->account->area ?? '',
-            'birthDate' => $this->account->date_of_birth ?? '',
-            'gender' => $this->account->gender ?? '',
+            'jobTitle' => $this->account ? $this->account->job_title : '',
+            'area' => $this->account ? $this->account->area : '',
+            'birthDate' => $this->account ? $this->account->date_of_birth : '',
+            'gender' => $this->account ? $this->account->gender : '',
 
         ];
     }
