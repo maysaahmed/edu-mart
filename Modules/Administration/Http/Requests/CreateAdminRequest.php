@@ -19,11 +19,11 @@ class CreateAdminRequest extends ApiRequest
 
         if (!isset($id))
         {
-            $rules += ['name'=> 'required|unique:users|max:255'];
-            $rules += ['email'=> 'required|email|unique:users|max:255'];
+            $rules += ['name'=> 'required|unique:users,name,NULL,id,deleted_at,NULL|max:255'];
+            $rules += ['email'=> 'required|email|unique:users,email,NULL,id,deleted_at,NULL|max:255'];
         }else{
-            $rules += ['name'=> 'required|max:255|unique:users,name,'.$id,];
-            $rules += ['email'=> 'required|email|max:255|unique:users,email,'.$id,];
+            $rules += ['name'=> 'required|max:255|unique:users,name,'.$id.',id,deleted_at,NULL'];
+            $rules += ['email'=> 'required|email|max:255|unique:users,email,'.$id.',id,deleted_at,NULL'];
         }
 
         return $rules;

@@ -13,8 +13,8 @@ class EditUserRequest extends ApiRequest
         $passRule =  (!isset($id) ? 'required' : 'nullable'). '|string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/';
 
         return [
-            'name'=> 'required|max:255|unique:users,name,'.$id,
-            'email'=> 'required|email|max:255|unique:users,email,'.$id,
+            'name'=> 'required|max:255|unique:users,name,'.$id.',id,deleted_at,NULL',
+            'email'=> 'required|email|max:255|unique:users,email,'.$id.',id,deleted_at,NULL',
             'password' => $passRule,
             'isActive' => 'nullable|in:1,0',
 
