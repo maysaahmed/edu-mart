@@ -14,7 +14,7 @@ class RequestResource extends JsonResource
      */
     public function toArray($request)
     {
-        $states = [ 'New', 'Approved', 'Rejected'];
+        $states = [ 'New', 'Approved', 'Rejected', 'Canceled', 'Booked', 'Rejected'];
         return [
             'id' => $this->id,
             'user_name' => $this->user->name,

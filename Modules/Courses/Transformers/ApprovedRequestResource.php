@@ -15,12 +15,18 @@ class ApprovedRequestResource extends JsonResource
      */
     public function toArray($request)
     {
+        $states = [ 'New', 'Approved', 'Rejected', 'Canceled', 'Booked', 'Rejected'];
+
         return [
             'id' => $this->id,
             'user_name' => $this->user->name,
+            'email' => $this->user->email,
             'course'    => $this->course->title,
+            'provider'    => $this->course->provider->name,
+            'price'    => $this->course->price,
             'organization'  => $this->user->organization ? $this->user->organization->name : '',
-            'date'    => \Carbon\Carbon::parse($this->updated_at)->format('Y-m-d'),
+            'status'    => $states[$this->status],
+            'note'      => $this->note ?? ''
 
         ];
     }

@@ -12,6 +12,7 @@ use Modules\Courses\Core\Request\Commands\EditRequestStatus;
 use Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination;
 use Modules\Courses\Core\Request\Queries\GetApprovedRequestsPagination;
 use Modules\Courses\Core\Request\Queries\GetOrganizationRequestsCount;
+use Modules\Courses\Core\Request\Queries\GetApprovedRequestsCount;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use App\Enums;
@@ -26,7 +27,7 @@ class RequestsController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('ability:'.Enums\PermissionsEnum::listRequests->value,   ['only' => ['getApprovedRequests']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listRequests->value,   ['only' => ['getApprovedRequests', 'getApprovedRequestsCount']]);
     }
 
     /**
@@ -60,6 +61,17 @@ class RequestsController extends ApiController
             return $this->errorResponse($th->getMessage());
         }
     }
+
+    public function getApprovedRequestsCount(GetApprovedRequestsCount\IGetApprovedRequestsCount $query): JsonResponse
+    {
+        try {
+            $count = $query->execute();
+            return $this->successResponse(['count' => $count]);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
 
     public function getOrganizationRequestsCount(Request $request,GetOrganizationRequestsCount\IGetOrganizationRequestsCount $query): JsonResponse
     {

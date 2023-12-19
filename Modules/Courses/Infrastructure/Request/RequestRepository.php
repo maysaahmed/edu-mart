@@ -63,6 +63,11 @@ class RequestRepository extends Repository implements IRequestRepository
             ->where('users.organization_id', $org_id)->where('status', 0)->count();
     }
 
+    public function getApprovedRequestsCount(): int
+    {
+        return Request::where('status', 1)->count();
+    }
+
 
     public function createRequest(CreateRequestModel $model): Request
     {
