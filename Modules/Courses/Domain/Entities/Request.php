@@ -11,7 +11,7 @@ class Request extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['course_id', 'user_id', 'status'];
+    protected $fillable = ['course_id', 'user_id', 'status', 'note'];
     protected $table = 'course_requests';
 
     protected static function newFactory()

@@ -29,7 +29,7 @@ Route::middleware(['token-name:manager-token'])->group(function () {
 
 });
 
-Route::middleware(['token-name:user-token, token-name:manager-token'])->group(function () {
+Route::middleware(['token-name:user-token,manager-token'])->group(function () {
     Route::post('/user/completeData', 'UsersController@completeUserData');
 });
 

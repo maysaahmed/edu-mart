@@ -22,6 +22,7 @@ class TokenNameMiddleware
     {
         $user = $request->user();
         if (! $user || ! in_array($user->currentAccessToken()->name, $tokenNames)) {
+
            return $this->errorResponse('Unauthorized', Response::HTTP_FORBIDDEN);
         }
         return $next($request);

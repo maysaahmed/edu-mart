@@ -51,7 +51,7 @@ class RequestRepository extends Repository implements IRequestRepository
             ->join('users', 'course_requests.user_id', '=', 'users.id')
             ->join('courses', 'course_requests.course_id', '=', 'courses.id')
             ->join('organizations', 'users.organization_id', '=', 'organizations.id')
-            ->where('course_requests.status', 1)
+            ->whereIn('course_requests.status', [1, 3, 4])
             ->allowedFilters('user.name', 'user.organization.name', 'course.title')
             ->latest()
             ->paginate();
@@ -63,9 +63,20 @@ class RequestRepository extends Repository implements IRequestRepository
             ->where('users.organization_id', $org_id)->where('status', 0)->count();
     }
 
+    public function getApprovedRequestsCount(): int
+    {
+        return Request::where('status', 1)->count();
+    }
 
+
+    //change user previous rejected requests to be archived
+    public function archiveRequests($user_id, $course_id)
+    {
+        Request::where(['user_id' => $user_id, 'course_id' => $course_id, 'status' => 2])->update(['status' => 5]);
+    }
     public function createRequest(CreateRequestModel $model): Request
     {
+        $this->archiveRequests($model->user_id, $model->course_id);
         $request = new Request();
         $request->user_id = $model->user_id;
         $request->course_id = $model->course_id;
@@ -75,13 +86,12 @@ class RequestRepository extends Repository implements IRequestRepository
     }
 
 
-    public function editRequestStatus($id, $status): bool|null
+    public function editRequestStatus($id, $status, $note = null): bool|null
     {
-
         $item = $this->getRequestById($id);
-
         if($item){
-            $item->update(['status' => (int) $status]);
+
+            $item->update(['status' => (int) $status, 'note' => $note]);
             return true;
         }
 

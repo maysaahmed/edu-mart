@@ -8,8 +8,8 @@ class CreateUserRequest extends ApiRequest
     public function rules()
     {
 
-        return ['name'=> 'required|unique:users|max:255',
-            'email'=> 'required|email|unique:users|max:255'];
+        return ['name'=> 'required|unique:users,name,NULL,id,deleted_at,NULL|max:255',
+            'email'=> 'required|email|unique:users,email,NULL,id,deleted_at,NULL|max:255'];
 
 
     }

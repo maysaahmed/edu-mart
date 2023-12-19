@@ -7,6 +7,15 @@ use Modules\Courses\Domain\Entities\Request;
 
 class UserCourseResource extends JsonResource
 {
+
+    protected string $request_status;
+
+    public function status($value)
+    {
+        $this->request_status = $value;
+        return $this;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -17,15 +26,24 @@ class UserCourseResource extends JsonResource
     {
         $user_id = $request->user()->id;
         $request = Request::where(['user_id' => $user_id, 'course_id' => $this->id])->latest()->first();
+
         if($request)
         {
-            $request_status = match ($request->status) {
-                0 => "pending" ,
-                1 => "approved" ,
-                2 => "rejected" ,
-            };
+            if($this->request_status == 'all')
+            {
+                $request_status = match ($request->status) {
+                    0 => "Pending Approval" ,
+                    1 => "Approved (Pending Booking)" ,
+                    2 => "Rejected" ,
+                    3 => "Canceled",
+                    4 => "Booked"
+                };
+            }else{
+                $request_status = $this->request_status;
+            }
+
         }else{
-            $request_status = 'book';
+            $request_status = 'Book';
         }
 
         return [
@@ -41,5 +59,9 @@ class UserCourseResource extends JsonResource
             'location' => $this->location ?? '',
             'request_status' => $request_status
         ];
+    }
+
+    public static function collection($resource){
+        return new UserCourseResourceCollection($resource);
     }
 }
