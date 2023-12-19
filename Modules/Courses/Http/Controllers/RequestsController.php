@@ -4,11 +4,13 @@ namespace Modules\Courses\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 use Modules\Courses\Http\Requests\BookCourseRequest;
 use Modules\Courses\Transformers\RequestResource;
 use Modules\Courses\Transformers\ApprovedRequestResource;
 use Modules\Courses\Core\Request\Commands\CreateRequest;
 use Modules\Courses\Core\Request\Commands\EditRequestStatus;
+use Modules\Courses\Core\Request\Commands\ManageRequest;
 use Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination;
 use Modules\Courses\Core\Request\Queries\GetApprovedRequestsPagination;
 use Modules\Courses\Core\Request\Queries\GetOrganizationRequestsCount;
@@ -28,6 +30,7 @@ class RequestsController extends ApiController
     public function __construct()
     {
         $this->middleware('ability:'.Enums\PermissionsEnum::listRequests->value,   ['only' => ['getApprovedRequests', 'getApprovedRequestsCount']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editRequests->value,   ['only' => ['manageRequests']]);
     }
 
     /**
@@ -118,7 +121,43 @@ class RequestsController extends ApiController
         }
 
         try{
+
             $command->execute($id, $request->status);
+            return $this->successResponse([],'Course request status updated successfully!' , Response::HTTP_ACCEPTED);
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+
+    }
+
+    /**
+     * change course request to be canceled or booked
+     * @param Request $request
+     * @param $id
+     * @param ManageRequest\IManageRequest $command
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function manageRequests(Request $request, $id, ManageRequest\IManageRequest $command): JsonResponse
+    {
+        $validation_rules = [
+            'id' => 'required|integer|exists:course_requests,id',
+            'status' => 'required|integer|in:3,4',
+            'note' => 'nullable'
+
+        ];
+        $validator = $this->getValidationFactory()->make(['id' => $id, 'status' => $request->status, 'note' => $request->note], $validation_rules);
+
+        if ($validator->fails()) {
+            $this->failedValidation($validator);
+        }
+
+        try{
+
+            $commandModel = ManageRequest\ManageRequestModel::from($request->all()+['id' => $id]);
+
+            $command->execute($commandModel);
             return $this->successResponse([],'Course request status updated successfully!' , Response::HTTP_ACCEPTED);
 
         } catch (\Throwable $th) {

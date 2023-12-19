@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Http\JsonResponse;
 use Modules\Courses\Transformers\OrganizationCourseResourceCollection;
+use Modules\Courses\Transformers\UserCourseResourceCollection;
 use Modules\Courses\Core\Course\Commands\CreateCourse;
 use Modules\Courses\Core\Course\Commands\DeleteCourse;
 use Modules\Courses\Core\Course\Commands\EditCourse;
@@ -293,8 +294,13 @@ class CoursesController extends ApiController
             $queryModel = GetUserCoursesPagination\GetUserCoursesPaginationModel::from( $request->all() + ['organization_id' => request()->user()->organization_id] );
 
             $pagination = $query->execute($queryModel);
-
-            return $this->paginationResponse(UserCourseResource::class,$pagination);
+            $data = [
+                'paginatedData' =>  UserCourseResourceCollection::make($pagination)->status($request->status ?? 'all'),
+                'currentPage' => $pagination->currentPage(),
+                'lastPage' => $pagination->lastPage(),
+                'total' => $pagination->total()
+            ];
+            return $this->successResponse($data);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

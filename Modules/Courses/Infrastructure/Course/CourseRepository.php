@@ -85,9 +85,11 @@ class CourseRepository extends Repository implements ICourseRepository
         if(isset($model->status) and $model->status != 'all')
         {
             $status = match ($model->status) {
-                "approved" => 1,
                 "pending" => 0,
+                "approved" => 1,
                 "rejected" => 2,
+                "canceled" => 3,
+                "booked" => 4
             };
 
             $query = $query->whereHas('requests', function (Builder $q) use ($status){

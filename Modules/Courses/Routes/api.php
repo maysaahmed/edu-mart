@@ -47,6 +47,7 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     });
     Route::get('/approvedRequests', 'RequestsController@getApprovedRequests');
     Route::get('/approvedRequests/count', 'RequestsController@getApprovedRequestsCount');
+    Route::post('/approvedRequests/{id}', 'RequestsController@manageRequests');
     Route::resource('/courses', 'CoursesController',['only'=>['index', 'store', 'update', 'destroy']]);
 });
 

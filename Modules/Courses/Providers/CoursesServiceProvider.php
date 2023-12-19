@@ -183,6 +183,12 @@ class CoursesServiceProvider extends ServiceProvider
             \Modules\Courses\Core\Request\Commands\EditRequestStatus\IEditRequestStatus::class,
             \Modules\Courses\Core\Request\Commands\EditRequestStatus\EditRequestStatus::class
         );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Request\Commands\ManageRequest\IManageRequest::class,
+            \Modules\Courses\Core\Request\Commands\ManageRequest\ManageRequest::class
+        );
+
         $this->app->bind(
             \Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination\IGetOrganizationRequestsPagination::class,
             \Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination\GetOrganizationRequestsPagination::class

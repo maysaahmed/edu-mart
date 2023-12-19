@@ -56,6 +56,7 @@ enum PermissionsEnum: string
     case blockManager = 'block_manager';
 
     case listRequests = 'list_requests';
+    case editRequests = 'edit_requests';
 
 
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly
