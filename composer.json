@@ -24,6 +24,7 @@
         "spatie/laravel-data": "^3.4",
         "spatie/laravel-permission": "^5.10",
         "spatie/laravel-query-builder": "^5.2",
+        "spatie/laravel-translatable": "^6.8",
         "spiral/roadrunner": "^2.8.2",
         "zircote/swagger-php": "^4.7"
     },

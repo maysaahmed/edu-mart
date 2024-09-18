@@ -1,13 +1,11 @@
 <?php
 
-namespace Modules\Courses\Database\Seeders;
+namespace Modules\Assessment\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-
-
-class CoursesDatabaseSeeder extends Seeder
+class AssessmentDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,6 +16,7 @@ class CoursesDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call("OthersTableSeeder");
+        $this->call([OptionSeeder::class]);
+
     }
 }

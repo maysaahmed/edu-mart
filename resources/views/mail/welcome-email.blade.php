@@ -163,7 +163,8 @@
                                             you can follow the below link to finish the registration process
 
                                         </p>
-                                        <a href="{{$link}}" target="_blank">follow link</a>
+                                        <br>
+                                        <a href=" {{$link}}" target="_blank">follow link</a>
                                     </td>
                                 </tr>
                             </table>
