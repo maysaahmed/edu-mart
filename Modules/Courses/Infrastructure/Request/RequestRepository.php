@@ -52,6 +52,7 @@ class RequestRepository extends Repository implements IRequestRepository
             ->join('courses', 'course_requests.course_id', '=', 'courses.id')
             ->join('organizations', 'users.organization_id', '=', 'organizations.id')
             ->whereIn('course_requests.status', [1, 3, 4])
+            ->where('users.deleted_at', NULL)
             ->allowedFilters('user.name', 'user.organization.name', 'course.title')
             ->latest()
             ->paginate();
