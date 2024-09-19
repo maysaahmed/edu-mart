@@ -5,6 +5,7 @@ namespace Modules\Assessment\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
+
 class AssessmentDatabaseSeeder extends Seeder
 {
     /**
@@ -16,7 +17,7 @@ class AssessmentDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call([OptionSeeder::class]);
+        $this->call([FactorSeeder::class]);
 
     }
 }
