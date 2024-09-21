@@ -49,6 +49,17 @@ class AssessmentServiceProvider extends ServiceProvider
             \Modules\Assessment\Infrastructure\Option\OptionRepository::class
         );
 
+        //questions
+        $this->app->bind(
+            \Modules\Assessment\Core\Question\Queries\GetQuestionPagination\IGetQuestionPagination::class,
+            \Modules\Assessment\Core\Question\Queries\GetQuestionPagination\GetQuestionPagination::class
+        );
+
+        $this->app->bind(
+            \Modules\Assessment\Core\Question\Repositories\IQuestionRepository::class,
+            \Modules\Assessment\Infrastructure\Question\QuestionRepository::class
+        );
+
     }
 
     /**

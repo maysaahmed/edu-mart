@@ -18,3 +18,4 @@ Route::middleware('auth:api')->get('/assessment', function (Request $request) {
 });
 
 Route::get('/assessment/getOptions', 'AssessmentController@getOptions');
+Route::get('/assessment/getQuestions', 'AssessmentController@getQuestionsPaginated');
