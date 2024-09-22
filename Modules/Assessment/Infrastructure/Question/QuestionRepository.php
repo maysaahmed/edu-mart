@@ -6,7 +6,7 @@ use \Modules\Assessment\Core\Question\Queries\GetQuestionPagination\GetQuestionP
 use Modules\Assessment\Core\Question\Repositories\IQuestionRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Modules\Courses\Domain\Entities\Course;
+use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Modules\Assessment\Domain\Entities\Question;
@@ -55,6 +55,12 @@ class QuestionRepository extends Repository implements IQuestionRepository
         }
 
         return null;
+    }
+
+    public function getQuestions(): Collection
+    {
+        return Question::get();
+
     }
 
 

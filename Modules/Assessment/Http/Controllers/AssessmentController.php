@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Modules\Assessment\Core\Option\Queries\GetOptions;
 use Modules\Assessment\Core\Question\Commands\EditQuestion;
 use Modules\Assessment\Core\Question\Queries\GetQuestionPagination;
+use Modules\Assessment\Core\Question\Queries\GetQuestions;
 use Modules\Assessment\Transformers\QuestionResource;
 use App\Enums;
 use Modules\Assessment\Http\Requests\QuestionRequest;
@@ -24,7 +25,7 @@ class AssessmentController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('ability:'.Enums\PermissionsEnum::listQuestions->value,   ['only' => ['getQuestionsPaginated']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listQuestions->value,   ['only' => ['getQuestionsPaginated', 'getQuestions']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::editQuestions->value,   ['only' => ['updateQuestion']]);
     }
 
@@ -76,6 +77,21 @@ class AssessmentController extends ApiController
             $commandModel = EditQuestion\EditQuestionModel::from($request->all() + ['id' => $id]);
             $item = $command->execute($commandModel);
             return $this->successResponse([],'Question updated successfully!' , Response::HTTP_ACCEPTED);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * @param GetQuestions\IGetQuestions $query
+     * @return JsonResponse
+     */
+    public function getQuestions(GetQuestions\IGetQuestions $query): JsonResponse
+    {
+        try {
+            $questions = $query->execute();
+
+            return $this->successResponse(QuestionResource::collection($questions));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
