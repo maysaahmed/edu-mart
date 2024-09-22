@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use App\Enums;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,4 +18,7 @@ Route::middleware('auth:api')->get('/assessment', function (Request $request) {
 });
 
 Route::get('/assessment/getOptions', 'AssessmentController@getOptions');
-Route::get('/assessment/getQuestions', 'AssessmentController@getQuestionsPaginated');
+Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->prefix('administration')->group( function () {
+
+    Route::get('/getQuestions', 'AssessmentController@getQuestionsPaginated');
+});

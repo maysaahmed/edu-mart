@@ -17,8 +17,9 @@ class QuestionResource extends JsonResource
         return [
             'id' => $this->id,
             'order' => $this->order,
-            'ques' => $this->getTranslations('ques', ['en', 'ar']),
-            'factor' => $this->factor->getTranslations('name', ['en']),
+            'ques_en' => $this->getTranslation('ques', 'en'),
+            'ques_ar' => $this->getTranslation('ques', 'ar'),
+            'factor' => $this->factor->getTranslation('name', 'en'),
             'factor_id' => $this->factor_id
         ];
     }

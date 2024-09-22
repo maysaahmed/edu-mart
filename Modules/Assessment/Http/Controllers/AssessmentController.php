@@ -10,9 +10,19 @@ use Illuminate\Routing\Controller;
 use Modules\Assessment\Core\Option\Queries\GetOptions;
 use Modules\Assessment\Core\Question\Queries\GetQuestionPagination;
 use Modules\Assessment\Transformers\QuestionResource;
+use App\Enums;
 
 class AssessmentController extends ApiController
 {
+    /**
+     * Instantiate a new AssessmentController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('ability:'.Enums\PermissionsEnum::listQuestions->value,   ['only' => ['getQuestionsPaginated']]);
+    }
 
     /**
      * @param GetOptions\IGetOptions $query
@@ -42,6 +52,7 @@ class AssessmentController extends ApiController
         try {
             $queryModel = GetQuestionPagination\GetQuestionPaginationModel::from($request->all());
             $pagination = $query->execute($queryModel);
+
             return $this->paginationResponse(QuestionResource::class,$pagination);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
