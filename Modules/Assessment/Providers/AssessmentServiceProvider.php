@@ -66,6 +66,11 @@ class AssessmentServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Modules\Assessment\Core\Question\Commands\ReorderQuestions\IReorderQuestions::class,
+            \Modules\Assessment\Core\Question\Commands\ReorderQuestions\ReorderQuestions::class
+        );
+
+        $this->app->bind(
             \Modules\Assessment\Core\Question\Repositories\IQuestionRepository::class,
             \Modules\Assessment\Infrastructure\Question\QuestionRepository::class
         );

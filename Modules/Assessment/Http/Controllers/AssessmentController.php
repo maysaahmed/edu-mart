@@ -9,11 +9,13 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Assessment\Core\Option\Queries\GetOptions;
 use Modules\Assessment\Core\Question\Commands\EditQuestion;
+use Modules\Assessment\Core\Question\Commands\ReorderQuestions;
 use Modules\Assessment\Core\Question\Queries\GetQuestionPagination;
 use Modules\Assessment\Core\Question\Queries\GetQuestions;
 use Modules\Assessment\Transformers\QuestionResource;
 use App\Enums;
 use Modules\Assessment\Http\Requests\QuestionRequest;
+use Modules\Assessment\Http\Requests\ReorderQuestionsRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class AssessmentController extends ApiController
@@ -26,7 +28,7 @@ class AssessmentController extends ApiController
     public function __construct()
     {
         $this->middleware('ability:'.Enums\PermissionsEnum::listQuestions->value,   ['only' => ['getQuestionsPaginated', 'getQuestions']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::editQuestions->value,   ['only' => ['updateQuestion']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editQuestions->value,   ['only' => ['updateQuestion', 'reorderQuestions']]);
     }
 
     /**
@@ -82,6 +84,23 @@ class AssessmentController extends ApiController
         }
     }
 
+
+    /**
+     * Update the specified resource in storage.
+     * @param ReorderQuestionsRequest $request
+     * @param ReorderQuestions\IReorderQuestions $command
+     * @return JsonResponse
+     */
+    public function reorderQuestions(ReorderQuestionsRequest $request, ReorderQuestions\IReorderQuestions $command): JsonResponse
+    {
+        try{
+            $questions =$request->questions ;
+            $command->execute($questions);
+            return $this->successResponse([],'Question reordered successfully!' , Response::HTTP_ACCEPTED);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
     /**
      * @param GetQuestions\IGetQuestions $query
      * @return JsonResponse

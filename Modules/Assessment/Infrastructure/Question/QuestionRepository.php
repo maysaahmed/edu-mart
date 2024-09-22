@@ -11,6 +11,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Modules\Assessment\Domain\Entities\Question;
 use Modules\Assessment\Core\Question\Commands\EditQuestion\EditQuestionModel;
+use DB;
 
 class QuestionRepository extends Repository implements IQuestionRepository
 {
@@ -57,6 +58,30 @@ class QuestionRepository extends Repository implements IQuestionRepository
         return null;
     }
 
+    public function reorderQuestions(Array $questions): bool|null
+    {
+        // Start a database transaction
+        DB::beginTransaction();
+        try {
+            // Loop through each question and update its order
+            foreach ($questions as $questionData) {
+                Question::where('id', $questionData['id'])
+                    ->update(['order' => $questionData['order']]);
+            }
+
+            // Commit the transaction
+            DB::commit();
+
+            return true;
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of an error
+            DB::rollback();
+
+            return false;
+        }
+
+        return null;
+    }
     public function getQuestions(): Collection
     {
         return Question::get();

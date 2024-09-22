@@ -23,4 +23,5 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     Route::get('/questions', 'AssessmentController@getQuestionsPaginated');
     Route::get('/listQuestions', 'AssessmentController@getQuestions');
     Route::put('/questions/{id}',  'AssessmentController@updateQuestion');
+    Route::post('/questions/reorder',  'AssessmentController@reorderQuestions');
 });

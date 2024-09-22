@@ -14,4 +14,5 @@ interface IQuestionRepository extends IRepository
     public function getQuestionsPagination(GetQuestionPaginationModel $model): LengthAwarePaginator;
     public function getQuestions(): Collection;
     public function editQuestion(EditQuestionModel $model): Question|null;
+    public function reorderQuestions(Array $questions): bool|null;
 }
