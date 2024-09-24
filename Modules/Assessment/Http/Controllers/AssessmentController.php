@@ -12,7 +12,9 @@ use Modules\Assessment\Core\Question\Commands\EditQuestion;
 use Modules\Assessment\Core\Question\Commands\ReorderQuestions;
 use Modules\Assessment\Core\Question\Queries\GetQuestionPagination;
 use Modules\Assessment\Core\Question\Queries\GetQuestions;
+use Modules\Assessment\Core\Factor\Queries\GetFactors;
 use Modules\Assessment\Transformers\QuestionResource;
+use Modules\Assessment\Transformers\FactorResource;
 use App\Enums;
 use Modules\Assessment\Http\Requests\QuestionRequest;
 use Modules\Assessment\Http\Requests\ReorderQuestionsRequest;
@@ -27,7 +29,7 @@ class AssessmentController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('ability:'.Enums\PermissionsEnum::listQuestions->value,   ['only' => ['getQuestionsPaginated', 'getQuestions']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listQuestions->value,   ['only' => ['getQuestionsPaginated', 'getQuestions', 'getFactors']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::editQuestions->value,   ['only' => ['updateQuestion', 'reorderQuestions']]);
     }
 
@@ -111,6 +113,20 @@ class AssessmentController extends ApiController
             $questions = $query->execute();
 
             return $this->successResponse(QuestionResource::collection($questions));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+    /**
+     * @param GetFactors\IGetFactors $query
+     * @return JsonResponse
+     */
+    public function getFactors(GetFactors\IGetFactors $query): JsonResponse
+    {
+        try {
+            $factors = $query->execute();
+
+            return $this->successResponse(FactorResource::collection($factors));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

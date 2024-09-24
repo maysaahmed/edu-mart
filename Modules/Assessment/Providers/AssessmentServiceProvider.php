@@ -75,6 +75,18 @@ class AssessmentServiceProvider extends ServiceProvider
             \Modules\Assessment\Infrastructure\Question\QuestionRepository::class
         );
 
+        //factors
+
+        $this->app->bind(
+            \Modules\Assessment\Core\Factor\Queries\GetFactors\IGetFactors::class,
+            \Modules\Assessment\Core\Factor\Queries\GetFactors\GetFactors::class
+        );
+
+        $this->app->bind(
+            \Modules\Assessment\Core\Factor\Repositories\IFactorRepository::class,
+            \Modules\Assessment\Infrastructure\Factor\FactorRepository::class
+        );
+
     }
 
     /**
