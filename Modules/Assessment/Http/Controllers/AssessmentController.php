@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Modules\Assessment\Core\Option\Queries\GetOptions;
 use Modules\Assessment\Core\Question\Commands\EditQuestion;
 use Modules\Assessment\Core\Question\Commands\ReorderQuestions;
+use Modules\Assessment\Core\Factor\Commands\EditFactor;
 use Modules\Assessment\Core\Question\Queries\GetQuestionPagination;
 use Modules\Assessment\Core\Question\Queries\GetQuestions;
 use Modules\Assessment\Core\Factor\Queries\GetFactors;
@@ -17,6 +18,7 @@ use Modules\Assessment\Transformers\QuestionResource;
 use Modules\Assessment\Transformers\FactorResource;
 use App\Enums;
 use Modules\Assessment\Http\Requests\QuestionRequest;
+use Modules\Assessment\Http\Requests\FactorRequest;
 use Modules\Assessment\Http\Requests\ReorderQuestionsRequest;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,6 +33,7 @@ class AssessmentController extends ApiController
     {
         $this->middleware('ability:'.Enums\PermissionsEnum::listQuestions->value,   ['only' => ['getQuestionsPaginated', 'getQuestions', 'getFactors']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::editQuestions->value,   ['only' => ['updateQuestion', 'reorderQuestions']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editFactors->value,   ['only' => ['updateFactor']]);
     }
 
     /**
@@ -127,6 +130,24 @@ class AssessmentController extends ApiController
             $factors = $query->execute();
 
             return $this->successResponse(FactorResource::collection($factors));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * @param FactorRequest $request
+     * @param int $id
+     * @param EditFactor\IEditFactor $command
+     * @return JsonResponse
+     */
+    public function updateFactor(FactorRequest $request, int $id, EditFactor\IEditFactor $command): JsonResponse
+    {
+        try{
+            $commandModel = EditFactor\EditFactorModel::from($request->all() + ['id' => $id]);
+            $item = $command->execute($commandModel);
+            return $this->successResponse([],'Data updated successfully!' , Response::HTTP_ACCEPTED);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

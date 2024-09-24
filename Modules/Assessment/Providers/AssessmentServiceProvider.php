@@ -83,6 +83,11 @@ class AssessmentServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Modules\Assessment\Core\Factor\Commands\EditFactor\IEditFactor::class,
+            \Modules\Assessment\Core\Factor\Commands\EditFactor\EditFactor::class
+        );
+
+        $this->app->bind(
             \Modules\Assessment\Core\Factor\Repositories\IFactorRepository::class,
             \Modules\Assessment\Infrastructure\Factor\FactorRepository::class
         );

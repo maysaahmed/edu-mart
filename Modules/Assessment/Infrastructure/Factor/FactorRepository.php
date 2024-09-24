@@ -6,7 +6,7 @@ use Modules\Assessment\Core\Factor\Repositories\IFactorRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Support\Collection;
 use Modules\Assessment\Domain\Entities\Factor;
-//use Modules\Assessment\Core\Factor\Commands\EditQuestion\EditQuestionModel;
+use Modules\Assessment\Core\Factor\Commands\EditFactor\EditFactorModel;
 use DB;
 
 class FactorRepository extends Repository implements IFactorRepository
@@ -21,28 +21,43 @@ class FactorRepository extends Repository implements IFactorRepository
         return Factor::find($id);
     }
 
-//    public function editQuestion(EditQuestionModel $model): Question|null
-//    {
-//        $id = $model->id;
-//        $question = $this->getQuestionById($id);
-//
-//        if($question){
-//
-//            $question->ques = [
-//                'en' => $model->ques_en,
-//                'ar' => $model->ques_ar
-//            ];
-//            $question->order = $model->order;
-//            $question->factor_id = $model->factor_id;
-//            $save = $question->save();
-//
-//            if ($save) {
-//                return $question;
-//            }
-//        }
-//
-//        return null;
-//    }
+    public function editFactor(EditFactorModel $model): Factor|null
+    {
+        $id = $model->id;
+        $factor = $this->getFactorById($id);
+
+        if($factor){
+
+            $factor->name = [
+                'en' => $model->name_en,
+                'ar' => $model->name_ar
+            ];
+            $factor->desc = [
+                'en' => $model->desc_en,
+                'ar' => $model->desc_ar
+            ];
+            $factor->low_desc = [
+                'en' => $model->low_desc_en,
+                'ar' => $model->low_desc_ar
+            ];
+            $factor->moderate_desc = [
+                'en' => $model->moderate_desc_en,
+                'ar' => $model->moderate_desc_ar
+            ];
+            $factor->high_desc = [
+                'en' => $model->high_desc_en,
+                'ar' => $model->high_desc_ar
+            ];
+            $factor->formula = $model->formula;
+            $save = $factor->save();
+
+            if ($save) {
+                return $factor;
+            }
+        }
+
+        return null;
+    }
 
 
     public function getFactors(): Collection

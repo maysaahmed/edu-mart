@@ -25,4 +25,5 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     Route::put('/questions/{id}',  'AssessmentController@updateQuestion');
     Route::post('/questions/reorder',  'AssessmentController@reorderQuestions');
     Route::get('/factors',  'AssessmentController@getFactors');
+    Route::put('/factors/{id}',  'AssessmentController@updateFactor');
 });
