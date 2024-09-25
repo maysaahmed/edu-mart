@@ -38,6 +38,7 @@ class RequestRepository extends Repository implements IRequestRepository
             ->select('course_requests.*', DB::raw('users.organization_id as organization_id'), DB::raw('users.name as user_name') )
             ->join('users', 'course_requests.user_id', '=', 'users.id')
             ->where('organization_id', $model->org_id)
+            ->where('users.deleted_at', NULL)
             ->allowedFilters('user.name')
             ->latest()
             ->paginate();
@@ -52,6 +53,7 @@ class RequestRepository extends Repository implements IRequestRepository
             ->join('courses', 'course_requests.course_id', '=', 'courses.id')
             ->join('organizations', 'users.organization_id', '=', 'organizations.id')
             ->whereIn('course_requests.status', [1, 3, 4])
+            ->where('users.deleted_at', NULL)
             ->allowedFilters('user.name', 'user.organization.name', 'course.title')
             ->latest()
             ->paginate();

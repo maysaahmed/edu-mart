@@ -12,7 +12,7 @@ class CompleteUserDataRequest extends ApiRequest
         $id = request()->user()->id;
 
         return [
-            'name'=> 'nullable|max:255|unique:users,name,'.$id.',id,deleted_at,NULL',
+            'name'=> 'required|max:255|unique:users,name,'.$id.',id,deleted_at,NULL',
             'jobTitle' => 'nullable|max:255',
             'area' => 'nullable|max:255',
             'DOB' => 'nullable|date_format:Y-m-d|before:' . Carbon::now()->subYears(18)->format('Y-m-d'),

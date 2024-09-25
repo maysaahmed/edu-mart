@@ -49,10 +49,10 @@ class CoursesController extends ApiController
     /**
      * Display a listing of the resource.
      * @param Request $request
-     * @param GetCoursePagination\IGetCoursePagination $query
+     * @param GetCoursePagination\IGetQuestionPagination $query
      * @return JsonResponse
      */
-    public function index(Request $request,GetCoursePagination\IGetCoursePagination $query): JsonResponse
+    public function index(Request $request,GetCoursePagination\IGetQuestionPagination $query): JsonResponse
     {
         try {
             $queryModel = GetCoursePagination\GetCoursePaginationModel::from($request->all());

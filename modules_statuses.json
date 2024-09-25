@@ -2,5 +2,6 @@
     "Organizations": true,
     "Administration": true,
     "Courses": true,
-    "Users": true
+    "Users": true,
+    "Assessment": true
 }

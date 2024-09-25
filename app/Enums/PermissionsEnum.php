@@ -58,6 +58,11 @@ enum PermissionsEnum: string
     case listRequests = 'list_requests';
     case editRequests = 'edit_requests';
 
+    //assessment permissions
+    case listQuestions = 'list_questions';
+    case editQuestions = 'edit_questions';
+    case editFactors = 'edit_Factors';
+
 
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly
     public static function label(): string
