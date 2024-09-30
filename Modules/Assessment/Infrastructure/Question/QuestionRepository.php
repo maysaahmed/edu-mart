@@ -31,7 +31,7 @@ class QuestionRepository extends Repository implements IQuestionRepository
             ->allowedFilters([
                 AllowedFilter::custom('ques', new FiltersJsonField)
             ])
-            ->latest()
+            ->orderBy('order', 'asc')
             ->paginate();
     }
 
@@ -84,7 +84,7 @@ class QuestionRepository extends Repository implements IQuestionRepository
     }
     public function getQuestions(): Collection
     {
-        return Question::get();
+        return Question::orderBy('order', 'asc')->get();
 
     }
 

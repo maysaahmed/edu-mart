@@ -17,6 +17,7 @@ Route::post('/forgetPassword', 'UsersController@forgetPassword');
 Route::post('/resetPassword/{token}', 'UsersController@ResetPassword');
 
 Route::post('user/login', 'UsersController@login');
+Route::post('user/register', 'UsersController@register');
 
 
 Route::middleware(['token-name:manager-token'])->group(function () {

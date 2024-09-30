@@ -4,6 +4,7 @@ namespace Modules\Users\Core\User\Repositories;
 use App\Core\Repository\IRepository;
 use Modules\Users\Core\User\Commands\CompleteUserData\CompleteUserDataModel;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
+use Modules\Users\Core\User\Commands\RegisterUser\RegisterUserModel;
 use Modules\Users\Core\User\Queries\GetUserPagination\GetUserPaginationModel;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Users\Domain\Entities\EndUser;
@@ -28,4 +29,8 @@ interface IUserRepository extends IRepository
     public function generateToken(): string;
 
     public function importUsers(string $file_path): int|null;
+
+    public function registerUser(RegisterUserModel $model): EndUser;
+
+
 }

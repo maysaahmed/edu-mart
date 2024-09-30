@@ -3,6 +3,7 @@ namespace Modules\Users\Infrastructure\User;
 
 use Mockery\Generator\StringManipulation\Pass\Pass;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
+use Modules\Users\Core\User\Commands\RegisterUser\RegisterUserModel;
 use Modules\Users\Core\User\Queries\GetUserPagination\GetUserPaginationModel;
 use Modules\Users\Core\User\Repositories\IUserRepository;
 use App\Infrastructure\Repository\Repository;
@@ -218,5 +219,23 @@ class UserRepository extends Repository implements IUserRepository
     }
 
 
+    public function registerUser(RegisterUserModel $model): EndUser
+    {
+        $user = new EndUser();
+        $user->name = $model->first_name.' '.$model->last_name;
+        $user->email = $model->email;
+        $user->password = bcrypt($model->password);
+        $user->check_email_status = 0;  // 1 for verified
+        $user->type = 3;
+        $user->is_active = 1;
+        $user->save();
+
+        VerifyUser::create([
+            'user_id' => $user->id,
+            'token' => sha1(time())
+        ]);
+
+        return $user;
+    }
 
 }

@@ -19,6 +19,7 @@ use Modules\Users\Http\Requests\CompleteUserDataRequest;
 use Modules\Users\Http\Requests\VerifyUserRequest;
 use Modules\Users\Http\Requests\UserLoginRequest;
 use Modules\Users\Http\Requests\ForgetPasswordRequest;
+use Modules\Users\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\ImportCSVRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Transformers\UserAccountResource;
@@ -27,6 +28,7 @@ use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
 use Modules\Users\Core\User\Commands\ForgetPassword;
 use Modules\Users\Core\User\Commands\ResetPassword;
+use Modules\Users\Core\User\Commands\RegisterUser;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Users\Imports\ImportUsers;
 use Str;
@@ -260,5 +262,19 @@ class UsersController extends ApiController
         }
 
     }
+
+
+    public function register(RegisterUserRequest $request, RegisterUser\IRegisterUser $command): JsonResponse
+    {
+        try {
+            $commandModel = RegisterUser\RegisterUserModel::from($request->all() );
+            $result = $command->execute($commandModel);
+
+                return $this->successResponse( new UserResource($result), 'Thank you for registering on our website, you have received a verification email please check your email.');
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
 
 }

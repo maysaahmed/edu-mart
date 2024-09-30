@@ -17,7 +17,7 @@ class AssessmentDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call([QuestionSeeder::class]);
+        $this->call([FactorSeeder::class,QuestionSeeder::class]);
 
     }
 }

@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/assessment', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/assessment/getOptions', 'AssessmentController@getOptions');
+Route::get('/assessment', 'AssessmentController@getAssessment');
 Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->prefix('administration')->group( function () {
 
     Route::get('/questions', 'AssessmentController@getQuestionsPaginated');

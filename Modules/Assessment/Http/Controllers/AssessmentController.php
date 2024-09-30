@@ -15,6 +15,7 @@ use Modules\Assessment\Core\Question\Queries\GetQuestionPagination;
 use Modules\Assessment\Core\Question\Queries\GetQuestions;
 use Modules\Assessment\Core\Factor\Queries\GetFactors;
 use Modules\Assessment\Transformers\QuestionResource;
+use Modules\Assessment\Transformers\AssessmentResource;
 use Modules\Assessment\Transformers\FactorResource;
 use App\Enums;
 use Modules\Assessment\Http\Requests\QuestionRequest;
@@ -148,6 +149,22 @@ class AssessmentController extends ApiController
             $commandModel = EditFactor\EditFactorModel::from($request->all() + ['id' => $id]);
             $item = $command->execute($commandModel);
             return $this->successResponse([],'Data updated successfully!' , Response::HTTP_ACCEPTED);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+
+    /**
+     * @param GetQuestions\IGetQuestions $query
+     * @return JsonResponse
+     */
+    public function getAssessment(GetQuestions\IGetQuestions $query): JsonResponse
+    {
+        try {
+            $questions = $query->execute();
+
+            return $this->successResponse(AssessmentResource::collection($questions));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
