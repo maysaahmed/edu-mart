@@ -2,8 +2,8 @@
 namespace Modules\Assessment\Core\Result\Commands\CreateResult;
 
 
-use Modules\Assessment\Core\Result\Repositories\IQuestionRepository;
-use Modules\Assessment\Domain\Entities\Result;
+use Modules\Assessment\Core\Result\Repositories\IResultRepository;
+
 
 class CreateResult implements ICreateResult
 {
@@ -14,14 +14,14 @@ class CreateResult implements ICreateResult
         $this->repository = $repository;
     }
 
-    public function execute(Array $questions): bool
+    public function execute(Array $answers): bool
     {
 
-        $updatedItem = $this->repository->reorderQuestions($questions);
-        if ($updatedItem){
-            return $updatedItem;
+        $saved = $this->repository->createResults($answers);
+        if ($saved){
+            return $saved;
         }
 
-        throw new \Exception('Questions failed to order!');
+        throw new \Exception('results failed to saved!');
     }
 }

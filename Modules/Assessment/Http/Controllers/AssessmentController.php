@@ -11,6 +11,7 @@ use Modules\Assessment\Core\Option\Queries\GetOptions;
 use Modules\Assessment\Core\Question\Commands\EditQuestion;
 use Modules\Assessment\Core\Question\Commands\ReorderQuestions;
 use Modules\Assessment\Core\Factor\Commands\EditFactor;
+use Modules\Assessment\Core\Result\Commands\CreateResult;
 use Modules\Assessment\Core\Question\Queries\GetQuestionPagination;
 use Modules\Assessment\Core\Question\Queries\GetQuestions;
 use Modules\Assessment\Core\Factor\Queries\GetFactors;
@@ -21,6 +22,7 @@ use App\Enums;
 use Modules\Assessment\Http\Requests\QuestionRequest;
 use Modules\Assessment\Http\Requests\FactorRequest;
 use Modules\Assessment\Http\Requests\ReorderQuestionsRequest;
+use Modules\Assessment\Http\Requests\StoreResultsRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class AssessmentController extends ApiController
@@ -173,16 +175,16 @@ class AssessmentController extends ApiController
 
     /**
      * post assessment answers to get result
-     * @param ReorderQuestionsRequest $request
-     * @param ReorderQuestions\IReorderQuestions $command
+     * @param StoreResultsRequest $request
+     * @param CreateResult\ICreateResult $command
      * @return JsonResponse
      */
-    public function postAnswers(ReorderQuestionsRequest $request, ReorderQuestions\IReorderQuestions $command): JsonResponse
+    public function postAnswers(StoreResultsRequest $request, CreateResult\ICreateResult $command): JsonResponse
     {
         try{
-            $questions =$request->questions ;
-            $command->execute($questions);
-            return $this->successResponse([],'Question reordered successfully!' , Response::HTTP_ACCEPTED);
+            $answers = $request->answers ;
+            $command->execute($answers);
+            return $this->successResponse([],'Result saved successfully!' , Response::HTTP_ACCEPTED);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

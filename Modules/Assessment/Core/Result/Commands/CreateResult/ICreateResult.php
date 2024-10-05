@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Assessment\Core\Result\Commands\ICreateResult;
+namespace Modules\Assessment\Core\Result\Commands\CreateResult;
 
 
 interface ICreateResult
