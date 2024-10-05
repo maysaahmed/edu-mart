@@ -155,6 +155,7 @@ class AssessmentController extends ApiController
     }
 
 
+    // user assessment
     /**
      * @param GetQuestions\IGetQuestions $query
      * @return JsonResponse
@@ -169,5 +170,24 @@ class AssessmentController extends ApiController
             return $this->errorResponse($th->getMessage());
         }
     }
+
+    /**
+     * post assessment answers to get result
+     * @param ReorderQuestionsRequest $request
+     * @param ReorderQuestions\IReorderQuestions $command
+     * @return JsonResponse
+     */
+    public function postAnswers(ReorderQuestionsRequest $request, ReorderQuestions\IReorderQuestions $command): JsonResponse
+    {
+        try{
+            $questions =$request->questions ;
+            $command->execute($questions);
+            return $this->successResponse([],'Question reordered successfully!' , Response::HTTP_ACCEPTED);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+
 
 }
