@@ -32,6 +32,12 @@ class ResultRepository extends Repository implements IResultRepository
         return Result::where('user_id', $user_id)->get();
     }
 
+    public function takeAssessment(int $user_id): bool
+    {
+        $results_count = Result::where('user_id', $user_id)->count();
+        return ($results_count > 0) ? 1 : 0;
+    }
+
     public function createResults(Array $answers): Collection|bool
     {
         // Start a database transaction
