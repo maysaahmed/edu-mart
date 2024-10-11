@@ -1,11 +1,13 @@
 <?php
 namespace Modules\Assessment\Infrastructure\Result;
 
+use Illuminate\Support\Collection;
 use Modules\Assessment\Core\Result\Repositories\IResultRepository;
 use App\Infrastructure\Repository\Repository;
 use Modules\Assessment\Domain\Entities\Result;
 use Modules\Assessment\Domain\Entities\Factor;
 use DB;
+
 
 class ResultRepository extends Repository implements IResultRepository
 {
@@ -25,11 +27,17 @@ class ResultRepository extends Repository implements IResultRepository
         return $associativeArray;
     }
 
-    public function createResults(Array $answers): bool|null
+    public function getResults(int $user_id): Collection|null
+    {
+        return Result::where('user_id', $user_id)->get();
+    }
+
+    public function createResults(Array $answers): Collection|bool
     {
         // Start a database transaction
         DB::beginTransaction();
         try {
+            $user_id = auth()->id();
             $factors = Factor::get();
             $associative = $this->associativeArray($answers);
 
@@ -47,24 +55,23 @@ class ResultRepository extends Repository implements IResultRepository
                 }
                 eval('$result = ' . $actualFormula . ';');
 
-//                Result::create([
-//                    'user_id' => auth()->id(),
-//                    'factor_id' => $factor->id,
-//                    'result' => $result
-//                ]);
+                Result::create([
+                    'user_id' => $user_id,
+                    'factor_id' => $factor->id,
+                    'result' => $result
+                ]);
             }
-            die;
             // Commit the transaction
             DB::commit();
 
-            return true;
+            return $this->getResults($user_id);
         } catch (\Exception $e) {
             // Rollback the transaction in case of an error
             DB::rollback();
             return false;
         }
 
-        return null;
+        return false;
     }
 
 }

@@ -2,7 +2,9 @@
 namespace Modules\Assessment\Core\Result\Commands\CreateResult;
 
 
+use Illuminate\Support\Collection;
 use Modules\Assessment\Core\Result\Repositories\IResultRepository;
+
 
 
 class CreateResult implements ICreateResult
@@ -14,8 +16,13 @@ class CreateResult implements ICreateResult
         $this->repository = $repository;
     }
 
-    public function execute(Array $answers): bool
+    public function execute(Array $answers): Collection|bool
     {
+        //check if user took the assessment before
+        $result = $this->repository->getResults(auth()->id());
+
+        if(count($result) != 0)
+            throw new \Exception('you have taken this assessment before!');
 
         $saved = $this->repository->createResults($answers);
         if ($saved){

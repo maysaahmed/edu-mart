@@ -93,6 +93,11 @@ class AssessmentServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Modules\Assessment\Core\Result\Queries\GetResult\IGetResult::class,
+            \Modules\Assessment\Core\Result\Queries\GetResult\GetResult::class
+        );
+
+        $this->app->bind(
             \Modules\Assessment\Core\Result\Commands\CreateResult\ICreateResult::class,
             \Modules\Assessment\Core\Result\Commands\CreateResult\CreateResult::class
         );

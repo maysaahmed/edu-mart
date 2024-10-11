@@ -21,6 +21,7 @@ Route::get('/assessment', 'AssessmentController@getAssessment');
 
 Route::middleware(['token-name:user-token'])->group(function () {
     Route::post('/assessment', 'AssessmentController@postAnswers');
+    Route::get('/result', 'AssessmentController@getResult');
 });
 
 

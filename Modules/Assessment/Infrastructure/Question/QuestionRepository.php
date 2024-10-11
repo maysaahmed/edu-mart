@@ -46,7 +46,6 @@ class QuestionRepository extends Repository implements IQuestionRepository
                 'en' => $model->ques_en,
                 'ar' => $model->ques_ar
             ];
-            $question->order = $model->order;
             $question->factor_id = $model->factor_id;
             $save = $question->save();
 
@@ -84,7 +83,7 @@ class QuestionRepository extends Repository implements IQuestionRepository
     }
     public function getQuestions(): Collection
     {
-        return Question::orderBy('order', 'asc')->get();
+        return Question::orderBy('order', 'ASC')->get();
 
     }
 

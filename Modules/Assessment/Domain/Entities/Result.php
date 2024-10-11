@@ -16,11 +16,11 @@ class Result extends Model
 
     /**
      * questions relationship
-     * @return HasMany
+     * @return BelongsTo
      */
-    public function factors(): HasMany
+    public function factor(): BelongsTo
     {
-        return $this->hasMany(Factor::class, 'factor_id', 'id');
+        return $this->BelongsTo(Factor::class, 'factor_id', 'id');
     }
 
     /**

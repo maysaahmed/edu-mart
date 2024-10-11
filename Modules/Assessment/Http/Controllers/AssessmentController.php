@@ -15,9 +15,11 @@ use Modules\Assessment\Core\Result\Commands\CreateResult;
 use Modules\Assessment\Core\Question\Queries\GetQuestionPagination;
 use Modules\Assessment\Core\Question\Queries\GetQuestions;
 use Modules\Assessment\Core\Factor\Queries\GetFactors;
+use Modules\Assessment\Core\Result\Queries\GetResult;
 use Modules\Assessment\Transformers\QuestionResource;
 use Modules\Assessment\Transformers\AssessmentResource;
 use Modules\Assessment\Transformers\FactorResource;
+use Modules\Assessment\Transformers\ResultResource;
 use App\Enums;
 use Modules\Assessment\Http\Requests\QuestionRequest;
 use Modules\Assessment\Http\Requests\FactorRequest;
@@ -183,13 +185,27 @@ class AssessmentController extends ApiController
     {
         try{
             $answers = $request->answers ;
-            $command->execute($answers);
-            return $this->successResponse([],'Result saved successfully!' , Response::HTTP_ACCEPTED);
+            $result = $command->execute($answers);
+            return $this->successResponse(ResultResource::collection($result),'Result saved successfully!' , Response::HTTP_ACCEPTED);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
     }
 
-
+    /**
+     * @param GetResult\IGetResult $query
+     * @return JsonResponse
+     */
+    public function getResult(GetResult\IGetResult $query): JsonResponse
+    {
+        try {
+            $results = $query->execute();
+            if(count($results) == 0)
+                return $this->errorResponse("You didn't take the assessment yet.");
+            return $this->successResponse(ResultResource::collection($results));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 
 }
