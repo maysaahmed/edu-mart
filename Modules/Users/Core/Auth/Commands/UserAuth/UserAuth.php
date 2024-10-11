@@ -3,6 +3,7 @@ namespace Modules\Users\Core\Auth\Commands\UserAuth;
 
 use Modules\Organizations\Core\Organization\Repositories\IOrganizationRepository;
 use Modules\Users\Core\Auth\Repositories\IAuthRepository;
+use Modules\Assessment\Core\Result\Repositories\IResultRepository;
 use Illuminate\Support\Facades\Hash;
 use App\Enums\EnumUserTypes;
 
@@ -10,7 +11,8 @@ class UserAuth implements IUserAuth
 {
     public function __construct(
         private IAuthRepository $repository,
-        private IOrganizationRepository $organizationRepository
+        private IOrganizationRepository $organizationRepository,
+        private IResultRepository $resultRepository,
     )
     {
     }
@@ -45,7 +47,11 @@ class UserAuth implements IUserAuth
                 $user_token = $user->createToken($token, $abilities)->plainTextToken;
                 //check user complete data
                 $complete_data = ($user->type == EnumUserTypes::User->value && !isset($user->account)) ? 0 : 1;
-                return ['user' => $user, 'token' => $user_token, 'complete_data' => $complete_data];
+
+                //check if user took the assessment
+                $take_assessment = $this->resultRepository->takeAssessment($user->id);
+
+                return ['user' => $user, 'token' => $user_token, 'complete_data' => $complete_data, 'take_assessment' => $take_assessment];
             }
 
         }

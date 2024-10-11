@@ -146,7 +146,7 @@ class CoursesServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            \Modules\Courses\Core\Course\Queries\GetCoursePagination\IGetQuestionPagination::class,
+            \Modules\Courses\Core\Course\Queries\GetCoursePagination\IGetCoursePagination::class,
             \Modules\Courses\Core\Course\Queries\GetCoursePagination\GetCoursePagination::class
         );
         $this->app->bind(

@@ -10,7 +10,6 @@ class EditQuestionModel extends Data
         public int $id,
         public string $ques_en,
         public string $ques_ar,
-        public int $order,
         public int $factor_id,
     ) {
     }

@@ -122,6 +122,12 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\User\Commands\ResetPassword\IResetPassword::class,
             \Modules\Users\Core\User\Commands\ResetPassword\ResetPassword::class
         );
+
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\RegisterUser\IRegisterUser::class,
+            \Modules\Users\Core\User\Commands\RegisterUser\RegisterUser::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\Users\Core\User\Repositories\IUserRepository::class,
