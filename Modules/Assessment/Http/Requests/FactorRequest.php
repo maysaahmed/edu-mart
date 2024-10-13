@@ -22,7 +22,6 @@ class FactorRequest extends ApiRequest
             'moderate_desc_ar' => 'required',
             'high_desc_en' => 'required',
             'high_desc_ar' => 'required',
-            'formula' => 'required',
         ];
 
     }

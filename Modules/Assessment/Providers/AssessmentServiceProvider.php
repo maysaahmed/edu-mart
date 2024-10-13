@@ -88,6 +88,11 @@ class AssessmentServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Modules\Assessment\Core\Factor\Commands\EditFormula\IEditFormula::class,
+            \Modules\Assessment\Core\Factor\Commands\EditFormula\EditFormula::class
+        );
+
+        $this->app->bind(
             \Modules\Assessment\Core\Factor\Repositories\IFactorRepository::class,
             \Modules\Assessment\Infrastructure\Factor\FactorRepository::class
         );
