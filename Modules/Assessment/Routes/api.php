@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/assessment', function (Request $request) {
 Route::get('/assessment', 'AssessmentController@getAssessment');
 
 Route::middleware(['token-name:user-token'])->group(function () {
-    Route::post('/assessment', 'AssessmentController@postAnswers');
+    Route::post('/postAssessment', 'AssessmentController@postAnswers');
     Route::get('/result', 'AssessmentController@getResult');
 });
 
@@ -33,4 +33,5 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     Route::post('/questions/reorder',  'AssessmentController@reorderQuestions');
     Route::get('/factors',  'AssessmentController@getFactors');
     Route::put('/factors/{id}',  'AssessmentController@updateFactor');
+    Route::put('/editFormula/{id}',  'AssessmentController@updateFormula');
 });

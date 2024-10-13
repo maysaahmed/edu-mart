@@ -7,6 +7,7 @@ use App\Infrastructure\Repository\Repository;
 use Illuminate\Support\Collection;
 use Modules\Assessment\Domain\Entities\Factor;
 use Modules\Assessment\Core\Factor\Commands\EditFactor\EditFactorModel;
+use Modules\Assessment\Core\Factor\Commands\EditFormula\EditFormulaModel;
 use DB;
 
 class FactorRepository extends Repository implements IFactorRepository
@@ -48,7 +49,6 @@ class FactorRepository extends Repository implements IFactorRepository
                 'en' => $model->high_desc_en,
                 'ar' => $model->high_desc_ar
             ];
-            $factor->formula = $model->formula;
             $save = $factor->save();
 
             if ($save) {
@@ -59,6 +59,24 @@ class FactorRepository extends Repository implements IFactorRepository
         return null;
     }
 
+
+    public function editFormula(EditFormulaModel $model): bool|null
+    {
+        $id = $model->id;
+        $factor = $this->getFactorById($id);
+
+        if($factor){
+
+            $factor->formula = $model->formula;
+            $save = $factor->save();
+
+            if ($save) {
+                return true;
+            }
+        }
+
+        return null;
+    }
 
     public function getFactors(): Collection
     {

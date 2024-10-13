@@ -11,6 +11,7 @@ use Modules\Assessment\Core\Option\Queries\GetOptions;
 use Modules\Assessment\Core\Question\Commands\EditQuestion;
 use Modules\Assessment\Core\Question\Commands\ReorderQuestions;
 use Modules\Assessment\Core\Factor\Commands\EditFactor;
+use Modules\Assessment\Core\Factor\Commands\EditFormula;
 use Modules\Assessment\Core\Result\Commands\CreateResult;
 use Modules\Assessment\Core\Question\Queries\GetQuestionPagination;
 use Modules\Assessment\Core\Question\Queries\GetQuestions;
@@ -23,6 +24,7 @@ use Modules\Assessment\Transformers\ResultResource;
 use App\Enums;
 use Modules\Assessment\Http\Requests\QuestionRequest;
 use Modules\Assessment\Http\Requests\FactorRequest;
+use Modules\Assessment\Http\Requests\FormulaRequest;
 use Modules\Assessment\Http\Requests\ReorderQuestionsRequest;
 use Modules\Assessment\Http\Requests\StoreResultsRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -158,6 +160,23 @@ class AssessmentController extends ApiController
         }
     }
 
+    /**
+     * Update the specified resource in storage.
+     * @param FactorRequest $request
+     * @param int $id
+     * @param EditFormula\IEditFormula $command
+     * @return JsonResponse
+     */
+    public function updateFormula(FormulaRequest $request, int $id, EditFormula\IEditFormula $command): JsonResponse
+    {
+        try{
+            $commandModel = EditFormula\EditFormulaModel::from($request->all() + ['id' => $id]);
+            $item = $command->execute($commandModel);
+            return $this->successResponse([],'Data updated successfully!' , Response::HTTP_ACCEPTED);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 
     // user assessment
     /**

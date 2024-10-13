@@ -18,7 +18,6 @@ class EditFactorModel extends Data
         public string $moderate_desc_ar,
         public string $high_desc_en,
         public string $high_desc_ar,
-        public string $formula,
 
     ) {
     }
