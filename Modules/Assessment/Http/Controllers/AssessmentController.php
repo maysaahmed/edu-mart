@@ -17,6 +17,7 @@ use Modules\Assessment\Core\Question\Queries\GetQuestionPagination;
 use Modules\Assessment\Core\Question\Queries\GetQuestions;
 use Modules\Assessment\Core\Factor\Queries\GetFactors;
 use Modules\Assessment\Core\Result\Queries\GetResult;
+use Modules\Assessment\Core\Result\Queries\CheckResult;
 use Modules\Assessment\Transformers\QuestionResource;
 use Modules\Assessment\Transformers\AssessmentResource;
 use Modules\Assessment\Transformers\FactorResource;
@@ -222,6 +223,20 @@ class AssessmentController extends ApiController
             if(count($results) == 0)
                 return $this->errorResponse("You didn't take the assessment yet.");
             return $this->successResponse(ResultResource::collection($results));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * @param CheckResult\ICheckResult $query
+     * @return JsonResponse
+     */
+    public function checkResult(CheckResult\ICheckResult $query): JsonResponse
+    {
+        try {
+            $takeAssessment = $query->execute();
+            return $this->successResponse(['takeAssessment' => $takeAssessment]);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

@@ -9,7 +9,7 @@ use Modules\Courses\Core\Level\Commands\CreateLevel;
 use Modules\Courses\Core\Level\Commands\DeleteLevel;
 use Modules\Courses\Core\Level\Commands\EditLevel;
 use Modules\Courses\Core\Level\Commands\ImportLevel;
-use Modules\Courses\Core\Level\Queries\GetLevelPagination;
+use Modules\Courses\Core\Level\Queries\GetLevels;
 use App\Http\Requests\ImportCSVRequest;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -34,20 +34,19 @@ class LevelsController extends ApiController
 
     /**
      * Display a listing of the resource.
-     * @param Request $request
-     * @param GetLevelPagination\IGetLevelPagination $query
+     * @param GetLevels\IGetLevels $query
      * @return JsonResponse
      */
-    public function index(Request $request, GetLevelPagination\IGetLevelPagination $query): JsonResponse
+    public function index(GetLevels\IGetLevels $query): JsonResponse
     {
         try {
-            $queryModel = GetLevelPagination\GetLevelPaginationModel::from($request->all());
-            $pagination = $query->execute($queryModel);
-            return $this->paginationResponse(CategoryResource::class,$pagination);
+            $levels = $query->execute();
+            return $this->successResponse(CategoryResource::collection($levels));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
     }
+
 
 
     /**

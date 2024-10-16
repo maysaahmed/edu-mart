@@ -3,9 +3,8 @@ namespace Modules\Administration\Infrastructure\Admin;
 
 use Modules\Administration\Core\Admin\Repositories\IAdminRepository;
 use App\Infrastructure\Repository\Repository;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Administration\Domain\Entities\Admin\Admin;
-use Spatie\QueryBuilder\QueryBuilder;
+
 use App\Enums\EnumUserTypes;
 
 class AdminRepository extends Repository implements IAdminRepository
@@ -26,19 +25,11 @@ class AdminRepository extends Repository implements IAdminRepository
         return Admin::find($id);
     }
 
-    public function getAdminsPagination(int $page, ?string $name = null, ?string $email = null): LengthAwarePaginator
+    public function getAdmins(): \Illuminate\Support\Collection
     {
-//        if ($name) {
-//            $this->addCriteria(new NameCriteria($name));
-//        }
-//
-//        $this->addCriteria(new OrderByLatest());
-//        return $this->paginator(50, $page);
-        return  QueryBuilder::for(Admin::class)
-            ->where('type', EnumUserTypes::Admin)
-            ->allowedFilters('name', 'email')
+        return  Admin::where('type', EnumUserTypes::Admin)
             ->latest()
-            ->paginate();
+            ->get();
     }
 
     public function createAdmin(string $name, string $email, string $password, int $type, int $roleId, int $createdBy, int $isActive): Admin

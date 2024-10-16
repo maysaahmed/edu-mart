@@ -12,8 +12,8 @@ use Modules\Courses\Core\Course\Commands\DeleteCourse;
 use Modules\Courses\Core\Course\Commands\EditCourse;
 use Modules\Courses\Core\Course\Commands\ImportCourse;
 use Modules\Courses\Core\Course\Commands\EditCourseVisibility;
-use Modules\Courses\Core\Course\Queries\GetCoursePagination;
-use Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination;
+use Modules\Courses\Core\Course\Queries\GetCourses;
+use Modules\Courses\Core\Course\Queries\GetArchivedCourses;
 use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination;
 use Modules\Courses\Core\Course\Queries\GetUserCoursesPagination;
 use Modules\Courses\Core\Course\Queries\GetCourse;
@@ -48,16 +48,14 @@ class CoursesController extends ApiController
 
     /**
      * Display a listing of the resource.
-     * @param Request $request
-     * @param GetCoursePagination\IGetCoursePagination $query
+     * @param GetCourses\IGetCourses $query
      * @return JsonResponse
      */
-    public function index(Request $request,GetCoursePagination\IGetCoursePagination $query): JsonResponse
+    public function index(GetCourses\IGetCourses $query): JsonResponse
     {
         try {
-            $queryModel = GetCoursePagination\GetCoursePaginationModel::from($request->all());
-            $pagination = $query->execute($queryModel);
-            return $this->paginationResponse(CourseResource::class,$pagination);
+            $courses = $query->execute();
+            return $this->successResponse(CourseResource::collection($courses));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -65,16 +63,14 @@ class CoursesController extends ApiController
 
     /**
      * Display a list of archived courses
-     * @param Request $request
-     * @param GetArchivedCoursePagination\IGetArchivedCoursePagination $query
+     * @param GetArchivedCourses\IGetArchivedCourses $query
      * @return JsonResponse
      */
-    public function archived(Request $request,GetArchivedCoursePagination\IGetArchivedCoursePagination $query): JsonResponse
+    public function archived(GetArchivedCourses\IGetArchivedCourses $query): JsonResponse
     {
         try {
-            $queryModel = GetArchivedCoursePagination\GetArchivedCoursePaginationModel::from($request->all());
-            $pagination = $query->execute($queryModel);
-            return $this->paginationResponse(CourseResource::class,$pagination);
+            $archived = $query->execute();
+            return $this->successResponse(CourseResource::collection($archived));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

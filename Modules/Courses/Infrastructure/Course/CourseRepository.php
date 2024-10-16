@@ -1,17 +1,16 @@
 <?php
 namespace Modules\Courses\Infrastructure\Course;
 
+use Illuminate\Support\Collection;
 use Modules\Courses\Core\Course\Commands\CreateCourse\CreateCourseModel;
 use Modules\Courses\Core\Course\Commands\EditCourse\EditCourseModel;
-use Modules\Courses\Core\Course\Queries\GetCoursePagination\GetCoursePaginationModel;
-use Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination\GetArchivedCoursePaginationModel;
 use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination\GetOrganizationCoursesPaginationModel;
 use Modules\Courses\Core\Course\Queries\GetUserCoursesPagination\GetUserCoursesPaginationModel;
 use Modules\Courses\Core\Course\Repositories\ICourseRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Courses\Domain\Entities\Course;
-use Nwidart\Modules\Collection;
+
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Courses\Infrastructure\Course\Imports\ImportCourses;
@@ -36,20 +35,16 @@ class CourseRepository extends Repository implements ICourseRepository
             })->get()->toArray();
     }
 
-    public function getCoursesPagination(GetCoursePaginationModel $model): LengthAwarePaginator
+    public function getCourses(): Collection
     {
-        return  QueryBuilder::for(Course::class)
-            ->allowedFilters('title', 'duration', 'price')
-            ->latest()
-            ->paginate();
+        return  Course::latest()
+            ->get();
     }
-    public function getArchivedCoursesPagination(GetArchivedCoursePaginationModel $model): LengthAwarePaginator
+    public function getArchivedCourses(): \Illuminate\Support\Collection
     {
-        return  QueryBuilder::for(Course::class)
-            ->allowedFilters('title')
-            ->onlyTrashed()
+        return  Course::onlyTrashed()
             ->latest()
-            ->paginate();
+            ->get();
     }
     public function getOrganizationCoursesPagination(GetOrganizationCoursesPaginationModel $model): LengthAwarePaginator
     {
