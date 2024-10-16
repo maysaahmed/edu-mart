@@ -10,6 +10,7 @@ use Modules\Users\Http\Requests\CreateUserRequest;
 use Modules\Users\Core\User\Commands\CreateUser;
 use Modules\Users\Core\User\Commands\ImportUser;
 use Modules\Users\Core\User\Commands\VerifyUser;
+use Modules\Users\Core\User\Commands\VerifyRegisteredUser;
 use Modules\Users\Core\User\Commands\ResendMail;
 use Modules\Users\Core\Auth\Commands\UserAuth;
 use Modules\Users\Core\User\Commands\CompleteUserData;
@@ -271,6 +272,23 @@ class UsersController extends ApiController
             $result = $command->execute($commandModel);
 
                 return $this->successResponse( new UserResource($result), 'Thank you for registering on our website, you have received a verification email please check your email.');
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * @param $token
+     * @param VerifyRegisteredUser\IVerifyRegisteredUser $command
+     * @return JsonResponse
+     */
+    public function verifyRegisteredUser($token, VerifyRegisteredUser\IVerifyRegisteredUser $command): JsonResponse
+    {
+        try {
+            $verified = $command->execute($token);
+            if($verified)
+                return $this->successResponse([],'Email Verified Successfully. You can now login.');
+
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

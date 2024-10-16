@@ -16,8 +16,9 @@ Route::post('/user/verify/{token}', 'UsersController@verifyUser');
 Route::post('/forgetPassword', 'UsersController@forgetPassword');
 Route::post('/resetPassword/{token}', 'UsersController@ResetPassword');
 
-Route::post('user/login', 'UsersController@login');
-Route::post('user/register', 'UsersController@register');
+Route::post('/user/login', 'UsersController@login');
+Route::post('/user/register', 'UsersController@register');
+Route::get('/user/verify-registered/{token}', 'UsersController@verifyRegisteredUser');
 
 
 Route::middleware(['token-name:manager-token'])->group(function () {

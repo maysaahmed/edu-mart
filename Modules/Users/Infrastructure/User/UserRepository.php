@@ -148,6 +148,7 @@ class UserRepository extends Repository implements IUserRepository
         return null;
     }
 
+
     public function resetPassword($token, $password): int|null
     {
         $resetToken = $this->getResetByToken($token);
@@ -236,6 +237,23 @@ class UserRepository extends Repository implements IUserRepository
         ]);
 
         return $user;
+    }
+
+    public function verifyRegisteredUser($token): bool|null
+    {
+        $verifyUser = $this->getVerifyUserByToken($token);
+
+        if($verifyUser){
+
+            $verifyUser->user->check_email_status = 1;
+            $save = $verifyUser->user->save();
+
+            if ($save) {
+                return true;
+            }
+        }
+
+        return null;
     }
 
 }

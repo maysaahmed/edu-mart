@@ -128,6 +128,11 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\User\Commands\RegisterUser\RegisterUser::class
         );
 
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\VerifyRegisteredUser\IVerifyRegisteredUser::class,
+            \Modules\Users\Core\User\Commands\VerifyRegisteredUser\VerifyRegisteredUser::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\Users\Core\User\Repositories\IUserRepository::class,
