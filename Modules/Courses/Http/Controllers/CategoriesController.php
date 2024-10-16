@@ -9,7 +9,7 @@ use Modules\Courses\Core\Category\Commands\CreateCategory;
 use Modules\Courses\Core\Category\Commands\DeleteCategory;
 use Modules\Courses\Core\Category\Commands\EditCategory;
 use Modules\Courses\Core\Category\Commands\ImportCategory;
-use Modules\Courses\Core\Category\Queries\GetCategoryPagination;
+use Modules\Courses\Core\Category\Queries\GetCategories;
 use App\Http\Requests\ImportCSVRequest;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -35,16 +35,14 @@ class CategoriesController extends ApiController
 
     /**
      * Display a listing of the resource.
-     * @param Request $request
-     * @param GetCategoryPagination\IGetCategoryPagination $query
+     * @param GetCategories\IGetCategories $query
      * @return JsonResponse
      */
-    public function index(Request $request, GetCategoryPagination\IGetCategoryPagination $query): JsonResponse
+    public function index(GetCategories\IGetCategories $query): JsonResponse
     {
         try {
-            $queryModel = GetCategoryPagination\GetCategoryPaginationModel::from($request->all());
-            $pagination = $query->execute($queryModel);
-            return $this->paginationResponse(CategoryResource::class,$pagination);
+            $categories = $query->execute();
+            return $this->successResponse(CategoryResource::collection($categories));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

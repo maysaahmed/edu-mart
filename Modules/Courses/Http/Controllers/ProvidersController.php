@@ -13,7 +13,7 @@ use Modules\Courses\Core\Provider\Commands\CreateProvider;
 use Modules\Courses\Core\Provider\Commands\DeleteProvider;
 use Modules\Courses\Core\Provider\Commands\EditProvider;
 use Modules\Courses\Core\Provider\Commands\ImportProvider;
-use Modules\Courses\Core\Provider\Queries\GetProviderPagination;
+use Modules\Courses\Core\Provider\Queries\GetProviders;
 use App\Enums;
 
 class ProvidersController extends ApiController
@@ -34,16 +34,14 @@ class ProvidersController extends ApiController
 
     /**
      * Display a listing of the resource.
-     * @param Request $request
-     * @param GetProviderPagination\IGetProviderPagination $query
+     * @param GetProviders\IGetProviders $query
      * @return JsonResponse
      */
-    public function index(Request $request, GetProviderPagination\IGetProviderPagination $query): JsonResponse
+    public function index(GetProviders\IGetProviders $query): JsonResponse
     {
         try {
-            $queryModel = GetProviderPagination\GetProviderPaginationModel::from($request->all());
-            $pagination = $query->execute($queryModel);
-            return $this->paginationResponse(CategoryResource::class,$pagination);
+            $providers = $query->execute();
+            return $this->successResponse(CategoryResource::collection($providers));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -52,7 +50,7 @@ class ProvidersController extends ApiController
 
     /**
      * Store a newly created resource in storage.
-     * @param CategoryRequest $request
+     * @param ProviderRequest $request
      * @param CreateProvider\ICreateProvider $command
      * @return JsonResponse
      */

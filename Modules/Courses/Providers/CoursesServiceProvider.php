@@ -146,12 +146,12 @@ class CoursesServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            \Modules\Courses\Core\Course\Queries\GetCoursePagination\IGetCoursePagination::class,
-            \Modules\Courses\Core\Course\Queries\GetCoursePagination\GetCoursePagination::class
+            \Modules\Courses\Core\Course\Queries\GetCourses\IGetCourses::class,
+            \Modules\Courses\Core\Course\Queries\GetCourses\GetCourses::class
         );
         $this->app->bind(
-            \Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination\IGetArchivedCoursePagination::class,
-            \Modules\Courses\Core\Course\Queries\GetArchivedCoursePagination\GetArchivedCoursePagination::class
+            \Modules\Courses\Core\Course\Queries\GetArchivedCourses\IGetArchivedCourses::class,
+            \Modules\Courses\Core\Course\Queries\GetArchivedCourses\GetArchivedCourses::class
         );
 
         $this->app->bind(

@@ -12,7 +12,7 @@ use Modules\Administration\Core\Admin\Commands\EditAdmin;
 use Modules\Administration\Core\Admin\Commands\DeleteAdmin;
 use Modules\Administration\Core\Admin\Commands\UpdateAdminStatus;
 use Modules\Administration\Core\Admin\Commands\EditProfile;
-use Modules\Administration\Core\Admin\Queries\GetAdminPagination;
+use Modules\Administration\Core\Admin\Queries\GetAdmins;
 use Modules\Administration\Core\Admin\Commands\AdminAuth;
 use Modules\Administration\Http\Requests\AdminLoginRequest;
 use Modules\Administration\Http\Requests\CreateAdminRequest;
@@ -77,16 +77,14 @@ class AdministrationController extends ApiController
      *          )
      *       ),
      * )
-     * @param Request $request
-     * @param GetAdminPagination\IGetAdminPagination $query
+     * @param GetAdmins\IGetAdmins $query
      * @return JsonResponse
      */
-    public function index(Request $request, GetAdminPagination\IGetAdminPagination $query): JsonResponse
+    public function index(GetAdmins\IGetAdmins $query): JsonResponse
     {
         try {
-            $queryModel = GetAdminPagination\GetAdminPaginationModel::from($request->all());
-            $pagination = $query->execute($queryModel);
-            return $this->paginationResponse(AdminResource::class,$pagination);
+            $admins = $query->execute();
+            return $this->successResponse(AdminResource::collection($admins));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

@@ -43,8 +43,8 @@ class AdministrationServiceProvider extends ServiceProvider
 
         // Application/Core
         $this->app->bind(
-            \Modules\Administration\Core\Admin\Queries\GetAdminPagination\IGetAdminPagination::class,
-            \Modules\Administration\Core\Admin\Queries\GetAdminPagination\GetAdminPagination::class
+            \Modules\Administration\Core\Admin\Queries\GetAdmins\IGetAdmins::class,
+            \Modules\Administration\Core\Admin\Queries\GetAdmins\GetAdmins::class
         );
 
         $this->app->bind(

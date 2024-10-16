@@ -42,18 +42,15 @@ class OrganizationsController extends ApiController
 
     /**
      * Display a listing of the resource.
-     * @param Request $request
-     * @param GetOrganizationPagination\IGetOrganizationPagination $query
+     * @param GetOrganizationList\IGetOrganizationList $query
      * @return JsonResponse
      */
 
-    public function index(Request $request, GetOrganizationPagination\IGetOrganizationPagination $query): JsonResponse
+    public function index(GetOrganizationList\IGetOrganizationList $query): JsonResponse
     {
-
         try {
-            $queryModel = GetOrganizationPagination\GetOrganizationPaginationModel::from($request->all());
-            $pagination = $query->execute($queryModel);
-            return $this->paginationResponse(OrganizationResource::class,$pagination);
+            $orgs = $query->execute();
+            return $this->successResponse(OrganizationResource::collection($orgs));
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
