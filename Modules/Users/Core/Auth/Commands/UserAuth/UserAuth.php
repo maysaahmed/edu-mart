@@ -36,6 +36,12 @@ class UserAuth implements IUserAuth
 
                 //check user organization is blocked or user is blocked
                 $organization = $this->organizationRepository->getOrganizationById($user->organization_id);
+                if($organization)
+                {
+                    if (!$organization->status) {
+                        throw new \Exception('Your account is blocked!');
+                    }
+                }
                 if (!$user->is_active || !$organization->status) {
                     throw new \Exception('Your account is blocked!');
                 }

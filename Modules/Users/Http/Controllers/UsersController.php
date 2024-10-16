@@ -273,7 +273,7 @@ class UsersController extends ApiController
             $commandModel = RegisterUser\RegisterUserModel::from($request->all() );
             $result = $command->execute($commandModel);
 
-                return $this->successResponse( new UserResource($result), 'Thank you for registering on our website, you have received a verification email please check your email.');
+                return $this->successResponse( new UserResource($result), 'Thank you for registering on our website, you have received a verification mail please check your email.');
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
