@@ -11,6 +11,7 @@ use Modules\Users\Core\User\Commands\CreateUser;
 use Modules\Users\Core\User\Commands\ImportUser;
 use Modules\Users\Core\User\Commands\VerifyUser;
 use Modules\Users\Core\User\Commands\VerifyRegisteredUser;
+use Modules\Users\Core\User\Commands\ResendVerificationMail;
 use Modules\Users\Core\User\Commands\ResendMail;
 use Modules\Users\Core\Auth\Commands\UserAuth;
 use Modules\Users\Core\User\Commands\CompleteUserData;
@@ -21,6 +22,7 @@ use Modules\Users\Http\Requests\VerifyUserRequest;
 use Modules\Users\Http\Requests\UserLoginRequest;
 use Modules\Users\Http\Requests\ForgetPasswordRequest;
 use Modules\Users\Http\Requests\RegisterUserRequest;
+use Modules\Users\Http\Requests\ResendMailRequest;
 use App\Http\Requests\ImportCSVRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Transformers\UserAccountResource;
@@ -288,6 +290,24 @@ class UsersController extends ApiController
             $verified = $command->execute($token);
             if($verified)
                 return $this->successResponse([],'Email Verified Successfully. You can now login.');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * @param ResendMailRequest $request
+     * @param $email
+     * @param ResendVerificationMail\IResendVerificationMail $command
+     * @return JsonResponse
+     */
+    public function resendVerificationMail(ResendMailRequest $request, ResendVerificationMail\IResendVerificationMail $command): JsonResponse
+    {
+        try {
+            $sent = $command->execute($request->email);
+            if($sent)
+                return $this->successResponse([],'The email resent successfully');
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
