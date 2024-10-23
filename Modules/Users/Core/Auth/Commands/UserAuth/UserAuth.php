@@ -42,7 +42,7 @@ class UserAuth implements IUserAuth
                         throw new \Exception('Your account is blocked!');
                     }
                 }
-                if (!$user->is_active || !$organization->status) {
+                if (!$user->is_active ) {
                     throw new \Exception('Your account is blocked!');
                 }
 
