@@ -2,21 +2,22 @@
 
 namespace App\Infrastructure\Services;
 use  App\Core\Interfaces\Services\IImageService;
-use Image;
+use Intervention\Image\ImageManager;
 use File;
+use Illuminate\Support\Str;
 
 class ImageService implements IImageService
 {
     public function uploadImage($img, $path, $x, $y): string
     {
 
-        $filename = str_random(12) . '_' . time() . '.' . strtolower($img->getClientOriginalExtension());
+        $filename = Str::random(12) . '_' . time() . '.' . strtolower($img->getClientOriginalExtension());
 
         if (!file_exists(public_path($path))) {
             mkdir(public_path($path), 0777, true);
         }
 
-        Image::make($img)->resize($x, $y)->save($path  . $filename);  //resized
+        ImageManager::imagick()->read($img)->resize($x, $y)->save($path  . $filename);  //resized
 
         return $filename;
     }

@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Core\Interfaces\Services\IMailService::class,
             \App\Infrastructure\Services\MailService::class
         );
+        $this->app->bind(
+            \App\Core\Interfaces\Services\IImageService::class,
+            \App\Infrastructure\Services\ImageService::class
+        );
 
         // Common
         $this->app->bind(

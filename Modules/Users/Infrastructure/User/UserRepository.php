@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Users\Infrastructure\User;
 
+use App\Core\Interfaces\Services\IImageService;
 use Mockery\Generator\StringManipulation\Pass\Pass;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
 use Modules\Users\Core\User\Commands\RegisterUser\RegisterUserModel;
@@ -22,6 +23,13 @@ use Hash;
 
 class UserRepository extends Repository implements IUserRepository
 {
+
+    private IImageService $img;
+
+    public function __construct(IImageService $img)
+    {
+        $this->img = $img;
+    }
     protected function model(): string
     {
         return EndUser::class;
@@ -263,6 +271,42 @@ class UserRepository extends Repository implements IUserRepository
         $item = $this->getUserByID($model->id);
 
         if($item){
+            $account = UserAccount::where('user_id', $model->id)->first();
+            $img_name = '';
+            if(isset($model->image))
+            {
+                $img_name = $this->img->uploadImage(request()->file('image'), 'images/profile/', 150, 150);
+                if($account){
+                    $account->image = $img_name;
+                    if(isset($account->image))
+                        $this->img->removeImage('images/profile/', $account->image);
+                }
+            }
+
+            if($account)
+            {
+                $account->gender = $model->gender;
+                $account->date_of_birth = $model->dob;
+                $account->graduated = $model->graduated;
+                $account->education = $model->education;
+                $account->university = $model->university;
+                $account->industry = $model->industry;
+                $account->save();
+            }else{
+                UserAccount::create([
+                    'user_id' => $model->id,
+                    'gender' => $model->gender,
+                    'date_of_birth' => $model->dob,
+                    'graduated' => $model->graduated,
+                    'education' => $model->education,
+                    'university' => $model->university,
+                    'industry' => $model->industry,
+                    'image' => $img_name
+                ]);
+            }
+
+
+
             $item->name = $model->name;
             $item->email = $model->email;
 

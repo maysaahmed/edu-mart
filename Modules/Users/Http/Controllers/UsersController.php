@@ -23,8 +23,10 @@ use Modules\Users\Http\Requests\UserLoginRequest;
 use Modules\Users\Http\Requests\ForgetPasswordRequest;
 use Modules\Users\Http\Requests\RegisterUserRequest;
 use Modules\Users\Http\Requests\ResendMailRequest;
+use Modules\Users\Http\Requests\EditProfileRequest;
 use App\Http\Requests\ImportCSVRequest;
 use Modules\Users\Transformers\UserResource;
+use Modules\Users\Transformers\UserProfileResource;
 use Modules\Users\Transformers\UserAccountResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Commands\DeleteUser;
@@ -32,6 +34,7 @@ use Modules\Users\Core\User\Commands\EditUser;
 use Modules\Users\Core\User\Commands\ForgetPassword;
 use Modules\Users\Core\User\Commands\ResetPassword;
 use Modules\Users\Core\User\Commands\RegisterUser;
+use Modules\Users\Core\User\Commands\EditProfile;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Users\Imports\ImportUsers;
 use Str;
@@ -314,5 +317,23 @@ class UsersController extends ApiController
         }
     }
 
+
+
+    public function editProfile(EditProfileRequest $request, EditProfile\IEditProfile $command): JsonResponse
+    {
+        try {
+            $user_id = $request->user()->id;
+
+            $additionalModelData = [
+                "id" => $user_id,
+            ];
+            $commandModel = EditProfile\EditProfileModel::from($request->all()+$additionalModelData);
+            $result = $command->execute($commandModel);
+
+            return $this->successResponse( new UserProfileResource($result), 'The profile has been updated successfully.');
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 
 }
