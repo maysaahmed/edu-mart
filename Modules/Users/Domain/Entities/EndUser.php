@@ -16,6 +16,7 @@ class EndUser extends User
         'organization_id',
         'type',
         'check_email_status',
+        'email_verified_at',
         'is_active',
         'created_by',
         'updated_by',

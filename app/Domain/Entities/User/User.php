@@ -30,6 +30,7 @@ class User extends Authenticatable
         'organization_id',
         'type',
         'check_email_status',
+        'email_verified_at',
         'is_active',
         'createdBy',
         'updatedBy',

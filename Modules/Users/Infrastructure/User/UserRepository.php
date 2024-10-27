@@ -138,6 +138,7 @@ class UserRepository extends Repository implements IUserRepository
 
             $verifyUser->user->check_email_status = 1;
             $verifyUser->user->password = bcrypt($password);
+            $verifyUser->user->email_verified_at = now();;
             $save = $verifyUser->user->save();
 
             if ($save) {
@@ -246,6 +247,7 @@ class UserRepository extends Repository implements IUserRepository
         if($verifyUser){
 
             $verifyUser->user->check_email_status = 1;
+            $verifyUser->user->email_verified_at = now();;
             $save = $verifyUser->user->save();
 
             if ($save) {
@@ -256,4 +258,21 @@ class UserRepository extends Repository implements IUserRepository
         return null;
     }
 
+    public function editProfile($model): EndUser|null
+    {
+        $item = $this->getUserByID($model->id);
+
+        if($item){
+            $item->name = $model->name;
+            $item->email = $model->email;
+
+            $save = $item->save();
+
+            if ($save) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
 }
