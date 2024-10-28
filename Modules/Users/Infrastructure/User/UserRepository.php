@@ -275,12 +275,12 @@ class UserRepository extends Repository implements IUserRepository
             $img_name = '';
             if(isset($model->image))
             {
-                $img_name = $this->img->uploadImage(request()->file('image'), 'images/profile/', 150, 150);
-                if($account){
-                    $account->image = $img_name;
-                    if(isset($account->image))
-                        $this->img->removeImage('images/profile/', $account->image);
+                if($account && isset($account->image)){
+                    $this->img->removeImage('images/profile/', $account->image);
                 }
+                $img_name = $this->img->uploadImage(request()->file('image'), 'images/profile/', 150, 150);
+                if($account)
+                    $account->image = $img_name;
             }
 
             if($account)
