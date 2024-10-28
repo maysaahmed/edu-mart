@@ -29,6 +29,7 @@ use Modules\Users\Transformers\UserResource;
 use Modules\Users\Transformers\UserProfileResource;
 use Modules\Users\Transformers\UserAccountResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
+use Modules\Users\Core\User\Queries\GetUserProfile;
 use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
 use Modules\Users\Core\User\Commands\ForgetPassword;
@@ -336,4 +337,14 @@ class UsersController extends ApiController
         }
     }
 
+    public function getUserProfile(GetUserProfile\IGetUserProfile $query): JsonResponse
+    {
+        try {
+           $result = $query->execute();
+
+            return $this->successResponse( new UserProfileResource($result));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 }
