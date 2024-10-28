@@ -132,6 +132,19 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\User\Commands\VerifyRegisteredUser\IVerifyRegisteredUser::class,
             \Modules\Users\Core\User\Commands\VerifyRegisteredUser\VerifyRegisteredUser::class
         );
+
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\EditProfile\IEditProfile::class,
+            \Modules\Users\Core\User\Commands\EditProfile\EditProfile::class
+        );
+
+
+        $this->app->bind(
+            \Modules\Users\Core\User\Queries\GetUserProfile\IGetUserProfile::class,
+            \Modules\Users\Core\User\Queries\GetUserProfile\GetUserProfile::class
+        );
+
+
         $this->app->bind(
                 \Modules\Users\Core\User\Commands\ResendVerificationMail\IResendVerificationMail::class,
                 \Modules\Users\Core\User\Commands\ResendVerificationMail\ResendVerificationMail::class

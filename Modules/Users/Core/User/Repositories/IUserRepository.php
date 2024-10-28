@@ -33,5 +33,8 @@ interface IUserRepository extends IRepository
 
     public function registerUser(RegisterUserModel $model): EndUser;
 
+    public function editProfile(EditProfileModel $model): EndUser|null;
+
+
 
 }
