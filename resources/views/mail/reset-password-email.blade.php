@@ -14,7 +14,7 @@
                 <tr>
                     <td style="text-align: center;">
                         <!-- Logo Image -->
-                        <img src="logo.png" alt="Logo" width="120" style="display: block; margin: 0 auto;">
+                        <img src="{{env('APP_URL')}}/logo.png" alt="Logo" width="120" style="display: block; margin: 0 auto;">
 
                         <h1 style="color:#344054; font-size: 24px; line-height: 31.2px; font-weight: 700;">Edumart Password Reset</h1>
                         <p style="color:#344054; font-size: 22px; line-height: 28.6px; font-weight: 400; margin-bottom: 90px;">To Reset your Edumart Password, please click the button below.</p>

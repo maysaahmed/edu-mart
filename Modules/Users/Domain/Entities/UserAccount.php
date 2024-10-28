@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserAccount extends Model
 {
     protected $table = 'accounts';
-    protected $fillable = ['user_id', 'job_title', 'area', 'date_of_birth', 'gender'];
+    protected $fillable = ['user_id', 'job_title', 'area', 'date_of_birth', 'gender', 'graduated', 'education', 'university', 'industry', 'image'];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
