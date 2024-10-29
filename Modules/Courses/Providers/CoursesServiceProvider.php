@@ -160,8 +160,8 @@ class CoursesServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            \Modules\Courses\Core\Course\Queries\GetUserCoursesPagination\IGetUserCoursesPagination::class,
-            \Modules\Courses\Core\Course\Queries\GetUserCoursesPagination\GetUserCoursesPagination::class
+            \Modules\Courses\Core\Course\Queries\GetUserCourses\IGetUserCourses::class,
+            \Modules\Courses\Core\Course\Queries\GetUserCourses\GetUserCourses::class
         );
 
         $this->app->bind(

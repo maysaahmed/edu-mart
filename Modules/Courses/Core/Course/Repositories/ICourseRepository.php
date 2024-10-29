@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Modules\Courses\Core\Course\Commands\CreateCourse\CreateCourseModel;
 use Modules\Courses\Core\Course\Commands\EditCourse\EditCourseModel;
 use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination\GetOrganizationCoursesPaginationModel;
-use Modules\Courses\Core\Course\Queries\GetUserCoursesPagination\GetUserCoursesPaginationModel;
+use Modules\Courses\Core\Course\Queries\GetUserCourses\GetUserCoursesModel;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Courses\Domain\Entities\Course;
 
@@ -16,7 +16,7 @@ interface ICourseRepository extends IRepository
     public function getCourses(): Collection;
     public function getArchivedCourses(): Collection;
     public function getOrganizationCoursesPagination(GetOrganizationCoursesPaginationModel $model): LengthAwarePaginator;
-    public function getUserCoursesPagination(GetUserCoursesPaginationModel $model): LengthAwarePaginator;
+    public function getUserCourses(GetUserCoursesModel $model): \Illuminate\Database\Eloquent\Collection;
     public function createCourse(CreateCourseModel $model): Course;
     public function editCourse(EditCourseModel $model): Course|null;
     public function deleteCourse(int $id): bool;

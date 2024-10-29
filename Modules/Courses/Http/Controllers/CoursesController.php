@@ -15,7 +15,7 @@ use Modules\Courses\Core\Course\Commands\EditCourseVisibility;
 use Modules\Courses\Core\Course\Queries\GetCourses;
 use Modules\Courses\Core\Course\Queries\GetArchivedCourses;
 use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination;
-use Modules\Courses\Core\Course\Queries\GetUserCoursesPagination;
+use Modules\Courses\Core\Course\Queries\GetUserCourses;
 use Modules\Courses\Core\Course\Queries\GetCourse;
 use Modules\Courses\Core\Course\Queries\GetMinMaxCoursePrice;
 use Modules\Courses\Core\Category\Queries\GetCategories;
@@ -281,22 +281,17 @@ class CoursesController extends ApiController
     /**
      * Display a list of organization courses
      * @param Request $request
-     * @param GetUserCoursesPagination\IGetUserCoursesPagination $query
+     * @param GetUserCourses\IGetUserCourses $query
      * @return JsonResponse
      */
-    public function getUserCourses(Request $request,GetUserCoursesPagination\IGetUserCoursesPagination $query): JsonResponse
+    public function getUserCourses(Request $request, GetUserCourses\IGetUserCourses $query): JsonResponse
     {
         try {
-            $queryModel = GetUserCoursesPagination\GetUserCoursesPaginationModel::from( $request->all() + ['organization_id' => request()->user()->organization_id] );
+            $queryModel = GetUserCourses\GetUserCoursesModel::from( $request->all() + ['organization_id' => request()->user()->organization_id] );
 
-            $pagination = $query->execute($queryModel);
-            $data = [
-                'paginatedData' =>  UserCourseResourceCollection::make($pagination)->status($request->status ?? 'all'),
-                'currentPage' => $pagination->currentPage(),
-                'lastPage' => $pagination->lastPage(),
-                'total' => $pagination->total()
-            ];
-            return $this->successResponse($data);
+            $courses = $query->execute($queryModel);
+//
+            return $this->successResponse(UserCourseResourceCollection::make($courses)->status($request->status ?? 'all'));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

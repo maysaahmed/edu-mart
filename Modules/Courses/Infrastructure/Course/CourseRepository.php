@@ -5,7 +5,7 @@ use Illuminate\Support\Collection;
 use Modules\Courses\Core\Course\Commands\CreateCourse\CreateCourseModel;
 use Modules\Courses\Core\Course\Commands\EditCourse\EditCourseModel;
 use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination\GetOrganizationCoursesPaginationModel;
-use Modules\Courses\Core\Course\Queries\GetUserCoursesPagination\GetUserCoursesPaginationModel;
+use Modules\Courses\Core\Course\Queries\GetUserCourses\GetUserCoursesModel;
 use Modules\Courses\Core\Course\Repositories\ICourseRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -67,16 +67,18 @@ class CourseRepository extends Repository implements ICourseRepository
 
     }
 
-    public function getUserCoursesPagination(GetUserCoursesPaginationModel $model): LengthAwarePaginator
+    public function getUserCourses(GetUserCoursesModel $model): \Illuminate\Database\Eloquent\Collection
     {
         $org_id = $model->organization_id;
 
         $query = QueryBuilder::for(Course::class)
-                ->allowedIncludes('requests')
-                ->whereDoesntHave('organizations', function (Builder $q) use( $org_id) {
+                ->allowedIncludes('requests');
+        if($org_id){
+            $query->whereDoesntHave('organizations', function (Builder $q) use( $org_id) {
+                $q->where('id', $org_id);
+            });
+        }
 
-                    $q->where('id', $org_id);
-                });
         if(isset($model->status) and $model->status != 'all')
         {
             $status = match ($model->status) {
@@ -92,21 +94,7 @@ class CourseRepository extends Repository implements ICourseRepository
             });
         }
 
-        if(isset($model->price_min))
-        {
-            $query = $query->where('price' , '>=' , $model->price_min);
-        }
-
-        if(isset($model->price_max))
-        {
-            $query = $query->where('price' , '<=' , $model->price_max);
-        }
-
-
-        return $query->allowedFilters('title', 'location', 'level_id', 'provider_id', 'category_id')
-            ->allowedSorts(['title', 'price'])
-            ->latest()
-            ->paginate(9);
+        return $query->latest()->get();
 
     }
 

@@ -53,9 +53,12 @@ class UserCourseResource extends JsonResource
             'duration' => $this->duration,
             'price' => $this->price,
             'level' => $this->level ? $this->level->name : '' ,
+            'level_id' => $this->level_id ,
             'level_color' => $this->level ? $this->level->color : '' ,
             'provider' => $this->provider ? $this->provider->name : '',
+            'provider_id' => $this->provider_id ,
             'category' => $this->category ? $this->category->name : '',
+            'category_id' => $this->category_id ,
             'location' => $this->location ?? '',
             'request_status' => $request_status
         ];
