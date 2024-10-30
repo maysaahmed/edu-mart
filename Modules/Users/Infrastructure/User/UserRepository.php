@@ -164,11 +164,12 @@ class UserRepository extends Repository implements IUserRepository
 
         if($resetToken){
             $user = $this->getUserByEmail($resetToken->email);
+
             $user->password = bcrypt($password);
             $save = $user->save();
 
             if ($save) {
-                $resetToken->delete();
+                PasswordReset::where('token', $token)->delete();
                 return $user->type;
             }
         }

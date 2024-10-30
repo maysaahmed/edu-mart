@@ -14,6 +14,7 @@ class ResetPassword implements IResetPassword
     public function execute($token, $password): int|bool
     {
         $resetToken = $this->repository->getResetByToken($token);
+
         if(!$resetToken){
             throw new \Exception('Token cannot be found!');
         }
