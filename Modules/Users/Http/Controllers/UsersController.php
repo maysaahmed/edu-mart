@@ -180,13 +180,13 @@ class UsersController extends ApiController
 
     public function resetPassword(VerifyUserRequest $request,$token, ResetPassword\IResetPassword $command): JsonResponse
     {
-        try {
+//        try {
             $userType = $command->execute($token, $request->password);
             return $this->successResponse(['user_type' => $userType],'You have reset your password successfully. You can now login.');
 
-        } catch (\Throwable $th) {
-            return $this->errorResponse($th->getMessage());
-        }
+//        } catch (\Throwable $th) {
+//            return $this->errorResponse($th->getMessage());
+//        }
     }
 
     public function resendMail($id, ResendMail\IResendMail $command): JsonResponse
