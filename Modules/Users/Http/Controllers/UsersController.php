@@ -21,6 +21,7 @@ use Modules\Users\Http\Requests\CompleteUserDataRequest;
 use Modules\Users\Http\Requests\VerifyUserRequest;
 use Modules\Users\Http\Requests\UserLoginRequest;
 use Modules\Users\Http\Requests\ForgetPasswordRequest;
+use Modules\Users\Http\Requests\ChangePasswordRequest;
 use Modules\Users\Http\Requests\RegisterUserRequest;
 use Modules\Users\Http\Requests\ResendMailRequest;
 use Modules\Users\Http\Requests\EditProfileRequest;
@@ -36,6 +37,7 @@ use Modules\Users\Core\User\Commands\ForgetPassword;
 use Modules\Users\Core\User\Commands\ResetPassword;
 use Modules\Users\Core\User\Commands\RegisterUser;
 use Modules\Users\Core\User\Commands\EditProfile;
+use Modules\Users\Core\User\Commands\ChangePassword;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Users\Imports\ImportUsers;
 use Str;
@@ -180,13 +182,13 @@ class UsersController extends ApiController
 
     public function resetPassword(VerifyUserRequest $request,$token, ResetPassword\IResetPassword $command): JsonResponse
     {
-//        try {
+        try {
             $userType = $command->execute($token, $request->password);
             return $this->successResponse(['user_type' => $userType],'You have reset your password successfully. You can now login.');
 
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 
     public function resendMail($id, ResendMail\IResendMail $command): JsonResponse
@@ -343,6 +345,24 @@ class UsersController extends ApiController
            $result = $query->execute();
 
             return $this->successResponse( new UserProfileResource($result));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+
+    public function changePassword(ChangePasswordRequest $request, ChangePassword\IChangePassword $command): JsonResponse
+    {
+        try {
+            $user_id = $request->user()->id;
+
+            $additionalModelData = [
+                "id" => $user_id,
+            ];
+            $commandModel = ChangePassword\ChangePasswordModel::from($request->all()+$additionalModelData);
+            $result = $command->execute($commandModel);
+
+            return $this->successResponse( new UserResource($result), 'The password has been updated successfully.');
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

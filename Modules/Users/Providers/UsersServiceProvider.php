@@ -150,6 +150,11 @@ class UsersServiceProvider extends ServiceProvider
                 \Modules\Users\Core\User\Commands\ResendVerificationMail\ResendVerificationMail::class
             );
 
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\ChangePassword\IChangePassword::class,
+            \Modules\Users\Core\User\Commands\ChangePassword\ChangePassword::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\Users\Core\User\Repositories\IUserRepository::class,
