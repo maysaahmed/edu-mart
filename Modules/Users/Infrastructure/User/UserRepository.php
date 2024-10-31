@@ -320,4 +320,21 @@ class UserRepository extends Repository implements IUserRepository
 
         return null;
     }
+
+    public function changePassword(int $id, string $newPass): EndUser|null
+    {
+        $item = $this->getUserById($id);
+
+        if($item){
+
+            $item->password = bcrypt($newPass);
+            $save = $item->save();
+
+            if ($save) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
 }
