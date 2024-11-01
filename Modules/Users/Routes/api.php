@@ -51,6 +51,7 @@ Route::middleware(['token-name:admin-token'])->group(function () {
     Route::resource('/managers', 'ManagersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
         '' => 'manager'
     ]);
+    Route::get('/endUsers', 'UsersController@getUsers');
 
     Route::resource('/', 'Modules\Users\Http\Controllers\UsersController');
 

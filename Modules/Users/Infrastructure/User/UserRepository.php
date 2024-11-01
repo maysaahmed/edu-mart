@@ -2,6 +2,7 @@
 namespace Modules\Users\Infrastructure\User;
 
 use App\Core\Interfaces\Services\IImageService;
+use Illuminate\Database\Eloquent\Collection;
 use Mockery\Generator\StringManipulation\Pass\Pass;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
 use Modules\Users\Core\User\Commands\RegisterUser\RegisterUserModel;
@@ -65,6 +66,14 @@ class UserRepository extends Repository implements IUserRepository
             ->latest()
             ->paginate();
     }
+
+    public function getAllEndUsers(): Collection
+    {
+        return  EndUser::where('type', EnumUserTypes::User->value)
+            ->latest()
+            ->get();
+    }
+
     public function createUser(CreateUserModel $model): EndUser
     {
         $user = new EndUser();

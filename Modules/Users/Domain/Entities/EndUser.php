@@ -4,6 +4,7 @@ namespace Modules\Users\Domain\Entities;
 
 use App\Domain\Entities\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Assessment\Domain\Entities\Result;
 use Modules\Organizations\Domain\Entities\Organization\Organization;
 
 class EndUser extends User
@@ -42,6 +43,11 @@ class EndUser extends User
     public function account(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(UserAccount::class, 'user_id', 'id');
+    }
+
+    public function results(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->HasMany(Result::class, 'user_id', 'id');
     }
 
 }

@@ -31,6 +31,7 @@ use Modules\Users\Transformers\UserProfileResource;
 use Modules\Users\Transformers\UserAccountResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Queries\GetUserProfile;
+use Modules\Users\Core\User\Queries\GetEndUsers;
 use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
 use Modules\Users\Core\User\Commands\ForgetPassword;
@@ -42,8 +43,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Modules\Users\Imports\ImportUsers;
 use Str;
 
+
 class UsersController extends ApiController
 {
+    public function __construct()
+    {
+        $this->middleware('ability:'.Enums\PermissionsEnum::listUsers->value,   ['only' => ['getUsers']]);
+     }
 
     /**
      * Display a listing of the resource.
@@ -64,6 +70,21 @@ class UsersController extends ApiController
         }
     }
 
+    /**
+     * Display a listing of the resource.
+     * @param Request $request
+     * @param GetEndUsers\IGetEndUsers $query
+     * @return JsonResponse
+     */
+    public function getUsers(GetEndUsers\IGetEndUsers $query): JsonResponse
+    {
+        try {
+            $users = $query->execute();
+            return $this->successResponse(UserResource::collection($users));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 
     /**
      * @OA\Post(

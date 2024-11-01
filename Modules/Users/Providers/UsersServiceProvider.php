@@ -75,6 +75,11 @@ class UsersServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Modules\Users\Core\User\Queries\GetEndUsers\IGetEndUsers::class,
+            \Modules\Users\Core\User\Queries\GetEndUsers\GetEndUsers::class
+        );
+
+        $this->app->bind(
             \Modules\Users\Core\Manager\Queries\GetOrganizationManagers\IGetOrganizationManagers::class,
             \Modules\Users\Core\Manager\Queries\GetOrganizationManagers\GetOrganizationManagers::class
         );
