@@ -26,7 +26,7 @@ class UserProfileResource extends JsonResource
             'education' => $this->account ? $this->account->education : '',
             'university' => $this->account ? $this->account->university : '',
             'industry' => $this->account ? $this->account->industry : '',
-            'image' => ($this->account && isset($this->account->image)) ? $path.$this->account->image : $path.'avatar.jpg',
+            'image' => ($this->account && $this->account->image != '') ? $path.$this->account->image : $path.'avatar.jpg',
 
         ];
     }
