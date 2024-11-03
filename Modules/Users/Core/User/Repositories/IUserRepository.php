@@ -2,6 +2,7 @@
 namespace Modules\Users\Core\User\Repositories;
 
 use App\Core\Repository\IRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Users\Core\User\Commands\CompleteUserData\CompleteUserDataModel;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
 use Modules\Users\Core\User\Commands\RegisterUser\RegisterUserModel;
@@ -18,6 +19,7 @@ interface IUserRepository extends IRepository
     public function getVerifyUserByToken($token): VerifyUser|null;
     public function getResetByToken($token): PasswordReset|null;
     public function getUsersPagination(GetUserPaginationModel $model): LengthAwarePaginator;
+    public function getAllEndUsers(): Collection;
 
     public function createUser(CreateUserModel $model): EndUser;
     public function editUser(EditUserModel $model): EndUser|null;
@@ -35,6 +37,8 @@ interface IUserRepository extends IRepository
 
     public function editProfile(EditProfileModel $model): EndUser|null;
     public function changePassword(int $id, string $newPass): EndUser|null;
+    public function uploadImage(int $id, string $image): string|null;
+    public function removeImage(int $id): bool|null;
 
 
 

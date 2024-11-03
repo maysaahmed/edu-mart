@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'verified' => $this->check_email_status ? 'Verified' : 'Resend Mail',
             'editor' => $this->editor ? $this->editor->name : '',
             'status' => $this->is_active ? 'active' : 'blocked',
+            'took_assessment' => count($this->results) ? true : false
         ];
     }
 }

@@ -25,25 +25,34 @@ use Modules\Users\Http\Requests\ChangePasswordRequest;
 use Modules\Users\Http\Requests\RegisterUserRequest;
 use Modules\Users\Http\Requests\ResendMailRequest;
 use Modules\Users\Http\Requests\EditProfileRequest;
+use Modules\Users\Http\Requests\UploadImageRequest;
 use App\Http\Requests\ImportCSVRequest;
 use Modules\Users\Transformers\UserResource;
 use Modules\Users\Transformers\UserProfileResource;
 use Modules\Users\Transformers\UserAccountResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Queries\GetUserProfile;
+use Modules\Users\Core\User\Queries\GetEndUsers;
 use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
 use Modules\Users\Core\User\Commands\ForgetPassword;
 use Modules\Users\Core\User\Commands\ResetPassword;
 use Modules\Users\Core\User\Commands\RegisterUser;
 use Modules\Users\Core\User\Commands\EditProfile;
+use Modules\Users\Core\User\Commands\UploadProfileImage;
+use Modules\Users\Core\User\Commands\RemoveProfileImage;
 use Modules\Users\Core\User\Commands\ChangePassword;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Users\Imports\ImportUsers;
 use Str;
 
+
 class UsersController extends ApiController
 {
+    public function __construct()
+    {
+        $this->middleware('ability:'.Enums\PermissionsEnum::listUsers->value,   ['only' => ['getUsers']]);
+     }
 
     /**
      * Display a listing of the resource.
@@ -64,6 +73,21 @@ class UsersController extends ApiController
         }
     }
 
+    /**
+     * Display a listing of the resource.
+     * @param Request $request
+     * @param GetEndUsers\IGetEndUsers $query
+     * @return JsonResponse
+     */
+    public function getUsers(GetEndUsers\IGetEndUsers $query): JsonResponse
+    {
+        try {
+            $users = $query->execute();
+            return $this->successResponse(UserResource::collection($users));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 
     /**
      * @OA\Post(
@@ -334,6 +358,32 @@ class UsersController extends ApiController
             $result = $command->execute($commandModel);
 
             return $this->successResponse( new UserProfileResource($result), 'The profile has been updated successfully.');
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function uploadProfileImage(UploadImageRequest $request, UploadProfileImage\IUploadProfileImage $command): JsonResponse
+    {
+        try {
+            $user_id = $request->user()->id;
+
+            $result = $command->execute($request->image, $user_id);
+
+            return $this->successResponse(['image' => $result], 'The image has been uploaded successfully.');
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function removeProfileImage(RemoveProfileImage\IRemoveProfileImage $command): JsonResponse
+    {
+        try {
+            $user_id = request()->user()->id;
+
+            $result = $command->execute($user_id);
+
+            return $this->successResponse([], 'The image has been removed successfully.');
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

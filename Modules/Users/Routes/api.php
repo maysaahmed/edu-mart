@@ -40,6 +40,8 @@ Route::middleware(['token-name:user-token,manager-token'])->group(function () {
 
 Route::middleware(['token-name:user-token'])->group(function () {
     Route::post('/user/editProfile', 'UsersController@editProfile');
+    Route::post('/user/uploadImage', 'UsersController@uploadProfileImage');
+    Route::get('/user/removeImage', 'UsersController@removeProfileImage');
     Route::post('/user/changePassword', 'UsersController@changePassword');
     Route::get('/user/profile', 'UsersController@getUserProfile');
 });
@@ -51,6 +53,7 @@ Route::middleware(['token-name:admin-token'])->group(function () {
     Route::resource('/managers', 'ManagersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
         '' => 'manager'
     ]);
+    Route::get('/endUsers', 'UsersController@getUsers');
 
     Route::resource('/', 'Modules\Users\Http\Controllers\UsersController');
 

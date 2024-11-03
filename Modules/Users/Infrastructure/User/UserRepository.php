@@ -2,6 +2,7 @@
 namespace Modules\Users\Infrastructure\User;
 
 use App\Core\Interfaces\Services\IImageService;
+use Illuminate\Database\Eloquent\Collection;
 use Mockery\Generator\StringManipulation\Pass\Pass;
 use Modules\Users\Core\User\Commands\CreateUser\CreateUserModel;
 use Modules\Users\Core\User\Commands\RegisterUser\RegisterUserModel;
@@ -65,6 +66,14 @@ class UserRepository extends Repository implements IUserRepository
             ->latest()
             ->paginate();
     }
+
+    public function getAllEndUsers(): Collection
+    {
+        return  EndUser::where('type', EnumUserTypes::User->value)
+            ->latest()
+            ->get();
+    }
+
     public function createUser(CreateUserModel $model): EndUser
     {
         $user = new EndUser();
@@ -319,6 +328,51 @@ class UserRepository extends Repository implements IUserRepository
         }
 
         return null;
+    }
+
+    public function uploadImage($id, $image): string|null
+    {
+        $item = $this->getUserByID($id);
+        if($item) {
+            $account = UserAccount::where('user_id', $id)->first();
+
+            if (isset($image)) {
+                if ($account && isset($account->image)) {
+                    $this->img->removeImage('images/profile/', $account->image);
+                }
+                $img_name = $this->img->uploadImage(request()->file('image'), 'images/profile/', 150, 150);
+                if ($account){
+                    $account->image = $img_name;
+                    $account->save();
+
+                }else{
+                    UserAccount::create([
+                        'user_id' => $id,
+                        'image' => $img_name
+                    ]);
+                }
+
+                return env('APP_URL').'images/profile/'.$img_name;
+            }
+            return null;
+        }
+    }
+
+    public function removeImage($id): bool|null
+    {
+        $item = $this->getUserByID($id);
+        if($item) {
+            $account = UserAccount::where('user_id', $id)->first();
+
+            if ($account && isset($account->image)) {
+                $this->img->removeImage('images/profile/', $account->image);
+                $account->image = '';
+                $account->save();
+                return true;
+            }
+
+            return null;
+        }
     }
 
     public function changePassword(int $id, string $newPass): EndUser|null
