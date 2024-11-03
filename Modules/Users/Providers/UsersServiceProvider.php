@@ -69,6 +69,17 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\User\Commands\ResendMail\IResendMail::class,
             \Modules\Users\Core\User\Commands\ResendMail\ResendMail::class
         );
+
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\UploadProfileImage\IUploadProfileImage::class,
+            \Modules\Users\Core\User\Commands\UploadProfileImage\UploadProfileImage::class
+        );
+
+        $this->app->bind(
+            \Modules\Users\Core\User\Commands\RemoveProfileImage\IRemoveProfileImage::class,
+            \Modules\Users\Core\User\Commands\RemoveProfileImage\RemoveProfileImage::class
+        );
+
         $this->app->bind(
             \Modules\Users\Core\User\Queries\GetUserPagination\IGetUserPagination::class,
             \Modules\Users\Core\User\Queries\GetUserPagination\GetUserPagination::class

@@ -37,6 +37,8 @@ interface IUserRepository extends IRepository
 
     public function editProfile(EditProfileModel $model): EndUser|null;
     public function changePassword(int $id, string $newPass): EndUser|null;
+    public function uploadImage(int $id, string $image): string|null;
+    public function removeImage(int $id): bool|null;
 
 
 
