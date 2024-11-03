@@ -368,7 +368,7 @@ class UsersController extends ApiController
         try {
             $user_id = $request->user()->id;
 
-            $result = $command->execute($request->image, $user_id);
+            $result = $command->execute($user_id, $request->image);
 
             return $this->successResponse(['image' => $result], 'The image has been uploaded successfully.');
         } catch (\Throwable $th) {
