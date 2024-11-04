@@ -88,10 +88,20 @@ class CourseRepository extends Repository implements ICourseRepository
                 "canceled" => 3,
                 "booked" => 4
             };
-
-            $query = $query->whereHas('requests', function (Builder $q) use ($status){
-                $q->latest()->limit(1)->where(['user_id' => request()->user()->id, 'status' => $status]);
-            });
+            if($model->status == 'approved' || $model->status == 'booked')
+            {
+                $query = $query->whereHas('requests', function (Builder $q) {
+                    $q->latest()->limit(1)->whereIn('status', [1, 4])->where('user_id', request()->user()->id);
+                });
+            }elseif ($model->status == 'rejected' || $model->status == 'canceled') {
+                $query = $query->whereHas('requests', function (Builder $q) {
+                    $q->latest()->limit(1)->whereIn('status', [2, 3])->where('user_id', request()->user()->id);
+                });
+            }else{
+                $query = $query->whereHas('requests', function (Builder $q) use ($status){
+                    $q->latest()->limit(1)->where(['user_id' => request()->user()->id, 'status' => $status]);
+                });
+            }
         }
 
         return $query->latest()->get();
