@@ -46,7 +46,7 @@ class RequestsController extends ApiController
 
             $pagination = $query->execute($queryModel);
 
-            return $this->paginationResponse(RequestResource::class,$pagination);;
+            return $this->paginationResponse(RequestResource::class,$pagination);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
