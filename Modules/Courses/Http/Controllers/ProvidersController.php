@@ -7,6 +7,7 @@ use App\Http\Requests\ImportCSVRequest;
 use Illuminate\Http\JsonResponse;
 use Modules\Courses\Transformers\CategoryResource;
 use Modules\Courses\Http\Requests\ProviderRequest;
+use Modules\Courses\Transformers\RequestResource;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Modules\Courses\Core\Provider\Commands\CreateProvider;
@@ -14,6 +15,7 @@ use Modules\Courses\Core\Provider\Commands\DeleteProvider;
 use Modules\Courses\Core\Provider\Commands\EditProvider;
 use Modules\Courses\Core\Provider\Commands\ImportProvider;
 use Modules\Courses\Core\Provider\Queries\GetProviders;
+use Modules\Courses\Core\Provider\Queries\GetProviderPagination;
 use App\Enums;
 
 class ProvidersController extends ApiController
@@ -34,14 +36,18 @@ class ProvidersController extends ApiController
 
     /**
      * Display a listing of the resource.
-     * @param GetProviders\IGetProviders $query
+     * @param Request $request
+     * @param GetProviderPagination\IGetProviderPagination $query
      * @return JsonResponse
      */
-    public function index(GetProviders\IGetProviders $query): JsonResponse
+    public function index(Request $request, GetProviderPagination\IGetProviderPagination $query): JsonResponse
     {
         try {
-            $providers = $query->execute();
-            return $this->successResponse(CategoryResource::collection($providers));
+            $queryModel = GetProviderPagination\GetProviderPaginationModel::from($request->all());
+
+            $pagination = $query->execute($queryModel);
+
+            return $this->paginationResponse(CategoryResource::class,$pagination);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
