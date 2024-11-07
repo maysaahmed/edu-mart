@@ -7,14 +7,16 @@ use Modules\Courses\Core\Course\Commands\CreateCourse\CreateCourseModel;
 use Modules\Courses\Core\Course\Commands\EditCourse\EditCourseModel;
 use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination\GetOrganizationCoursesPaginationModel;
 use Modules\Courses\Core\Course\Queries\GetUserCourses\GetUserCoursesModel;
+use Modules\Courses\Core\Course\Queries\GetCourses\GetCoursesModel;
+use Modules\Courses\Core\Course\Queries\GetArchivedCourses\GetArchivedCoursesModel;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Courses\Domain\Entities\Course;
 
 interface ICourseRepository extends IRepository
 {
     public function getCourseById($id): Course|null;
-    public function getCourses(): Collection;
-    public function getArchivedCourses(): Collection;
+    public function getCourses(GetCoursesModel $model): LengthAwarePaginator;
+    public function getArchivedCourses(GetArchivedCoursesModel $model): LengthAwarePaginator;
     public function getOrganizationCoursesPagination(GetOrganizationCoursesPaginationModel $model): LengthAwarePaginator;
     public function getUserCourses(GetUserCoursesModel $model): \Illuminate\Database\Eloquent\Collection;
     public function createCourse(CreateCourseModel $model): Course;

@@ -1,9 +1,9 @@
 <?php
 namespace Modules\Courses\Core\Course\Queries\GetArchivedCourses;
 
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface IGetArchivedCourses
 {
-    public function execute(): Collection;
+    public function execute(GetArchivedCoursesModel $model): LengthAwarePaginator;
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Courses\Core\Course\Queries\GetCourses;
 
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Courses\Core\Course\Repositories\ICourseRepository;
 
 class GetCourses implements IGetCourses
@@ -13,8 +13,8 @@ class GetCourses implements IGetCourses
         $this->repository = $repository;
     }
 
-    public function execute(): Collection
+    public function execute(GetCoursesModel $model): LengthAwarePaginator
     {
-        return $this->repository->getCourses();
+        return $this->repository->getCourses($model);
     }
 }
