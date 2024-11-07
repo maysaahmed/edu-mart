@@ -1,9 +1,9 @@
 <?php
 namespace Modules\Courses\Core\Course\Queries\GetCourses;
 
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface IGetCourses
 {
-    public function execute(): Collection;
+    public function execute(GetCoursesModel $model): LengthAwarePaginator;
 }

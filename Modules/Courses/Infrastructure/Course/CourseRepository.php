@@ -6,6 +6,8 @@ use Modules\Courses\Core\Course\Commands\CreateCourse\CreateCourseModel;
 use Modules\Courses\Core\Course\Commands\EditCourse\EditCourseModel;
 use Modules\Courses\Core\Course\Queries\GetOrganizationCoursesPagination\GetOrganizationCoursesPaginationModel;
 use Modules\Courses\Core\Course\Queries\GetUserCourses\GetUserCoursesModel;
+use Modules\Courses\Core\Course\Queries\GetCourses\GetCoursesModel;
+use Modules\Courses\Core\Course\Queries\GetArchivedCourses\GetArchivedCoursesModel;
 use Modules\Courses\Core\Course\Repositories\ICourseRepository;
 use App\Infrastructure\Repository\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -35,16 +37,20 @@ class CourseRepository extends Repository implements ICourseRepository
             })->get()->toArray();
     }
 
-    public function getCourses(): Collection
+    public function getCourses(GetCoursesModel $model): LengthAwarePaginator
     {
-        return  Course::latest()
-            ->get();
-    }
-    public function getArchivedCourses(): \Illuminate\Support\Collection
-    {
-        return  Course::onlyTrashed()
+        return  QueryBuilder::for(Course::class)
+            ->allowedFilters('title', 'duration', 'price')
             ->latest()
-            ->get();
+            ->paginate();
+    }
+    public function getArchivedCourses(GetArchivedCoursesModel $model): LengthAwarePaginator
+    {
+        return  QueryBuilder::for(Course::class)
+            ->allowedFilters('title')
+            ->onlyTrashed()
+            ->latest()
+            ->paginate();
     }
     public function getOrganizationCoursesPagination(GetOrganizationCoursesPaginationModel $model): LengthAwarePaginator
     {

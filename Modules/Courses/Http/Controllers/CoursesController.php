@@ -48,14 +48,16 @@ class CoursesController extends ApiController
 
     /**
      * Display a listing of the resource.
+     * @param Request $request
      * @param GetCourses\IGetCourses $query
      * @return JsonResponse
      */
-    public function index(GetCourses\IGetCourses $query): JsonResponse
+    public function index(Request $request,GetCourses\IGetCourses $query): JsonResponse
     {
         try {
-            $courses = $query->execute();
-            return $this->successResponse(CourseResource::collection($courses));
+            $queryModel = GetCourses\GetCoursesModel::from($request->all());
+            $pagination = $query->execute($queryModel);
+            return $this->paginationResponse(CourseResource::class,$pagination);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -63,14 +65,16 @@ class CoursesController extends ApiController
 
     /**
      * Display a list of archived courses
+     * @param Request $request
      * @param GetArchivedCourses\IGetArchivedCourses $query
      * @return JsonResponse
      */
-    public function archived(GetArchivedCourses\IGetArchivedCourses $query): JsonResponse
+    public function archived(Request $request,GetArchivedCourses\IGetArchivedCourses $query): JsonResponse
     {
         try {
-            $archived = $query->execute();
-            return $this->successResponse(CourseResource::collection($archived));
+            $queryModel = GetArchivedCourses\GetArchivedCoursesModel::from($request->all());
+            $pagination = $query->execute($queryModel);
+            return $this->paginationResponse(CourseResource::class,$pagination);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
