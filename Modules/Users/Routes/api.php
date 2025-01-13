@@ -24,7 +24,7 @@ Route::post('/user/resend-mail', 'UsersController@resendVerificationMail');
 
 
 Route::middleware(['token-name:manager-token'])->group(function () {
-    Route::resource('/users', 'UsersController',['only'=>['index', 'store', 'update', 'destroy']])->parameters([
+    Route::resource('/users', 'UsersController',['only'=>['index' ,'store', 'update', 'destroy']])->parameters([
         '' => 'user'
     ]);
     Route::post('users/import', 'UsersController@import');
@@ -54,6 +54,7 @@ Route::middleware(['token-name:admin-token'])->group(function () {
         '' => 'manager'
     ]);
     Route::get('/endUsers', 'UsersController@getUsers');
+    Route::get('/users/{id}', 'UsersController@getUserData');
 
     Route::resource('/', 'Modules\Users\Http\Controllers\UsersController');
 
