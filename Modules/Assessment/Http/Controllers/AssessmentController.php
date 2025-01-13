@@ -41,7 +41,7 @@ class AssessmentController extends ApiController
     {
         $this->middleware('ability:'.Enums\PermissionsEnum::listQuestions->value,   ['only' => ['getQuestionsPaginated', 'getQuestions', 'getFactors']]);
         $this->middleware('ability:'.Enums\PermissionsEnum::editQuestions->value,   ['only' => ['updateQuestion', 'reorderQuestions']]);
-        $this->middleware('ability:'.Enums\PermissionsEnum::editFactors->value,   ['only' => ['updateFactor']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editFactors->value,   ['only' => ['updateFactor', 'updateFormula']]);
     }
 
     /**
