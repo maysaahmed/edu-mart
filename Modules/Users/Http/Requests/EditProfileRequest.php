@@ -20,7 +20,9 @@ class EditProfileRequest extends ApiRequest
             'graduated' => 'required|in:0,1',
             'education' => 'required|max:255',
             'university' => 'required|max:255',
-            'industry' => 'required|max:255'
+            'industry' => 'required|max:255',
+            'area'  => 'required|max:255',
+            'phone'  => 'required|regex:/^[0-9]{11}$/'
 
         ];
 
