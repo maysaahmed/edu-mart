@@ -301,6 +301,8 @@ class UserRepository extends Repository implements IUserRepository
                 $account->education = $model->education;
                 $account->university = $model->university;
                 $account->industry = $model->industry;
+                $account->area = $model->area;
+                $account->phone = $model->phone;
                 $account->save();
             }else{
                 UserAccount::create([
@@ -311,7 +313,10 @@ class UserRepository extends Repository implements IUserRepository
                     'education' => $model->education,
                     'university' => $model->university,
                     'industry' => $model->industry,
-                    'image' => $img_name
+                    'image' => $img_name,
+                    'area' => $model->area,
+                    'phone' => $model->phone,
+
                 ]);
             }
 

@@ -15,7 +15,10 @@ class EditProfileModel extends Data
         public string $education,
         public string $university,
         public string $industry,
+        public string $area,
+        public string $phone,
         public ?string $image = null,
+
     ) {
     }
 

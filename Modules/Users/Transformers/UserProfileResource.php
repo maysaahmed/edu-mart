@@ -27,7 +27,8 @@ class UserProfileResource extends JsonResource
             'university' => $this->account ? $this->account->university : '',
             'industry' => $this->account ? $this->account->industry : '',
             'image' => ($this->account && $this->account->image != '') ? $path.$this->account->image : $path.'user.png',
-
+            'area' => $this->account && $this->account->area ? $this->account->area : '',
+            'phone' => $this->account && $this->account->area ? $this->account->phone : ''
         ];
     }
 }

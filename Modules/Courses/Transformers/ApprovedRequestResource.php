@@ -20,6 +20,7 @@ class ApprovedRequestResource extends JsonResource
         return [
             'id' => $this->id,
             'user_name' => $this->user->name ,
+            'user_id' => $this->user->id ,
             'email' => $this->user->email ,
             'course'    => $this->course ? $this->course->title : '',
             'provider'    => ($this->course && $this->course->provider) ? $this->course->provider->name : '',

@@ -77,7 +77,7 @@ class RequestRepository extends Repository implements IRequestRepository
 
     public function getApprovedRequestsCount(): int
     {
-        return Request::where('status', 1)->count();
+        return Request::whereIn('status', [0,1])->count();
     }
 
 

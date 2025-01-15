@@ -32,6 +32,7 @@ use Modules\Users\Transformers\UserProfileResource;
 use Modules\Users\Transformers\UserAccountResource;
 use Modules\Users\Core\User\Queries\GetUserPagination;
 use Modules\Users\Core\User\Queries\GetUserProfile;
+use Modules\Users\Core\User\Queries\GetUserData;
 use Modules\Users\Core\User\Queries\GetEndUsers;
 use Modules\Users\Core\User\Commands\DeleteUser;
 use Modules\Users\Core\User\Commands\EditUser;
@@ -51,7 +52,7 @@ class UsersController extends ApiController
 {
     public function __construct()
     {
-        $this->middleware('ability:'.Enums\PermissionsEnum::listUsers->value,   ['only' => ['getUsers']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::listUsers->value,   ['only' => ['getUsers', 'getUserData']]);
      }
 
     /**
@@ -84,6 +85,22 @@ class UsersController extends ApiController
         try {
             $users = $query->execute();
             return $this->successResponse(UserResource::collection($users));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * @param int $id
+     * @param GetUserData\IGetUserData $query
+     * @return JsonResponse
+     */
+    public function getUserData(int $id, GetUserData\IGetUserData $query): JsonResponse
+    {
+        try {
+            $result = $query->execute($id);
+
+            return $this->successResponse( new UserProfileResource($result));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

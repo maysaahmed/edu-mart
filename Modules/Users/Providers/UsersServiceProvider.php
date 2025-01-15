@@ -160,6 +160,11 @@ class UsersServiceProvider extends ServiceProvider
             \Modules\Users\Core\User\Queries\GetUserProfile\GetUserProfile::class
         );
 
+        $this->app->bind(
+            \Modules\Users\Core\User\Queries\GetUserData\IGetUserData::class,
+            \Modules\Users\Core\User\Queries\GetUserData\GetUserData::class
+        );
+
 
         $this->app->bind(
                 \Modules\Users\Core\User\Commands\ResendVerificationMail\IResendVerificationMail::class,
