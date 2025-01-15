@@ -10,10 +10,12 @@ class CreateCourseModel extends Data
         public int $duration,
         public float $price,
         public ?string $desc = '',
+        public array $factors,
         public ?int $level_id = null,
         public ?int $provider_id = null,
         public ?int $category_id =null,
         public ?string $location = null,
+
     ) {
     }
 }

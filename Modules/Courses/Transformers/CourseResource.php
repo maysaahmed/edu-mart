@@ -28,6 +28,7 @@ class CourseResource extends JsonResource
             'category' => $this->category ? $this->category->name : '',
             'category_id' => $this->category_id ,
             'location' => $this->location ?? '',
+            'factors' => CourseFactorResource::collection($this->courseFactors),
         ];
     }
 }
