@@ -134,7 +134,7 @@ class CourseRepository extends Repository implements ICourseRepository
             CourseFactor::create([
                 'course_id' => $course->id,
                 'factor_id' => $item['factor'],
-                'result'    => $item['result']
+                'result'    => implode(', ', $item['result'])
             ]);
         }
         return $course;
@@ -162,14 +162,8 @@ class CourseRepository extends Repository implements ICourseRepository
                 foreach($model->factors as $item)
                 {
                     $course->courseFactors()->updateOrCreate(
-                        [
-                            'factor_id' => $item['factor'], // Match by column1
-                            'result'    => $item['result'] // match by column 2
-                        ],
-                        [
-                            'factor_id' => $item['factor'], // Update column1 (or leave it as is)
-                            'factor_id' => $item['factor'], // Update column2
-                        ]
+                        ['factor_id' => $item['factor']],
+                        ['result' => implode(', ', $item['result'])]
                     );
 
                 }
