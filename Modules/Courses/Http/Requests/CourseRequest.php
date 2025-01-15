@@ -19,6 +19,7 @@ class CourseRequest extends ApiRequest
             $this->merge([
                 'factors' => json_decode($this->input('factors'), true), // Decode JSON to array
             ]);
+
         }
     }
 
@@ -40,7 +41,8 @@ class CourseRequest extends ApiRequest
             'location'  => 'max:255',
             'factors' => 'required|array',
             'factors.*.factor' => 'required|exists:factors,id',
-            'factors.*.result' => 'required',
+            'factors.*.result' => 'required|array',
+            'factors.*.result.*' => 'required|string',
         ];
 
     }

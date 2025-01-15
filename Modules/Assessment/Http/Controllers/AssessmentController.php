@@ -21,6 +21,7 @@ use Modules\Assessment\Core\Result\Queries\CheckResult;
 use Modules\Assessment\Transformers\QuestionResource;
 use Modules\Assessment\Transformers\AssessmentResource;
 use Modules\Assessment\Transformers\FactorResource;
+use Modules\Assessment\Transformers\FactorListResource;
 use Modules\Assessment\Transformers\ResultResource;
 use App\Enums;
 use Modules\Assessment\Http\Requests\QuestionRequest;
@@ -138,6 +139,21 @@ class AssessmentController extends ApiController
             $factors = $query->execute();
 
             return $this->successResponse(FactorResource::collection($factors));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * @param GetFactors\IGetFactors $query
+     * @return JsonResponse
+     */
+    public function getFactorList(GetFactors\IGetFactors $query): JsonResponse
+    {
+        try {
+            $factors = $query->execute();
+
+            return $this->successResponse(FactorListResource::collection($factors));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

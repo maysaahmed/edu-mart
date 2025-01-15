@@ -151,6 +151,7 @@ class CoursesController extends ApiController
     {
         try {
             $commandModel = CreateCourse\CreateCourseModel::from($request->all());
+
             $result = $command->execute($commandModel);
             return $this->successResponse(new CourseResource($result),'Course saved successfully!' , Response::HTTP_CREATED);
 
