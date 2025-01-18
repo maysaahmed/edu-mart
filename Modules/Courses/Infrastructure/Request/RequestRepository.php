@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Courses\Infrastructure\Request;
 
+use Illuminate\Support\Collection;
 use Modules\Courses\Core\Request\Commands\CreateRequest\CreateRequestModel;
 use Modules\Courses\Core\Request\Queries\GetOrganizationRequestsPagination\GetOrganizationRequestsPaginationModel;
 use Modules\Courses\Core\Request\Queries\GetApprovedRequestsPagination\GetApprovedRequestsPaginationModel;
@@ -44,7 +45,7 @@ class RequestRepository extends Repository implements IRequestRepository
             ->paginate();
     }
 
-    public function getApprovedRequestsPagination(GetApprovedRequestsPaginationModel|\Modules\Courses\Core\Request\Repositories\GetApprovedRequestsPaginationModel $model): LengthAwarePaginator
+    public function getApprovedRequestsPagination(GetApprovedRequestsPaginationModel|\Modules\Courses\Core\Request\Repositories\GetApprovedRequestsPaginationModel $model): Collection
     {
         return  QueryBuilder::for(Request::class)
             ->allowedIncludes('user', 'course')
@@ -55,7 +56,7 @@ class RequestRepository extends Repository implements IRequestRepository
             ->where('users.deleted_at', NULL)
             ->allowedFilters('user.name', 'course.title')
             ->latest()
-            ->paginate();
+            ->get();
 //        return  QueryBuilder::for(Request::class)
 //            ->allowedIncludes('user', 'course', 'organization')
 //            ->select('course_requests.*', DB::raw('organizations.name as organization_name'), DB::raw('users.name as user_name'), DB::raw('courses.title as course_title') )
