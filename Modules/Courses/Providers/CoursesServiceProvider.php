@@ -205,6 +205,12 @@ class CoursesServiceProvider extends ServiceProvider
             \Modules\Courses\Core\Request\Queries\GetApprovedRequestsCount\IGetApprovedRequestsCount::class,
             \Modules\Courses\Core\Request\Queries\GetApprovedRequestsCount\GetApprovedRequestsCount::class
         );
+
+        $this->app->bind(
+            \Modules\Courses\Core\Course\Queries\GetRecommendedCourses\IGetRecommendedCourses::class,
+            \Modules\Courses\Core\Course\Queries\GetRecommendedCourses\GetRecommendedCourses::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\Courses\Core\Category\Repositories\ICategoryRepository::class,

@@ -18,17 +18,21 @@ use Modules\Assessment\Core\Question\Queries\GetQuestions;
 use Modules\Assessment\Core\Factor\Queries\GetFactors;
 use Modules\Assessment\Core\Result\Queries\GetResult;
 use Modules\Assessment\Core\Result\Queries\CheckResult;
+use Modules\Courses\Core\Course\Queries\GetRecommendedCourses;
 use Modules\Assessment\Transformers\QuestionResource;
 use Modules\Assessment\Transformers\AssessmentResource;
 use Modules\Assessment\Transformers\FactorResource;
 use Modules\Assessment\Transformers\FactorListResource;
 use Modules\Assessment\Transformers\ResultResource;
+
 use App\Enums;
 use Modules\Assessment\Http\Requests\QuestionRequest;
 use Modules\Assessment\Http\Requests\FactorRequest;
 use Modules\Assessment\Http\Requests\FormulaRequest;
 use Modules\Assessment\Http\Requests\ReorderQuestionsRequest;
 use Modules\Assessment\Http\Requests\StoreResultsRequest;
+
+use Modules\Courses\Transformers\UserCourseResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class AssessmentController extends ApiController
@@ -215,14 +219,16 @@ class AssessmentController extends ApiController
      * post assessment answers to get result
      * @param StoreResultsRequest $request
      * @param CreateResult\ICreateResult $command
+     * @param GetRecommendedCourses\IGetRecommendedCourses $recommendedQuery
      * @return JsonResponse
      */
-    public function postAnswers(StoreResultsRequest $request, CreateResult\ICreateResult $command): JsonResponse
+    public function postAnswers(StoreResultsRequest $request, CreateResult\ICreateResult $command, GetRecommendedCourses\IGetRecommendedCourses $recommendedQuery): JsonResponse
     {
         try{
             $answers = $request->answers ;
             $result = $command->execute($answers);
-            return $this->successResponse(ResultResource::collection($result),'Result saved successfully!' , Response::HTTP_ACCEPTED);
+            $recommendedCourses = $recommendedQuery->execute();
+            return $this->successResponse(['result' => ResultResource::collection($result), 'courses' => UserCourseResourceCollection::make($recommendedCourses)->status('all')],'Result saved successfully!' , Response::HTTP_ACCEPTED);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -230,15 +236,17 @@ class AssessmentController extends ApiController
 
     /**
      * @param GetResult\IGetResult $query
+     * @param GetRecommendedCourses\IGetRecommendedCourses $recommendedQuery
      * @return JsonResponse
      */
-    public function getResult(GetResult\IGetResult $query): JsonResponse
+    public function getResult(GetResult\IGetResult $query, GetRecommendedCourses\IGetRecommendedCourses $recommendedQuery): JsonResponse
     {
         try {
             $results = $query->execute();
+            $recommendedCourses = $recommendedQuery->execute();
             if(count($results) == 0)
                 return $this->errorResponse("You didn't take the assessment yet.");
-            return $this->successResponse(ResultResource::collection($results));
+            return $this->successResponse(['result' => ResultResource::collection($results), 'courses' => UserCourseResourceCollection::make($recommendedCourses)->status('all')]);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
