@@ -14,11 +14,10 @@ class ResultResource extends JsonResource
      */
     public function toArray($request)
     {
-        $scale = '';
         if($this->result <= 24)
         {
             $scale = 'low';
-        }elseif ($this->result >= 25 && $this->result <=25)
+        }elseif ($this->result >= 25 && $this->result <=35)
         {
             $scale = 'moderate';
         }else{

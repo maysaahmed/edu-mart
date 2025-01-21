@@ -2,6 +2,7 @@
 namespace Modules\Courses\Infrastructure\Course;
 
 use Illuminate\Support\Collection;
+use Modules\Assessment\Domain\Entities\Result;
 use Modules\Courses\Domain\Entities\CourseFactor;
 use Modules\Courses\Core\Course\Commands\CreateCourse\CreateCourseModel;
 use Modules\Courses\Core\Course\Commands\EditCourse\EditCourseModel;
@@ -112,6 +113,32 @@ class CourseRepository extends Repository implements ICourseRepository
         }
 
         return $query->latest()->get();
+
+    }
+
+
+    public function getRecommendedCourses(int $user_id): \Illuminate\Database\Eloquent\Collection
+    {
+        $userFactors = Result::where('user_id', $user_id)->get();
+        return Course::whereHas('courseFactors', function ($query) use ($userFactors) {
+            $query->where(function ($query) use ($userFactors) {
+                foreach ($userFactors as $factor) {
+                    $query->orWhere(function ($query) use ($factor) {
+                        if ($factor->result <= 24) {
+                            $query->where('factor_id', $factor->factor_id)
+                                ->whereRaw('FIND_IN_SET(?, result)', ['low']);
+                        } elseif ($factor->result >= 25 && $factor->result <=35) {
+                            $query->where('factor_id', $factor->factor_id)
+                                ->whereRaw('FIND_IN_SET(?, result)', ['moderate']);
+                        } elseif ($factor->result > 35) {
+                            $query->where('factor_id', $factor->factor_id)
+                                ->whereRaw('FIND_IN_SET(?, result)', ['high']);
+                        }
+
+                    });
+                }
+            });
+        })->distinct()->get();
 
     }
 

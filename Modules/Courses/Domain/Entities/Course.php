@@ -66,7 +66,7 @@ class Course extends Model
 
     public function courseFactors(): HasMany
     {
-        return $this->hasMany(courseFactor::class);
+        return $this->hasMany(CourseFactor::class);
     }
 
 }

@@ -19,6 +19,7 @@ interface ICourseRepository extends IRepository
     public function getArchivedCourses(GetArchivedCoursesModel $model): LengthAwarePaginator;
     public function getOrganizationCoursesPagination(GetOrganizationCoursesPaginationModel $model): LengthAwarePaginator;
     public function getUserCourses(GetUserCoursesModel $model): \Illuminate\Database\Eloquent\Collection;
+    public function getRecommendedCourses(int $user_id): \Illuminate\Database\Eloquent\Collection;
     public function createCourse(CreateCourseModel $model): Course;
     public function editCourse(EditCourseModel $model): Course|null;
     public function deleteCourse(int $id): bool;

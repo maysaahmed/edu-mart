@@ -57,9 +57,9 @@ class RequestsController extends ApiController
         try {
             $queryModel = GetApprovedRequestsPagination\GetApprovedRequestsPaginationModel::from($request->all());
 
-            $pagination = $query->execute($queryModel);
+            $requests = $query->execute($queryModel);
 
-            return $this->paginationResponse(ApprovedRequestResource::class,$pagination);;
+            return $this->successResponse(ApprovedRequestResource::collection($requests));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

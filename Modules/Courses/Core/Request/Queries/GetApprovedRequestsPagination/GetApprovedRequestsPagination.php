@@ -1,8 +1,9 @@
 <?php
 namespace Modules\Courses\Core\Request\Queries\GetApprovedRequestsPagination;
 
+use Illuminate\Support\Collection;
 use Modules\Courses\Core\Request\Repositories\IRequestRepository;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
 
 class GetApprovedRequestsPagination implements IGetApprovedRequestsPagination
 {
@@ -13,7 +14,7 @@ class GetApprovedRequestsPagination implements IGetApprovedRequestsPagination
         $this->repository = $repository;
     }
 
-    public function execute(GetApprovedRequestsPaginationModel $model): LengthAwarePaginator
+    public function execute(GetApprovedRequestsPaginationModel $model): Collection
     {
         return $this->repository->getApprovedRequestsPagination($model);
     }
