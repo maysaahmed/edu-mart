@@ -41,8 +41,7 @@ class CourseRequest extends ApiRequest
             'location'  => 'max:255',
             'factors' => 'required|array',
             'factors.*.factor' => 'required|exists:factors,id',
-            'factors.*.result' => 'required|array',
-            'factors.*.result.*' => 'required|string',
+            'factors.*.result' => 'required|string',
         ];
 
     }
