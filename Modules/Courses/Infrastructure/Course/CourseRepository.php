@@ -161,7 +161,7 @@ class CourseRepository extends Repository implements ICourseRepository
             CourseFactor::create([
                 'course_id' => $course->id,
                 'factor_id' => $item['factor'],
-                'result'    => implode(', ', $item['result'])
+                'result'    => $item['result']
             ]);
         }
         return $course;
@@ -190,7 +190,7 @@ class CourseRepository extends Repository implements ICourseRepository
                 {
                     $course->courseFactors()->updateOrCreate(
                         ['factor_id' => $item['factor']],
-                        ['result' => implode(', ', $item['result'])]
+                        ['result' => $item['result']]
                     );
 
                 }
