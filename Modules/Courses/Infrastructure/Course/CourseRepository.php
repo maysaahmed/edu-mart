@@ -160,7 +160,7 @@ class CourseRepository extends Repository implements ICourseRepository
         {
             CourseFactor::create([
                 'course_id' => $course->id,
-                'factor_id' => $item['factor'],
+                'factor_id' => $item['factor_id'],
                 'result'    => $item['result']
             ]);
         }
@@ -189,7 +189,7 @@ class CourseRepository extends Repository implements ICourseRepository
                 foreach($model->factors as $item)
                 {
                     $course->courseFactors()->updateOrCreate(
-                        ['factor_id' => $item['factor']],
+                        ['factor_id' => $item['factor_id']],
                         ['result' => $item['result']]
                     );
 

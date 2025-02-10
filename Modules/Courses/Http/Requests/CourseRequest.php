@@ -40,7 +40,7 @@ class CourseRequest extends ApiRequest
             'provider_id' => 'nullable|integer|exists:providers,id',
             'location'  => 'max:255',
             'factors' => 'required|array',
-            'factors.*.factor' => 'required|exists:factors,id',
+            'factors.*.factor_id' => 'required|exists:factors,id',
             'factors.*.result' => 'required|string',
         ];
 
