@@ -22,7 +22,7 @@ class RegisterUser implements IRegisterUser
         $user = $this->repository->registerUser($model);
         $name = $user->name;
         $email = $user->email;
-        $link = env('VERIFY_REGISTERED_URL').'/'. $user->verifyUser->token;
+        $link = config('app.verify_registered_url').'/'. $user->verifyUser->token;
 
         $sent = $this->mail->sendUserVerifyMail($email,$name,$link);
         if(!$sent)
