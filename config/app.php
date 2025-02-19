@@ -54,9 +54,15 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://edmart.co.uk'),
 
     'asset_url' => env('ASSET_URL'),
+
+
+    'verify_registered_url' => env('VERIFY_REGISTERED_URL', 'https://edmart.co.uk/user/verify-login'),
+    'verify_front_url' => env('VERIFY_FRONT_URL', 'https://edmart.co.uk/user/verify'),
+    'reset_password_front_url' => env('RESET_PASSWORD_FRONT_URL', 'https://edmart.co.uk/reset-password'),
+
 
     /*
     |--------------------------------------------------------------------------

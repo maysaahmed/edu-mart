@@ -30,7 +30,7 @@ class ResetPasswordMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME', 'Edmart Admin')),
+            from: new Address(env('MAIL_FROM_ADDRESS', 'edmartadmin@edmart.co.uk'), env('MAIL_FROM_NAME', 'Edmart')),
             subject: 'Welcome to Edmart - Reset Password',
         );
     }
