@@ -27,7 +27,7 @@ class ResendMail implements IResendMail
 
         $name = $item->name;
         $email = $item->email;
-        $link = env('VERIFY_FRONT_URL').'/'. $item->verifyUser->token;
+        $link = config('app.verify_front_url').'/'. $item->verifyUser->token;
 
         $sent = $this->mail->sendMail($email,$name,$link);
         if(!$sent)
