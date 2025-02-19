@@ -38,8 +38,8 @@ class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('info@edumart.com', 'Edumart Admin'),
-            subject: 'ًWelcome to Edumart',
+            from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME', 'Edmart Admin')),
+            subject: 'Welcome to Edmart',
         );
     }
 
