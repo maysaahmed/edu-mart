@@ -357,7 +357,7 @@ class UserRepository extends Repository implements IUserRepository
                     ]);
                 }
 
-                return env('APP_URL').'/images/profile/'.$img_name;
+                return config('app.url').'/images/profile/'.$img_name;
             }
             return null;
         }

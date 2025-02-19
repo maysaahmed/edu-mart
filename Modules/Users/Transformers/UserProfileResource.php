@@ -14,8 +14,8 @@ class UserProfileResource extends JsonResource
      */
     public function toArray($request)
     {
-        $path = env('APP_URL').'/images/profile/';
-//        dd($this->account);
+        $path = config('app.url').'/images/profile/';
+
         return [
             'id' => $this->id,
             'name' => $this->name,
