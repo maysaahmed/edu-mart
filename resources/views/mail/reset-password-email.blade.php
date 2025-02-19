@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edumart</title>
+    <title>Edmart</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'inter', sans-serif;">
 
@@ -16,8 +16,8 @@
                         <!-- Logo Image -->
                         <img src="{{env('APP_URL')}}/logo.png" alt="Logo" width="120" style="display: block; margin: 0 auto;">
 
-                        <h1 style="color:#344054; font-size: 24px; line-height: 31.2px; font-weight: 700;">Edumart Password Reset</h1>
-                        <p style="color:#344054; font-size: 22px; line-height: 28.6px; font-weight: 400; margin-bottom: 90px;">To Reset your Edumart Password, please click the button below.</p>
+                        <h1 style="color:#344054; font-size: 24px; line-height: 31.2px; font-weight: 700;">Edmart Password Reset</h1>
+                        <p style="color:#344054; font-size: 22px; line-height: 28.6px; font-weight: 400; margin-bottom: 90px;">To Reset your Edmart Password, please click the button below.</p>
                         <a href="{{$link}}" style="background: none; color: #344054; padding: 16px 51px; text-decoration: none; border: 2px solid #344054; border-radius: 4px; font-size: 20px; line-height: 26px; font-weight: 600;">Reset Password</a>
                     </td>
                 </tr>
