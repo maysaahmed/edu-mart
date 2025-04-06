@@ -3,5 +3,6 @@
     "Administration": true,
     "Courses": true,
     "Users": true,
-    "Assessment": true
+    "Assessment": true,
+    "TechnicalAssessment": true
 }
