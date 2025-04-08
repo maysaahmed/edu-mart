@@ -38,6 +38,18 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+
+        // Application/Core
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment\ICreateAssessment::class,
+            \Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment\CreateAssessment::class
+        );
+
+        // Persistence
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository::class,
+            \Modules\TechnicalAssessment\Infrastructure\Assessment\AssessmentRepository::class
+        );
     }
 
     /**
