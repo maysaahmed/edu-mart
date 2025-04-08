@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Modules\TechnicalAssessment\Http\Requests\AssessmentQuestionRequest;
 use Modules\TechnicalAssessment\Transformers\AssessmentQuestionResource;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion;
+use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\EditAssessmentQuestion;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\DeleteAssessmentQuestion;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,13 +38,20 @@ class AssessmentQuestionController extends ApiController
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
+     * @param AssessmentQuestionRequest $request
      * @param int $id
-     * @return Renderable
+     * @param EditAssessmentQuestion\IEditAssessmentQuestion $command
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(AssessmentQuestionRequest $request, int $id, EditAssessmentQuestion\IEditAssessmentQuestion $command): JsonResponse
     {
-        //
+        try{
+            $commandModel = EditAssessmentQuestion\EditAssessmentQuestionModel::from($request->all() + ['id' => $id]);
+            $item = $command->execute($commandModel);
+            return $this->successResponse(new AssessmentQuestionResource($item),'Question updated successfully!' , Response::HTTP_ACCEPTED);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 
     /**
