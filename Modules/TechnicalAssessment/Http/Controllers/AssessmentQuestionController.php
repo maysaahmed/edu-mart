@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Modules\TechnicalAssessment\Http\Requests\AssessmentQuestionRequest;
 use Modules\TechnicalAssessment\Transformers\AssessmentQuestionResource;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion;
+use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\DeleteAssessmentQuestion;
 use Symfony\Component\HttpFoundation\Response;
 
 class AssessmentQuestionController extends ApiController
@@ -22,15 +23,15 @@ class AssessmentQuestionController extends ApiController
      */
     public function store(AssessmentQuestionRequest $request, CreateAssessmentQuestion\ICreateAssessmentQuestion $command): JsonResponse
     {
-//        try {
+        try {
             $commandModel = CreateAssessmentQuestion\CreateAssessmentQuestionModel::from($request->all());
 
             $result = $command->execute($commandModel);
             return $this->successResponse(new AssessmentQuestionResource($result),'Question saved successfully!' , Response::HTTP_CREATED);
 
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 
 
@@ -48,10 +49,17 @@ class AssessmentQuestionController extends ApiController
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Renderable
+     * @param DeleteAssessmentQuestion\IDeleteAssessmentQuestion $command
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id, DeleteAssessmentQuestion\IDeleteAssessmentQuestion $command):JsonResponse
     {
-        //
+        try {
+            $command->execute($id);
+            return $this->successResponse([],'Question removed successfully!');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 }

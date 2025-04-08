@@ -8,5 +8,7 @@ use Modules\TechnicalAssessment\Domain\Entities\AssessmentQuestion;
 interface IAssessmentQuestionRepository extends IRepository
 {
     public function createAssessmentQuestion(CreateAssessmentQuestionModel $model): AssessmentQuestion;
-
+    public function getAssessmentQuestionById($id): AssessmentQuestion|null;
+//    public function editAssessmentQuestion(EditCourseModel $model): Course|null;
+    public function deleteAssessmentQuestion(int $id): bool;
 }

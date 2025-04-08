@@ -50,6 +50,10 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion\ICreateAssessmentQuestion::class,
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion\CreateAssessmentQuestion::class
         );
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\DeleteAssessmentQuestion\IDeleteAssessmentQuestion::class,
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\DeleteAssessmentQuestion\DeleteAssessmentQuestion::class
+        );
 
         // Persistence
         $this->app->bind(
