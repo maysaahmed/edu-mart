@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use App\Enums;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/technicalassessment', function (Request $request) {
-    return $request->user();
+
+
+Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->prefix('administration')->group( function () {
+
+    Route::resource('technical-assessments', TechnicalAssessmentController::class)->except(['create', 'edit']);
+    Route::resource('assessment-questions', AssessmentQuestionController::class)->except(['create', 'edit']);
+
 });

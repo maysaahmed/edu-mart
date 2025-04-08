@@ -45,10 +45,16 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment\CreateAssessment::class
         );
 
+
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion\ICreateAssessmentQuestion::class,
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion\CreateAssessmentQuestion::class
+        );
+
         // Persistence
         $this->app->bind(
-            \Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository::class,
-            \Modules\TechnicalAssessment\Infrastructure\Assessment\AssessmentRepository::class
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Repositories\IAssessmentQuestionRepository::class,
+            \Modules\TechnicalAssessment\Infrastructure\AssessmentQuestion\AssessmentQuestionRepository::class
         );
     }
 

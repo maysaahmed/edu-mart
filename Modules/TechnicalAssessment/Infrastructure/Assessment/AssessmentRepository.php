@@ -1,11 +1,9 @@
 <?php
 namespace Modules\TechnicalAssessment\Infrastructure\Assessment;
 
-use Modules\Courses\Domain\Entities\CourseFactor;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment\CreateAssessmentModel;
 
 use App\Infrastructure\Repository\Repository;
-use Modules\Courses\Domain\Entities\Course;
 
 use Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository;
 use Modules\TechnicalAssessment\Domain\Entities\Assessment;

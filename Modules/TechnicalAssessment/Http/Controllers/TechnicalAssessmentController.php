@@ -2,16 +2,16 @@
 
 namespace Modules\TechnicalAssessment\Http\Controllers;
 
+use App\Http\Controllers\ApiController;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Modules\TechnicalAssessment\Http\Requests\AssessmentRequest;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentResource;
-use Modules\TechnicalAssessment\Domain\Entities\Assessment;
+use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment;
 use Symfony\Component\HttpFoundation\Response;
 
-class TechnicalAssessmentController extends Controller
+class TechnicalAssessmentController extends ApiController
 {
 
     /**

@@ -5,7 +5,7 @@ namespace Modules\TechnicalAssessment\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TechnicalAssessmentResource extends JsonResource
+class QuestionAnswerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,8 @@ class TechnicalAssessmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'code' => $this->code,
-            'desc' => $this->desc,
-            'type' => $this->assessment_type,
-            'questions' => AssessmentQuestionResource::collection($this->questions),
+            'answer_text' => $this->answer_text,
+            'is_correct' => $this->is_correct,
         ];
     }
 }
