@@ -44,6 +44,14 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment\ICreateAssessment::class,
             \Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment\CreateAssessment::class
         );
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment\IEditAssessment::class,
+            \Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment\EditAssessment::class
+        );
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\Assessment\Commands\DeleteAssessment\IDeleteAssessment::class,
+            \Modules\TechnicalAssessment\Core\Assessment\Commands\DeleteAssessment\DeleteAssessment::class
+        );
 
 
         $this->app->bind(
@@ -60,6 +68,10 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         );
 
         // Persistence
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository::class,
+            \Modules\TechnicalAssessment\Infrastructure\Assessment\AssessmentRepository::class
+        );
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Repositories\IAssessmentQuestionRepository::class,
             \Modules\TechnicalAssessment\Infrastructure\AssessmentQuestion\AssessmentQuestionRepository::class

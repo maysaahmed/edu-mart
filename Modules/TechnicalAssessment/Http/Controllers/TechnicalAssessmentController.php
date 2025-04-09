@@ -3,12 +3,12 @@
 namespace Modules\TechnicalAssessment\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Modules\TechnicalAssessment\Http\Requests\AssessmentRequest;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentResource;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment;
+use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment;
+use Modules\TechnicalAssessment\Core\Assessment\Commands\DeleteAssessment;
 use Symfony\Component\HttpFoundation\Response;
 
 class TechnicalAssessmentController extends ApiController
@@ -36,22 +36,36 @@ class TechnicalAssessmentController extends ApiController
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
+     * @param AssessmentRequest $request
      * @param int $id
-     * @return Renderable
+     * @param EditAssessment\IEditAssessment $command
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(AssessmentRequest $request, int $id, EditAssessment\IEditAssessment $command): JsonResponse
     {
-        //
+        try{
+            $commandModel = EditAssessment\EditAssessmentModel::from($request->all() + ['id' => $id]);
+            $item = $command->execute($commandModel);
+            return $this->successResponse(new TechnicalAssessmentResource($item),'Assessment updated successfully!' , Response::HTTP_ACCEPTED);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Renderable
+     * @param DeleteAssessment\IDeleteAssessment $command
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id, DeleteAssessment\IDeleteAssessment $command):JsonResponse
     {
-        //
+        try {
+            $command->execute($id);
+            return $this->successResponse([],'Assessment removed successfully!');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 }

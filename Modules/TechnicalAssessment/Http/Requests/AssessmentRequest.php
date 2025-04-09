@@ -12,13 +12,23 @@ class AssessmentRequest extends ApiRequest
      */
     public function rules()
     {
-
-        return [
+        $rules = [
             'name' => 'required|string|max:255',
             'desc' => 'nullable|string',
-            'code' => 'required|string|unique:assessments,code|max:50',
             'assessment_type' => 'required|in:soft,technical',
         ];
+
+        $id = $this->route('assessment');
+
+        if (!isset($id))
+        {
+            $rules += ['code'=> 'required|unique:assessments,code,NULL,id,deleted_at,NULL|max:50'];
+        }else{
+            $rules += ['code'=> 'required|max:50|unique:assessments,code,'.$id.',id,deleted_at,NULL'];
+        }
+
+        return $rules;
+
 
     }
 

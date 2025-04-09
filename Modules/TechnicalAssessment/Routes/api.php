@@ -17,7 +17,8 @@ use App\Enums;
 
 Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin-token'])->prefix('administration')->group( function () {
 
-    Route::resource('technical-assessments', TechnicalAssessmentController::class)->except(['create', 'edit']);
+    Route::resource('technical-assessments', TechnicalAssessmentController::class)->except(['create', 'edit', 'update']);
+    Route::put('technical-assessments/{assessment}', 'TechnicalAssessmentController@update');
     Route::resource('assessment-questions', AssessmentQuestionController::class)->except(['create', 'edit']);
 
 });
