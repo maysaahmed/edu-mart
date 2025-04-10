@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\TechnicalAssessment\Domain\Entities\Assessment;
+use Modules\TechnicalAssessment\Domain\Entities\OrganizationAssessment;
 
 class Organization extends Model
 {
@@ -38,5 +40,13 @@ class Organization extends Model
         return $this->belongsToMany('Modules\Courses\Domain\Entities\Course', 'hidden_courses', 'organization_id', 'course_id');
     }
 
-
+    /**
+     * assessments relationship
+     * @return BelongsToMany
+     */
+    public function assessments(): BelongsToMany
+    {
+        return $this->belongsToMany(Assessment::class, 'organization_assessment')
+            ->using(OrganizationAssessment::class); // <— pivot model
+    }
 }

@@ -5,6 +5,8 @@ namespace Modules\TechnicalAssessment\Domain\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Modules\Organizations\Domain\Entities\Organization\Organization;
 
 class Assessment extends Model
 {
@@ -29,5 +31,16 @@ class Assessment extends Model
     public function tiers(): HasMany
     {
         return $this->hasMany(AssessmentTier::class, 'assessment_id', 'id');
+    }
+
+    /**
+     * organizations relationship
+     * @return BelongsToMany
+     */
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany(Organization::class, 'organization_assessment')
+            ->withPivot(['limit_users'])
+            ->withTimestamps();
     }
 }

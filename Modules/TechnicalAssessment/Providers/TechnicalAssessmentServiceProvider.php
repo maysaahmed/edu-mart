@@ -75,6 +75,17 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\DeleteAssessmentQuestion\DeleteAssessmentQuestion::class
         );
 
+
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\AssignAssessmentToOrganization\IAssignAssessmentToOrganization::class,
+            \Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\AssignAssessmentToOrganization\AssignAssessmentToOrganization::class
+        );
+
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\UnassignAssessmentFromOrganization\IUnassignAssessmentFromOrganization::class,
+            \Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\UnassignAssessmentFromOrganization\UnassignAssessmentFromOrganization::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository::class,
@@ -83,6 +94,10 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Repositories\IAssessmentQuestionRepository::class,
             \Modules\TechnicalAssessment\Infrastructure\AssessmentQuestion\AssessmentQuestionRepository::class
+        );
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentOrganization\Repositories\IAssessmentOrganizationRepository::class,
+            \Modules\TechnicalAssessment\Infrastructure\AssessmentOrganization\AssessmentOrganizationRepository::class
         );
     }
 
