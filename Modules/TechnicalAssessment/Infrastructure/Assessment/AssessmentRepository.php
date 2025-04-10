@@ -1,6 +1,9 @@
 <?php
 namespace Modules\TechnicalAssessment\Infrastructure\Assessment;
 
+use Illuminate\Database\Eloquent\Collection;
+use Modules\Courses\Core\Course\Queries\GetCourses\GetCoursesModel;
+use Modules\Courses\Domain\Entities\Course;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment\CreateAssessmentModel;
 
 use App\Infrastructure\Repository\Repository;
@@ -8,6 +11,7 @@ use App\Infrastructure\Repository\Repository;
 use Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment\EditAssessmentModel;
 use Modules\TechnicalAssessment\Domain\Entities\Assessment;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class AssessmentRepository extends Repository implements IAssessmentRepository
 {
@@ -19,6 +23,11 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
     public function getAssessmentById($id): Assessment|null
     {
         return Assessment::find($id);
+    }
+
+    public function getAssessments(): Collection
+    {
+        return  Assessment::latest()->get();
     }
 
     public function createAssessment(CreateAssessmentModel $model): Assessment

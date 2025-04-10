@@ -4,15 +4,49 @@ namespace Modules\TechnicalAssessment\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
+use Modules\Courses\Transformers\CourseResource;
 use Modules\TechnicalAssessment\Http\Requests\AssessmentRequest;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentResource;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\DeleteAssessment;
+use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessments;
+use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessment;
 use Symfony\Component\HttpFoundation\Response;
 
 class TechnicalAssessmentController extends ApiController
 {
+
+    /**
+     * @param GetAssessments\IGetAssessments $query
+     * @return JsonResponse
+     */
+    public function index(GetAssessments\IGetAssessments $query): JsonResponse
+    {
+        try {
+            $assessments = $query->execute();
+            return $this->successResponse(TechnicalAssessmentResource::collection($assessments));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * Show the specified resource.
+     * @param int $id
+     * @param GetAssessment\IGetAssessment $query
+     * @return JsonResponse
+     */
+    public function show(int $id, GetAssessment\IGetAssessment $query): JsonResponse
+    {
+        try{
+            $item = $query->execute($id);
+            return $this->successResponse(new TechnicalAssessmentResource($item),'' , Response::HTTP_ACCEPTED);
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
