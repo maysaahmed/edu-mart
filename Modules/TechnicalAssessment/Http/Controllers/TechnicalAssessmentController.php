@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Modules\Courses\Transformers\CourseResource;
 use Modules\TechnicalAssessment\Http\Requests\AssessmentRequest;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentResource;
+use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentListResource;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\DeleteAssessment;
@@ -25,7 +26,7 @@ class TechnicalAssessmentController extends ApiController
     {
         try {
             $assessments = $query->execute();
-            return $this->successResponse(TechnicalAssessmentResource::collection($assessments));
+            return $this->successResponse(TechnicalAssessmentListResource::collection($assessments));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
