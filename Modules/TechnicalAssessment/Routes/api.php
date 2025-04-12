@@ -19,8 +19,9 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
 
     Route::resource('technical-assessments', TechnicalAssessmentController::class)->except(['create', 'edit', 'update']);
     Route::put('technical-assessments/{assessment}', 'TechnicalAssessmentController@update');
-    Route::resource('assessment-questions', AssessmentQuestionController::class)->except(['create', 'edit']);
+    Route::resource('assessment-questions', AssessmentQuestionController::class)->except(['create', 'edit', 'show']);
     Route::post('assessment-organization', 'AssessmentOrganizationController@assignAssessmentToOrganization');
     Route::post('unassign-assessment-organization', 'AssessmentOrganizationController@unassignAssessmentFromOrganization');
+    Route::resource('assessment-tiers', AssessmentTierController::class)->except(['create', 'edit', 'show']);
 
 });

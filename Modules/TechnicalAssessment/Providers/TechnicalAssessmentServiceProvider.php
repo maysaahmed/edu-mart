@@ -86,6 +86,12 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\UnassignAssessmentFromOrganization\UnassignAssessmentFromOrganization::class
         );
 
+
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentTier\Commands\CreateAssessmentTier\ICreateAssessmentTier::class,
+            \Modules\TechnicalAssessment\Core\AssessmentTier\Commands\CreateAssessmentTier\CreateAssessmentTier::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository::class,
@@ -98,6 +104,11 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentOrganization\Repositories\IAssessmentOrganizationRepository::class,
             \Modules\TechnicalAssessment\Infrastructure\AssessmentOrganization\AssessmentOrganizationRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentTier\Repositories\IAssessmentTierRepository::class,
+            \Modules\TechnicalAssessment\Infrastructure\AssessmentTier\AssessmentTierRepository::class
         );
     }
 
