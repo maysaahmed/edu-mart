@@ -92,6 +92,15 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\AssessmentTier\Commands\CreateAssessmentTier\CreateAssessmentTier::class
         );
 
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentTier\Commands\EditAssessmentTier\IEditAssessmentTier::class,
+            \Modules\TechnicalAssessment\Core\AssessmentTier\Commands\EditAssessmentTier\EditAssessmentTier::class
+        );
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentTier\Commands\DeleteAssessmentTier\IDeleteAssessmentTier::class,
+            \Modules\TechnicalAssessment\Core\AssessmentTier\Commands\DeleteAssessmentTier\DeleteAssessmentTier::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository::class,

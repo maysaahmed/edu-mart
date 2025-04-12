@@ -34,38 +34,38 @@ class AssessmentTierController extends ApiController
     }
 
 
-//    /**
-//     * Update the specified resource in storage.
-//     * @param AssessmentTierRequest $request
-//     * @param int $id
-//     * @param EditAssessmentTier\IEditAssessmentTier $command
-//     * @return JsonResponse
-//     */
-//    public function update(AssessmentTierRequest $request, int $id, EditAssessmentTier\IEditAssessmentTier $command): JsonResponse
-//    {
-//        try{
-//            $commandModel = EditAssessmentTier\EditAssessmentTierModel::from($request->all() + ['id' => $id]);
-//            $item = $command->execute($commandModel);
-//            return $this->successResponse(new AssessmentTierResource($item),'Tier updated successfully!' , Response::HTTP_ACCEPTED);
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
-//    }
+    /**
+     * Update the specified resource in storage.
+     * @param AssessmentTierRequest $request
+     * @param int $id
+     * @param EditAssessmentTier\IEditAssessmentTier $command
+     * @return JsonResponse
+     */
+    public function update(AssessmentTierRequest $request, int $id, EditAssessmentTier\IEditAssessmentTier $command): JsonResponse
+    {
+        try{
+            $commandModel = EditAssessmentTier\EditAssessmentTierModel::from($request->all() + ['id' => $id]);
+            $item = $command->execute($commandModel);
+            return $this->successResponse(new AssessmentTierResource($item),'Tier updated successfully!' , Response::HTTP_ACCEPTED);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 
-//    /**
-//     * Remove the specified resource from storage.
-//     * @param int $id
-//     * @param DeleteAssessmentTier\IDeleteAssessmentTier $command
-//     * @return JsonResponse
-//     */
-//    public function destroy(int $id, DeleteAssessmentTier\IDeleteAssessmentTier $command):JsonResponse
-//    {
-//        try {
-//            $command->execute($id);
-//            return $this->successResponse([],'Tier removed successfully!');
-//
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
-//    }
+    /**
+     * Remove the specified resource from storage.
+     * @param int $id
+     * @param DeleteAssessmentTier\IDeleteAssessmentTier $command
+     * @return JsonResponse
+     */
+    public function destroy(int $id, DeleteAssessmentTier\IDeleteAssessmentTier $command):JsonResponse
+    {
+        try {
+            $command->execute($id);
+            return $this->successResponse([],'Tier removed successfully!');
+
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 }

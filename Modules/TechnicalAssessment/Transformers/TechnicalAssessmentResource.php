@@ -22,7 +22,8 @@ class TechnicalAssessmentResource extends JsonResource
             'desc' => $this->desc,
             'type' => $this->assessment_type,
             'questions' => AssessmentQuestionResource::collection($this->questions),
-            'organizations' => AssessmentOrganizationResource::collection($this->organizations)
+            'organizations' => AssessmentOrganizationResource::collection($this->organizations),
+            'tiers' => AssessmentTierResource::collection($this->tiers)
         ];
     }
 }
