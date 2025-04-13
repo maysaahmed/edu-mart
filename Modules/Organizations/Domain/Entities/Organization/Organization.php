@@ -14,7 +14,7 @@ class Organization extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'phone', 'address', 'status'];
+    protected $fillable = ['name', 'phone', 'address', 'status', 'domain'];
 
 
     protected static function newFactory()

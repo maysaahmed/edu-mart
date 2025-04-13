@@ -12,6 +12,7 @@ class EditOrganizationModel extends Data
         public ?string $phone = null,
         public ?string $address =null,
         public ?int $status = 1,
+        public ?string $domain = '',
     ) {
     }
 
