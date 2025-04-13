@@ -37,6 +37,9 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
         $assessment->code = $model->code;
         $assessment->assessment_type = $model->assessment_type;
         $assessment->desc = $model->desc;
+        $assessment->mcq_points = $model->mcq_points;
+        $assessment->tf_points = $model->tf_points;
+        $assessment->sb_points = $model->sb_points;
         $assessment->save();
 
         return $assessment;
@@ -48,11 +51,13 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
         $assessment = $this->getAssessmentById($id);
 
         if($assessment){
-
             $assessment->name = $model->name;
             $assessment->code = $model->code;
             $assessment->assessment_type = $model->assessment_type;
             $assessment->desc = $model->desc;
+            $assessment->mcq_points = $model->mcq_points;
+            $assessment->tf_points = $model->tf_points;
+            $assessment->sb_points = $model->sb_points;
             $save = $assessment->save();
 
             if ($save) {
