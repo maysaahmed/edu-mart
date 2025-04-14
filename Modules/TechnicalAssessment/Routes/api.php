@@ -25,3 +25,8 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     Route::resource('assessment-tiers', AssessmentTierController::class)->except(['create', 'edit', 'show']);
 
 });
+
+
+Route::middleware(['token-name:user-token'])->group(function () {
+    Route::post('/assessments/check-code', 'TechnicalAssessmentController@checkAssessmentCode');
+});

@@ -2,8 +2,7 @@
 namespace Modules\TechnicalAssessment\Infrastructure\Assessment;
 
 use Illuminate\Database\Eloquent\Collection;
-use Modules\Courses\Core\Course\Queries\GetCourses\GetCoursesModel;
-use Modules\Courses\Domain\Entities\Course;
+use Modules\TechnicalAssessment\Core\Assessment\Commands\CheckAssessmentCode\CheckAssessmentCodeModel;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment\CreateAssessmentModel;
 
 use App\Infrastructure\Repository\Repository;
@@ -11,7 +10,7 @@ use App\Infrastructure\Repository\Repository;
 use Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment\EditAssessmentModel;
 use Modules\TechnicalAssessment\Domain\Entities\Assessment;
-use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Support\Str;
 
 class AssessmentRepository extends Repository implements IAssessmentRepository
 {
@@ -74,5 +73,24 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
         return  $item && $item->delete();
     }
 
+    public function checkAssessmentCode(CheckAssessmentCodeModel $model): bool
+    {
+        $assessment = Assessment::where(['id' => $model->assessment_id, 'code' => $model->code])->first();
+        if($assessment)
+            return true;
+        return false;
+    }
 
+    public function checkUserEmail(int $assessment_id): bool
+    {
+        $email = auth()->user()->email;
+        $domain = Str::after($email, '@');
+        $assessment = $this->getAssessmentById($assessment_id);
+
+        $hasDomain = $assessment->organizations()->where('domain', $domain)->exists();
+
+        if($hasDomain)
+            return true;
+        return false;
+    }
 }

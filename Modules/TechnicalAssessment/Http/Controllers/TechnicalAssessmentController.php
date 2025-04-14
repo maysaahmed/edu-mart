@@ -4,13 +4,15 @@ namespace Modules\TechnicalAssessment\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
-use Modules\Courses\Transformers\CourseResource;
 use Modules\TechnicalAssessment\Http\Requests\AssessmentRequest;
+use Modules\TechnicalAssessment\Http\Requests\CheckAssessmentCodeRequest;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentResource;
+use Modules\TechnicalAssessment\Transformers\UserTechnicalAssessmentResource;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentListResource;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\DeleteAssessment;
+use Modules\TechnicalAssessment\Core\Assessment\Commands\CheckAssessmentCode;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessments;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessment;
 use Symfony\Component\HttpFoundation\Response;
@@ -99,6 +101,24 @@ class TechnicalAssessmentController extends ApiController
             $command->execute($id);
             return $this->successResponse([],'Assessment removed successfully!');
 
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * check code and get assessment questions
+     * @param CheckAssessmentCodeRequest $request
+     * @param CheckAssessmentCode\ICheckAssessmentCode $command
+     * @return JsonResponse
+     */
+
+    public function checkAssessmentCode(CheckAssessmentCodeRequest $request, CheckAssessmentCode\ICheckAssessmentCode $command):JsonResponse
+    {
+        try{
+            $commandModel = CheckAssessmentCode\CheckAssessmentCodeModel::from($request->all());
+            $item = $command->execute($commandModel);
+            return $this->successResponse(new UserTechnicalAssessmentResource($item),'' , Response::HTTP_ACCEPTED);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
