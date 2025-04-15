@@ -107,6 +107,11 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\AssessmentTier\Commands\DeleteAssessmentTier\DeleteAssessmentTier::class
         );
 
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentAnswer\Commands\PostAssessmentAnswer\IPostAssessmentAnswer::class,
+            \Modules\TechnicalAssessment\Core\AssessmentAnswer\Commands\PostAssessmentAnswer\PostAssessmentAnswer::class
+        );
+
         // Persistence
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository::class,
@@ -124,6 +129,11 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentTier\Repositories\IAssessmentTierRepository::class,
             \Modules\TechnicalAssessment\Infrastructure\AssessmentTier\AssessmentTierRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentAnswer\Repositories\IAssessmentAnswerRepository::class,
+            \Modules\TechnicalAssessment\Infrastructure\AssessmentAnswer\AssessmentAnswerRepository::class
         );
     }
 
