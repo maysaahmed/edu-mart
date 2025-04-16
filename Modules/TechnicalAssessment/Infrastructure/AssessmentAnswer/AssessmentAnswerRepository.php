@@ -64,7 +64,7 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
         $result->assessment_id = $model->assessment_id;
         $result->score = $score;
         $result->started_at = $model->started_at;
-        $result->submitted_at = $model->submitted_at;
+        $result->submitted_at = $model->submitted_at ?? now();
         $result->answers = json_encode($answers);
         $save = $result->save();
 

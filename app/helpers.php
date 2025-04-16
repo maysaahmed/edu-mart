@@ -20,3 +20,12 @@ if(! function_exists('getImagesUrl')){
         return env("APP_URL", request()->root()) .'/public/images/';
     }
 }
+if(! function_exists('getAuthUserDomain')) {
+    function getAuthUserDomain(): ?string
+    {
+        $email = auth()->user()->email ?? null;
+
+        return $email ? substr(strrchr($email, "@"), 1) : null;
+    }
+}
+

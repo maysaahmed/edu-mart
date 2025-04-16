@@ -7,6 +7,7 @@ class PostAssessmentAnswerModel extends Data
 {
     public function __construct(
         public int $assessment_id,
+        public string $code,
         public array $answers,
         public ?string $started_at = null,
         public ?string $submitted_at = null,

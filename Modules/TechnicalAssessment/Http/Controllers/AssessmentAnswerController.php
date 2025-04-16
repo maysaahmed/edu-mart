@@ -20,15 +20,15 @@ class AssessmentAnswerController extends ApiController
      */
     public function storeAssessmentAnswers(AnswersRequest $request, PostAssessmentAnswer\IPostAssessmentAnswer $command): JsonResponse
     {
-//        try {
+        try {
             $commandModel = PostAssessmentAnswer\PostAssessmentAnswerModel::from($request->all());
 
             $result = $command->execute($commandModel);
 
             return $this->successResponse([],'Answers saved successfully!' , Response::HTTP_CREATED);
 
-//        } catch (\Throwable $th) {
-//            return $this->errorResponse($th->getMessage());
-//        }
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
     }
 }

@@ -150,6 +150,10 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             module_path($this->moduleName, 'Config/config.php'), $this->moduleNameLower
         );
+
+        $this->mergeConfigFrom(
+            module_path($this->moduleName, 'Config/assessment.php'), 'assessment'
+        );
     }
 
     /**

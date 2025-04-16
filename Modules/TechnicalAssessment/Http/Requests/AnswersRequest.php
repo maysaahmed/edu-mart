@@ -13,6 +13,7 @@ class AnswersRequest extends ApiRequest
     {
         return [
             'assessment_id' => 'required|exists:assessments,id',
+            'code' => 'required|exists:assessments,code',
             'started_at' => 'nullable|date_format:Y-m-d H:i:s',
             'submitted_at' => 'nullable|date_format:Y-m-d H:i:s',
             'answers' => 'required|array',
