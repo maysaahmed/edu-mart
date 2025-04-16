@@ -8,6 +8,7 @@ use Modules\TechnicalAssessment\Http\Requests\AssessmentRequest;
 use Modules\TechnicalAssessment\Http\Requests\CheckAssessmentCodeRequest;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentResource;
 use Modules\TechnicalAssessment\Transformers\UserTechnicalAssessmentResource;
+use Modules\TechnicalAssessment\Transformers\UserAssessmentsListResource;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentListResource;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment;
@@ -38,6 +39,20 @@ class TechnicalAssessmentController extends ApiController
         try {
             $assessments = $query->execute();
             return $this->successResponse(TechnicalAssessmentListResource::collection($assessments));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * @param GetAssessments\IGetAssessments $query
+     * @return JsonResponse
+     */
+    public function listAssessments(GetAssessments\IGetAssessments $query): JsonResponse
+    {
+        try {
+            $assessments = $query->execute();
+            return $this->successResponse(UserAssessmentsListResource::collection($assessments));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
