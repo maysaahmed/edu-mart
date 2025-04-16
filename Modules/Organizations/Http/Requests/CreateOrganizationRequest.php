@@ -10,7 +10,8 @@ class CreateOrganizationRequest extends ApiRequest
         $rules = [
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|numeric',
             'address' => 'required|regex:/([- ,\/0-9a-zA-Z]+)/|min:8',
-            'status' => 'in:1,0'
+            'status' => 'in:1,0',
+            'domain' => 'nullable|regex:/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/',
             ];
 
         $id = $this->route('organization');
@@ -18,7 +19,7 @@ class CreateOrganizationRequest extends ApiRequest
         {
             $rules += ['name'=> 'required|unique:organizations|max:255'];
         }else{
-            $rules += ['name'=> 'required|max:255|unique:organizations,name,'.$id,];
+            $rules += ['name'=> 'required|max:255|unique:organizations,name,'.$id.',id,deleted_at,NULL'];
         }
         return $rules;
 

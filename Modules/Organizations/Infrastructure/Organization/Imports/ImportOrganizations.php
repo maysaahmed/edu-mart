@@ -29,6 +29,7 @@ class ImportOrganizations implements ToModel, SkipsEmptyRows, WithValidation, Wi
             'name'     => $row['name'],
             'phone'    => $row['phone'],
             'address'  => $row['address'],
+            'domain'   => $row['domain'],
         ]);
     }
 
@@ -43,6 +44,7 @@ class ImportOrganizations implements ToModel, SkipsEmptyRows, WithValidation, Wi
             '*.name' => 'required|unique:organizations|max:255',
             '*.phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             '*.address' => 'required|regex:/([- ,\/0-9a-zA-Z]+)/|min:8',
+            '*.domain' => 'nullable|regex:/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/',
         ];
     }
 

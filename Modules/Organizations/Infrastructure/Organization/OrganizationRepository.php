@@ -45,6 +45,7 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
         $org->phone = $model->phone;
         $org->address = $model->address;
         $org->status = $model->status;
+        $org->domain = $model->domain;
         $org->save();
 
         return $org;
@@ -61,6 +62,7 @@ class OrganizationRepository extends Repository implements IOrganizationReposito
             $item->phone = $model->phone;
             $item->address = $model->address;
             $item->status = $model->status;
+            $item->domain = $model->domain;
             $save = $item->save();
 
             if ($save) {

@@ -1,0 +1,11 @@
+{
+    "name": "TechnicalAssessment",
+    "alias": "technicalassessment",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\TechnicalAssessment\\Providers\\TechnicalAssessmentServiceProvider"
+    ],
+    "files": []
+}
