@@ -10,10 +10,16 @@ use Modules\TechnicalAssessment\Core\AssessmentTier\Commands\CreateAssessmentTie
 use Modules\TechnicalAssessment\Core\AssessmentTier\Commands\EditAssessmentTier;
 use Modules\TechnicalAssessment\Core\AssessmentTier\Commands\DeleteAssessmentTier;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums;
 
 class AssessmentTierController extends ApiController
 {
-
+    public function __construct()
+    {
+        $this->middleware('ability:'.Enums\PermissionsEnum::createAssessmentTier->value,   ['only' => ['store']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editAssessmentTier->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteAssessmentTier->value,   ['only' => ['destroy']]);
+    }
     /**
      * Store a newly created resource in storage.
      * @param AssessmentTierRequest $request

@@ -49,7 +49,7 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
                 'points' => $isCorrect ? $points : 0,
             ];
         })->toArray();
-        die;
+
     }
 
     public function postAssessmentAnswers(PostAssessmentAnswerModel $model): bool

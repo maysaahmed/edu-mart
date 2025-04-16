@@ -3,18 +3,23 @@
 namespace Modules\TechnicalAssessment\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Modules\TechnicalAssessment\Http\Requests\AssessmentQuestionRequest;
 use Modules\TechnicalAssessment\Transformers\AssessmentQuestionResource;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\EditAssessmentQuestion;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\DeleteAssessmentQuestion;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums;
 
 class AssessmentQuestionController extends ApiController
 {
+    public function __construct()
+    {
+        $this->middleware('ability:'.Enums\PermissionsEnum::createAssessmentQuestion->value,   ['only' => ['store']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editAssessmentQuestion->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteAssessmentQuestion->value,   ['only' => ['destroy']]);
+    }
 
     /**
      * Store a newly created resource in storage.

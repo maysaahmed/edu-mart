@@ -64,6 +64,25 @@ enum PermissionsEnum: string
     case editFactors = 'edit_Factors';
 
 
+    //technical assessments permissions
+    case listAssessments = 'list_assessments';
+    case createAssessment = 'create_assessment';
+    case editAssessment = 'edit_assessment';
+    case deleteAssessment = 'delete_assessment';
+
+    case createAssessmentQuestion = 'create_assessment_question';
+    case editAssessmentQuestion = 'edit_assessment_question';
+    case deleteAssessmentQuestion = 'delete_assessment_question';
+
+    case createAssessmentTier = 'create_assessment_tier';
+    case editAssessmentTier = 'edit_assessment_tier';
+    case deleteAssessmentTier = 'delete_assessment_tier';
+
+    case assignAssessmentOrganization = 'assign_assessment_organization';
+
+
+
+
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly
     public static function label(): string
     {

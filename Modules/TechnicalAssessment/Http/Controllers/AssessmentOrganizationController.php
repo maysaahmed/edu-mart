@@ -9,9 +9,15 @@ use Modules\TechnicalAssessment\Http\Requests\UnassignAssessmentOrganizationRequ
 use Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\AssignAssessmentToOrganization;
 use Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\UnassignAssessmentFromOrganization;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums;
 
 class AssessmentOrganizationController extends ApiController
 {
+
+    public function __construct()
+    {
+        $this->middleware('ability:'.Enums\PermissionsEnum::assignAssessmentOrganization->value,   ['only' => ['assignAssessmentToOrganization', 'unassignAssessmentFromOrganization']]);
+    }
 
     /**
      *

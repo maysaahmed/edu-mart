@@ -16,9 +16,18 @@ use Modules\TechnicalAssessment\Core\Assessment\Commands\CheckAssessmentCode;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessments;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessment;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums;
 
 class TechnicalAssessmentController extends ApiController
 {
+
+    public function __construct()
+    {
+        $this->middleware('ability:'.Enums\PermissionsEnum::listAssessments->value,   ['only' => ['index', 'show']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::createAssessment->value,   ['only' => ['store']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::editAssessment->value,   ['only' => ['update']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::deleteAssessment->value,   ['only' => ['destroy']]);
+    }
 
     /**
      * @param GetAssessments\IGetAssessments $query
