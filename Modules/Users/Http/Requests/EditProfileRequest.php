@@ -13,7 +13,6 @@ class EditProfileRequest extends ApiRequest
 
         return [
             'name'=> 'required|max:255',
-            'email'=> 'required|email|unique:users,email,'.$id.',id,deleted_at,NULL',
             'dob' => 'required|date_format:Y-m-d|before:' . Carbon::now()->subYears(18)->format('Y-m-d'),
             'gender' => 'required|in:male,female',
             'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
