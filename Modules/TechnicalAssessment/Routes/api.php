@@ -30,7 +30,8 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
 Route::middleware(['token-name:user-token'])->group(function () {
     Route::post('/assessments/check-code', 'TechnicalAssessmentController@checkAssessmentCode');
     Route::post('/assessments/post-answers', 'AssessmentAnswerController@storeAssessmentAnswers');
+    Route::get('/assessments', 'TechnicalAssessmentController@listAssessments');
 });
 
 
-    Route::get('/assessments', 'TechnicalAssessmentController@listAssessments');
+

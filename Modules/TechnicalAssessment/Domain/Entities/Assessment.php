@@ -43,4 +43,13 @@ class Assessment extends Model
             ->withPivot(['limit_users'])
             ->withTimestamps();
     }
+
+    /**
+     * results relationship
+     * @return HasMany
+     */
+    public function results(): HasMany
+    {
+        return $this->hasMany(UserAssessmentResult::class);
+    }
 }

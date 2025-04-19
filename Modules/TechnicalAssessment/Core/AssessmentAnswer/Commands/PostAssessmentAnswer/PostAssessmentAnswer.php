@@ -27,7 +27,7 @@ class PostAssessmentAnswer implements IPostAssessmentAnswer
         $validEmail = $this->assessmentRepository->checkUserEmail($model->assessment_id);
 
         if(!$validEmail)
-            throw new \Exception('You need to edit your profile to change you email to your company email to use this code.');
+            throw new \Exception('You need to sign up with your company email to use this code.');
 
 
         //check if user take assessment before
