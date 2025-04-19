@@ -42,6 +42,7 @@ class UserAssessmentsListResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'desc' => $this->desc,
+            'type' => $this->assessment_type,
             'has_taken' => $hasTaken,
             'can_retake' => $canRetake,
             'retake_after_days' => $nextRetakeIn,

@@ -10,6 +10,7 @@ interface IAssessmentRepository extends IRepository
 {
     public function getAssessmentById($id): Assessment|null;
     public function getAssessments(): \Illuminate\Database\Eloquent\Collection;
+    public function getUserAssessments(): \Illuminate\Database\Eloquent\Collection;
     public function createAssessment(CreateAssessmentModel $model): Assessment;
     public function editAssessment(EditAssessmentModel $model): Assessment|null;
     public function deleteAssessment(int $id): bool;

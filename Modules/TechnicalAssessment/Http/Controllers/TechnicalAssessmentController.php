@@ -15,6 +15,7 @@ use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\DeleteAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CheckAssessmentCode;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessments;
+use Modules\TechnicalAssessment\Core\Assessment\Queries\GetUserAssessments;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessment;
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums;
@@ -45,10 +46,10 @@ class TechnicalAssessmentController extends ApiController
     }
 
     /**
-     * @param GetAssessments\IGetAssessments $query
+     * @param GetUserAssessments\IGetUserAssessments $query
      * @return JsonResponse
      */
-    public function listAssessments(GetAssessments\IGetAssessments $query): JsonResponse
+    public function listAssessments(GetUserAssessments\IGetUserAssessments $query): JsonResponse
     {
         try {
             $assessments = $query->execute();

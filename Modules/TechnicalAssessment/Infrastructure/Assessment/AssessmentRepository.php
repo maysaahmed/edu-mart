@@ -142,4 +142,12 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
 
         return true;
     }
+
+    public function getUserAssessments() :Collection
+    {
+        $domain = getAuthUserDomain();
+        return Assessment::whereHas('organizations', function ($query) use ($domain) {
+            $query->where('domain', $domain);
+        })->get();
+    }
 }

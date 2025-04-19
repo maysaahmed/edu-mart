@@ -18,6 +18,7 @@ class TechnicalAssessmentListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'has_results' => $this->results()->exists(),
             'organizations' => AssessmentOrganizationResource::collection($this->organizations),
 
         ];
