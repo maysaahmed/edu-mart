@@ -2,7 +2,7 @@
 namespace Modules\TechnicalAssessment\Infrastructure\Assessment;
 
 use Illuminate\Database\Eloquent\Collection;
-use Modules\TechnicalAssessment\Core\Assessment\Commands\CheckAssessmentCode\CheckAssessmentCodeModel;
+
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment\CreateAssessmentModel;
 
 use App\Infrastructure\Repository\Repository;
@@ -10,7 +10,9 @@ use App\Infrastructure\Repository\Repository;
 use Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment\EditAssessmentModel;
 use Modules\TechnicalAssessment\Domain\Entities\Assessment;
-use Illuminate\Support\Str;
+use Modules\TechnicalAssessment\Domain\Entities\UserAssessmentResult;
+
+use Carbon\Carbon;
 
 class AssessmentRepository extends Repository implements IAssessmentRepository
 {
@@ -76,9 +78,9 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
         return  $item && $item->delete();
     }
 
-    public function checkAssessmentCode(CheckAssessmentCodeModel $model): bool
+    public function checkAssessmentCode(int $assessment_id, string $code): bool
     {
-        $assessment = Assessment::where(['id' => $model->assessment_id, 'code' => $model->code])->first();
+        $assessment = Assessment::where(['id' => $assessment_id, 'code' => $code])->first();
         if($assessment)
             return true;
         return false;
@@ -86,8 +88,7 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
 
     public function checkUserEmail(int $assessment_id): bool
     {
-        $email = auth()->user()->email;
-        $domain = Str::after($email, '@');
+        $domain = getAuthUserDomain();
         $assessment = $this->getAssessmentById($assessment_id);
 
         $hasDomain = $assessment->organizations()->where('domain', $domain)->exists();
@@ -95,5 +96,58 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
         if($hasDomain)
             return true;
         return false;
+    }
+
+    public function canUserRetakeAssessment(int $assessment_id): int|bool
+    {
+        $userId = auth()->id();
+        $days  = config('assessment.retake_days');
+
+        $result = UserAssessmentResult::where('user_id', $userId)
+            ->where('assessment_id', $assessment_id)
+            ->orderByDesc('submitted_at')
+            ->first();
+
+        if (! $result || !$result->submitted_at) {
+            return true;
+        }
+
+        $nextAllowedDate = Carbon::parse($result->submitted_at)
+            ->addDays($days);
+
+        if (now()->lt($nextAllowedDate)) {
+            return now()->diffInDays($nextAllowedDate);
+        }
+        return true;
+
+    }
+
+    public function checkUserLimitOrganization(int $assessment_id): bool
+    {
+        $domain = getAuthUserDomain();
+        $assessment = $this->getAssessmentById($assessment_id);
+
+        $organization = $assessment->organizations()->where('domain', $domain)->first();
+
+
+        // Count unique users who have started this assessment
+        $results = UserAssessmentResult::where('assessment_id', $assessment_id)
+            ->where('user_id', '!=', auth()->id())
+            ->whereHas('user', function ($query) use ($domain) {
+            $query->where('email', 'like', '%@' . $domain);
+        })->distinct('user_id')->count();
+
+        if($results < $organization->pivot->limit_users)
+            return false;
+
+        return true;
+    }
+
+    public function getUserAssessments() :Collection
+    {
+        $domain = getAuthUserDomain();
+        return Assessment::whereHas('organizations', function ($query) use ($domain) {
+            $query->where('domain', $domain);
+        })->get();
     }
 }

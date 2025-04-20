@@ -67,6 +67,16 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessments\GetAssessments::class
         );
 
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\Assessment\Queries\GetUserAssessments\IGetUserAssessments::class,
+            \Modules\TechnicalAssessment\Core\Assessment\Queries\GetUserAssessments\GetUserAssessments::class
+        );
+
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetAssessmentResults\IGetAssessmentResults::class,
+            \Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetAssessmentResults\GetAssessmentResults::class
+        );
+
 
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion\ICreateAssessmentQuestion::class,
@@ -149,6 +159,10 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         ], 'config');
         $this->mergeConfigFrom(
             module_path($this->moduleName, 'Config/config.php'), $this->moduleNameLower
+        );
+
+        $this->mergeConfigFrom(
+            module_path($this->moduleName, 'Config/assessment.php'), 'assessment'
         );
     }
 

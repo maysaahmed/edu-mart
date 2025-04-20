@@ -8,12 +8,14 @@ use Modules\TechnicalAssessment\Http\Requests\AssessmentRequest;
 use Modules\TechnicalAssessment\Http\Requests\CheckAssessmentCodeRequest;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentResource;
 use Modules\TechnicalAssessment\Transformers\UserTechnicalAssessmentResource;
+use Modules\TechnicalAssessment\Transformers\UserAssessmentsListResource;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentListResource;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\DeleteAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CheckAssessmentCode;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessments;
+use Modules\TechnicalAssessment\Core\Assessment\Queries\GetUserAssessments;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessment;
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums;
@@ -38,6 +40,20 @@ class TechnicalAssessmentController extends ApiController
         try {
             $assessments = $query->execute();
             return $this->successResponse(TechnicalAssessmentListResource::collection($assessments));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * @param GetUserAssessments\IGetUserAssessments $query
+     * @return JsonResponse
+     */
+    public function listAssessments(GetUserAssessments\IGetUserAssessments $query): JsonResponse
+    {
+        try {
+            $assessments = $query->execute();
+            return $this->successResponse(UserAssessmentsListResource::collection($assessments));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

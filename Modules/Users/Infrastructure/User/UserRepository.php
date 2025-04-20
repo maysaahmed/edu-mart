@@ -323,7 +323,6 @@ class UserRepository extends Repository implements IUserRepository
 
 
             $item->name = $model->name;
-            $item->email = $model->email;
 
             $save = $item->save();
 
