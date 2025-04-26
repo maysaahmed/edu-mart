@@ -14,7 +14,7 @@ use Modules\TechnicalAssessment\Domain\Entities\UserAssessmentResult;
 
 use Modules\TechnicalAssessment\Infrastructure\AssessmentAnswer\Exports\OrganizationAssessmentResultExport;
 use Maatwebsite\Excel\Facades\Excel;
-
+use Illuminate\Support\Facades\Storage;
 
 class AssessmentAnswerRepository extends Repository implements IAssessmentAnswerRepository
 {
@@ -105,19 +105,12 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
             ];
         });
 
-        $directory = public_path('reports');
-        if (!file_exists($directory)) {
-            mkdir($directory, 0755, true);
-        }
-
         $filename = str_replace(' ', '_', $organization->name).'-'.str_replace(' ', '_', $assessment->name).'-report.csv';
 
-        $tempPath = storage_path("app/{$filename}");
-        // Store to storage
-        Excel::store(new OrganizationAssessmentResultExport($report), $filename, 'local', \Maatwebsite\Excel\Excel::CSV);
 
-        // Copy to public/reports
-        copy($tempPath, public_path("reports/{$filename}"));
+        // Store to storage
+        Excel::store(new OrganizationAssessmentResultExport($report), 'reports/' . $filename, 'local', \Maatwebsite\Excel\Excel::CSV);
+
 
         return $filename;
     }
@@ -126,15 +119,16 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
         //get organization reports
         $reports = OrganizationAssessment::where('organization_id', $org_id)->get();
         foreach ($reports as $report) {
-            $reportFile = public_path('reports/' . $report->report);
 
-            if (!$report->report || !file_exists($reportFile)) {
+            $reportFile = 'reports/' . $report->report;
+
+            if (!$report->report || !Storage::exists($reportFile)) {
                 $generatedFile = $this->generateReport($org_id, $report->assessment_id);
-                $report->report = $generatedFile; // just the filename like 'org_2_assess_4.xlsx'
+                $report->report = $generatedFile;
                 $report->save();
             }
         }
-        dd($reports);
+        return $reports;
     }
 
 

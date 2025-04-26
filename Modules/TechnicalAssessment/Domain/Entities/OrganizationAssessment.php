@@ -23,4 +23,10 @@ class OrganizationAssessment extends Pivot
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 
+    public function assessment(): BelongsTo
+    {
+        return $this->belongsTo(Assessment::class, 'assessment_id', 'id');
+    }
+
+
 }
