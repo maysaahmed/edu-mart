@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Modules\TechnicalAssessment\Http\Requests\AnswersRequest;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Commands\PostAssessmentAnswer;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetAssessmentResults;
+use Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetOrganizationReports;
 
 use Modules\TechnicalAssessment\Transformers\AssessmentResultResource;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,5 +48,19 @@ class AssessmentAnswerController extends ApiController
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
+
     }
+
+    public function getReports(int $organization_id,GetOrganizationReports\IGetOrganizationReports $query): JsonResponse
+    {
+        try {
+            $results = $query->execute($organization_id);
+            dd($results);
+            return $this->successResponse(AssessmentResultResource::collection($results));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+
 }

@@ -12,7 +12,7 @@ class OrganizationAssessment extends Pivot
 {
     use HasFactory;
     protected $table = 'organization_assessment';
-    protected $fillable = ['organization_id', 'assessment_id', 'limit_users'];
+    protected $fillable = ['organization_id', 'assessment_id', 'limit_users', 'report'];
 
     /**
      * organization relationship
