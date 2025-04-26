@@ -28,6 +28,7 @@ class AssessmentQuestionRepository extends Repository implements IAssessmentQues
         $ques->ques = $model->question;
         $ques->question_type = $model->question_type;
         $ques->assessment_id = $model->assessment_id;
+        $ques->weight = $model->weight;
         $ques->save();
 
         foreach($model->answers as $item)
@@ -51,6 +52,7 @@ class AssessmentQuestionRepository extends Repository implements IAssessmentQues
             $question->ques = $model->question;
             $question->question_type = $model->question_type;
             $question->assessment_id = $model->assessment_id;
+            $question->weight = $model->weight;
             $save = $question->save();
 
             if ($save) {

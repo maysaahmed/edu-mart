@@ -20,6 +20,7 @@ class AssessmentQuestionResource extends JsonResource
             'question' => $this->ques,
             'assessment_id' => $this->assessment_id,
             'question_type' => $this->question_type,
+            'weight' => $this->weight,
             'answers' => QuestionAnswerResource::collection($this->answers),
         ];
     }

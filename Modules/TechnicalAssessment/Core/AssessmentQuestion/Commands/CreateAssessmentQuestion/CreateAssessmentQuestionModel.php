@@ -9,6 +9,7 @@ class CreateAssessmentQuestionModel extends Data
         public string $question,
         public string $question_type,
         public int $assessment_id,
+        public int $weight,
         public array $answers ,
 
     ) {
