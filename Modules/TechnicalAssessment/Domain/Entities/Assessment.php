@@ -12,7 +12,7 @@ class Assessment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'code', 'assessment_type', 'desc', 'mcq_points', 'tf_points', 'sb_points'];
+    protected $fillable = ['name', 'code', 'assessment_type', 'desc'];
 
 
     /**

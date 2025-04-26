@@ -32,27 +32,17 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
         return collect($answers)->map(function ($answer) {
 
             $question = AssessmentQuestion::find($answer['question_id']);
-            $assessment = Assessment::find($question->assessment_id);
 
             //correct answer
             $correctAnswerId = $question->answers()->where('is_correct', true)->value('id');
 
             $isCorrect = $answer['answer_id'] == $correctAnswerId;
 
-            //points
-            $typeToColumn = [
-                'mcq' => 'mcq_points',
-                't/f' => 'tf_points',
-                'sb' => 'sb_points',
-            ];
-
-            $points = $assessment->{$typeToColumn[$question->question_type] ?? 'mcq_points'};
-
             return [
                 'question_id' => $answer['question_id'],
                 'answer_id' => $answer['answer_id'],
                 'is_correct' => $isCorrect,
-                'points' => $isCorrect ? $points : 0,
+                'points' => $isCorrect ? $question->weight : 0,
             ];
         })->toArray();
 

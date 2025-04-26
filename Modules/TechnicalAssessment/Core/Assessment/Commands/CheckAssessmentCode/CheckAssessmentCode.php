@@ -35,8 +35,9 @@ class CheckAssessmentCode implements ICheckAssessmentCode
             throw new \Exception("You can retake the assessment in {$retakeStatus} days.");
 
         //check user limit
-        $checkLimit = $this->repository->checkUserLimitOrganization($model->assessment_id);
-        if(!$checkLimit)
+        $limitReached = $this->repository->checkUserLimitOrganization($model->assessment_id);
+
+        if($limitReached)
             throw new \Exception('Assessment limit reached.');
 
         return $this->repository->getAssessmentById($model->assessment_id);
