@@ -10,6 +10,7 @@ use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentResource;
 use Modules\TechnicalAssessment\Transformers\UserTechnicalAssessmentResource;
 use Modules\TechnicalAssessment\Transformers\UserAssessmentsListResource;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentListResource;
+use Modules\TechnicalAssessment\Transformers\AssessmentRecommendedCourseResource;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\DeleteAssessment;
@@ -17,6 +18,7 @@ use Modules\TechnicalAssessment\Core\Assessment\Commands\CheckAssessmentCode;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessments;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetUserAssessments;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessment;
+use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessmentRecommendedCourses;
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums;
 
@@ -144,6 +146,23 @@ class TechnicalAssessmentController extends ApiController
             $commandModel = CheckAssessmentCode\CheckAssessmentCodeModel::from($request->all());
             $item = $command->execute($commandModel);
             return $this->successResponse(new UserTechnicalAssessmentResource($item),'' , Response::HTTP_ACCEPTED);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    /**
+     * @param int $assessment_id
+     * @param GetAssessmentRecommendedCourses\IGetAssessmentRecommendedCourses $query
+     * @return JsonResponse
+     */
+    public function getAssessmentRecommendedCourses(int $assessment_id, GetAssessmentRecommendedCourses\IGetAssessmentRecommendedCourses $query): JsonResponse
+    {
+        try{
+            $items = $query->execute($assessment_id);
+
+            return $this->successResponse(AssessmentRecommendedCourseResource::collection($items),'' , Response::HTTP_ACCEPTED);
+
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }

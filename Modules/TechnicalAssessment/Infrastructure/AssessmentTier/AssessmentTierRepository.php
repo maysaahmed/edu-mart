@@ -55,6 +55,8 @@ class AssessmentTierRepository extends Repository implements IAssessmentTierRepo
                 {
                     $tier->courses()->detach();
                     $tier->courses()->syncWithoutDetaching($model->courses);
+                }else{
+                    $tier->courses()->detach();
                 }
 
                 return $tier;

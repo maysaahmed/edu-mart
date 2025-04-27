@@ -11,6 +11,7 @@ use Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentReposito
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment\EditAssessmentModel;
 use Modules\TechnicalAssessment\Domain\Entities\Assessment;
 use Modules\TechnicalAssessment\Domain\Entities\UserAssessmentResult;
+use Modules\TechnicalAssessment\Domain\Entities\AssessmentTier;
 
 use Carbon\Carbon;
 
@@ -144,7 +145,25 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
 
     public function getUserRecommendedCourses($assessment_id) : Collection
     {
+        $user_id = auth()->id();
+        $userResult = UserAssessmentResult::where('user_id', $user_id)
+            ->where('assessment_id', $assessment_id)
+            ->whereNotNull('submitted_at')
+            ->orderByDesc('submitted_at')
+            ->first();
+        if($userResult)
+        {
+            $score = $userResult->score;
+            $tiers = AssessmentTier::where('assessment_id', $assessment_id)
+                ->where('from', '<=', $score)
+                ->where('to', '>=', $score)
+                ->with('courses')
+                ->first();
 
+            return $tiers->courses;
+        }
+
+        return collect();
 
     }
 }
