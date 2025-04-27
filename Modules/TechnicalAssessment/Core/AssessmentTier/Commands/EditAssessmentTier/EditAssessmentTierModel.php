@@ -13,7 +13,7 @@ class EditAssessmentTierModel extends Data
         public int $to,
         public int $assessment_id,
         public string $desc,
-        public array $courses ,
+        public ?array $courses ,
 
     ) {
     }

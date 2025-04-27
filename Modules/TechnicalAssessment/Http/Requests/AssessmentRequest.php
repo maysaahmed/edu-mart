@@ -16,9 +16,6 @@ class AssessmentRequest extends ApiRequest
             'name' => 'required|string|max:255',
             'desc' => 'nullable|string',
             'assessment_type' => 'required|in:soft,technical',
-            'mcq_points' => 'nullable|numeric',
-            'tf_points' => 'nullable|numeric',
-            'sb_points' => 'nullable|numeric'
         ];
 
         $id = $this->route('assessment');
@@ -45,9 +42,6 @@ class AssessmentRequest extends ApiRequest
         return [
             'assessment_type.required' => 'The type field is required.',
             'assessment_type.in' => 'The type field must be soft or technical.',
-            'mcq_points.numeric' => 'The mcq points must be a valid number.',
-            'tf_points.numeric' => 'The true/false points must be a valid number.',
-            'sb_points.numeric' => 'The scenario based points must be a valid number.',
 
 
         ];

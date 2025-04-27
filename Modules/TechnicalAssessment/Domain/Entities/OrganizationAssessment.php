@@ -12,7 +12,7 @@ class OrganizationAssessment extends Pivot
 {
     use HasFactory;
     protected $table = 'organization_assessment';
-    protected $fillable = ['organization_id', 'assessment_id', 'limit_users'];
+    protected $fillable = ['organization_id', 'assessment_id', 'limit_users', 'report'];
 
     /**
      * organization relationship
@@ -22,5 +22,11 @@ class OrganizationAssessment extends Pivot
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
+
+    public function assessment(): BelongsTo
+    {
+        return $this->belongsTo(Assessment::class, 'assessment_id', 'id');
+    }
+
 
 }

@@ -10,4 +10,5 @@ interface IAssessmentAnswerRepository extends IRepository
 {
     public function postAssessmentAnswers(PostAssessmentAnswerModel $model): bool;
     public function getAssessmentResults(int $assessment_id): Collection;
+    public function getOrganizationReports(int $org_id): Collection;
 }

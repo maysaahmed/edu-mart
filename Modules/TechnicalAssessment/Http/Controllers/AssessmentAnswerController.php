@@ -7,9 +7,12 @@ use Illuminate\Http\JsonResponse;
 use Modules\TechnicalAssessment\Http\Requests\AnswersRequest;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Commands\PostAssessmentAnswer;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetAssessmentResults;
+use Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetOrganizationReports;
 
 use Modules\TechnicalAssessment\Transformers\AssessmentResultResource;
+use Modules\TechnicalAssessment\Transformers\OrganizationAssessmentReportResource;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Storage;
 
 class AssessmentAnswerController extends ApiController
 {
@@ -47,5 +50,29 @@ class AssessmentAnswerController extends ApiController
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
+
     }
+
+    public function getReports(int $organization_id,GetOrganizationReports\IGetOrganizationReports $query): JsonResponse
+    {
+        try {
+            $results = $query->execute($organization_id);
+            return $this->successResponse(OrganizationAssessmentReportResource::collection($results));
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
+
+    public function downloadReport($filename): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $path = 'reports/' . $filename;
+
+        if (!Storage::exists($path)) {
+            abort(404);
+        }
+
+        return response()->download(storage_path('app/' . $path));
+    }
+
+
 }

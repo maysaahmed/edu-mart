@@ -31,7 +31,8 @@ class RolesAndPermissionsSeederTableSeeder extends Seeder
 //            'name' => 'super-admin',
 //            'email' => 'superAdmin@gmail.com',
 //            'password' => bcrypt('admin'),
-//            'type'     => EnumUserTypes::Admin
+//            'type'     => EnumUserTypes::Admin,
+//            'check_email_status' => 1
 //        ]);
 
         // Create permissions from enums.
@@ -44,7 +45,7 @@ class RolesAndPermissionsSeederTableSeeder extends Seeder
         // or may be done by chaining
 //        Role::create(['name' => 'super-admin'])
 //            ->givePermissionTo(Permission::all());
-
+//
 //        $user->assignRole('super-admin');
 
 

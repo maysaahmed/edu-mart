@@ -37,8 +37,8 @@ class PostAssessmentAnswer implements IPostAssessmentAnswer
             throw new \Exception("You can retake the assessment in {$retakeStatus} days.");
 
         //check user limit
-        $checkLimit = $this->assessmentRepository->checkUserLimitOrganization($model->assessment_id);
-        if(!$checkLimit)
+        $limitReached = $this->assessmentRepository->checkUserLimitOrganization($model->assessment_id);
+        if($limitReached)
             throw new \Exception('Assessment limit reached.');
 
         return $this->repository->postAssessmentAnswers($model);

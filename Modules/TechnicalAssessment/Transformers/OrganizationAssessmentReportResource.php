@@ -4,8 +4,9 @@
 namespace Modules\TechnicalAssessment\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Organizations\Domain\Entities\Organization\Organization;
 
-class AssessmentQuestionResource extends JsonResource
+class OrganizationAssessmentReportResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,13 +16,12 @@ class AssessmentQuestionResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id' => $this->id,
-            'question' => $this->ques,
             'assessment_id' => $this->assessment_id,
-            'question_type' => $this->question_type,
-            'weight' => $this->weight,
-            'answers' => QuestionAnswerResource::collection($this->answers),
+            'assessment' => $this->assessment->name,
+            'report' => isset($this->report) ? asset("reports/{$this->report}") : null
         ];
     }
 }

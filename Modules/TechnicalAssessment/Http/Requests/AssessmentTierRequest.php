@@ -19,8 +19,8 @@ class AssessmentTierRequest extends ApiRequest
             'from' => 'required|integer',
             'to' => 'required|integer',
             'assessment_id' => 'required|integer|exists:assessments,id',
-            'courses' => 'required|array',
-            'courses.*' => 'required|integer|exists:courses,id',
+            'courses' => 'nullable|array',
+            'courses.*' => 'nullable|integer|exists:courses,id',
             'desc' => 'nullable|string',
         ];
 
@@ -35,7 +35,6 @@ class AssessmentTierRequest extends ApiRequest
             'assessment_id.required' => 'The assessment id is required.',
             'assessment_id.integer' => 'The assessment id must be an integer.',
             'assessment_id.exists' => 'The assessment id is invalid.',
-            'courses.*.required' => 'The course id is required.',
             'courses.*.integer'  => 'The course id must be an integer.',
             'courses.*.exists'  => 'The course id is invalid.',
 

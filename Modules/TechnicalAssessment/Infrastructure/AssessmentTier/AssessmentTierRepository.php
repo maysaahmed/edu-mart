@@ -30,8 +30,8 @@ class AssessmentTierRepository extends Repository implements IAssessmentTierRepo
         $tier->desc = $model->desc;
         $tier->assessment_id = $model->assessment_id;
         $tier->save();
-
-        $tier->courses()->syncWithoutDetaching($model->courses);
+        if($model->courses)
+            $tier->courses()->syncWithoutDetaching($model->courses);
 
         return $tier;
     }
@@ -51,7 +51,8 @@ class AssessmentTierRepository extends Repository implements IAssessmentTierRepo
 
             if ($save) {
                 $tier->courses()->detach();
-                $tier->courses()->syncWithoutDetaching($model->courses);
+                if($model->courses)
+                    $tier->courses()->syncWithoutDetaching($model->courses);
                 return $tier;
             }
         }

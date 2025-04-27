@@ -14,13 +14,21 @@ class UserTechnicalAssessmentResource extends JsonResource
      */
     public function toArray($request)
     {
+        $weights = $this->questions()
+            ->select('question_type', \DB::raw('SUM(weight) as total_weight'))
+            ->groupBy('question_type')
+            ->pluck('total_weight', 'question_type')
+            ->toArray();
+
+
+
         return [
             'id' => $this->id,
             'name' => $this->name,
             'desc' => $this->desc,
-            'mcq_points' => $this->mcq_points,
-            'true_false_points' => $this->tf_points,
-            'scenario_based_points' => $this->sb_points,
+            'mcq_points' => isset($weights['mcq']) ? (int)$weights['mcq'] : 0,
+            'true_false_points' => isset($weights['t/f']) ? (int) $weights['t/f'] : 0,
+            'scenario_based_points' => isset($weights['sb']) ? (int) $weights['sb'] : 0,
             'mcq_count' => $this->questions()->where('question_type', 'mcq')->count(),
             'true_false_count' => $this->questions()->where('question_type', 't/f')->count(),
             'scenario_based_count' => $this->questions()->where('question_type', 'sb')->count(),

@@ -21,9 +21,6 @@ class TechnicalAssessmentResource extends JsonResource
             'code' => $this->code,
             'desc' => $this->desc,
             'type' => $this->assessment_type,
-            'mcq_points' => $this->mcq_points,
-            'true_false_points' => $this->tf_points,
-            'scenario_based_points' => $this->sb_points,
             'questions' => AssessmentQuestionResource::collection($this->questions),
             'organizations' => AssessmentOrganizationResource::collection($this->organizations),
             'tiers' => AssessmentTierResource::collection($this->tiers)

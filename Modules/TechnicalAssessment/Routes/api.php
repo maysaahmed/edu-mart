@@ -25,6 +25,8 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     Route::post('unassign-assessment-organization', 'AssessmentOrganizationController@unassignAssessmentFromOrganization');
     Route::resource('assessment-tiers', AssessmentTierController::class)->except(['create', 'edit', 'show']);
 
+    Route::get('assessment-organization/result/{organization}', 'AssessmentAnswerController@getReports');
+
 });
 
 

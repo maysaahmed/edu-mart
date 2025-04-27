@@ -10,9 +10,6 @@ class CreateAssessmentModel extends Data
         public string $code,
         public string $desc,
         public string $assessment_type,
-        public ?int $mcq_points = null,
-        public ?int $tf_points = null ,
-        public ?int $sb_points = null,
 
     ) {
     }
