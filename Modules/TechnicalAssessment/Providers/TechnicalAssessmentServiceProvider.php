@@ -73,6 +73,11 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessmentRecommendedCourses\IGetAssessmentRecommendedCourses::class,
+            \Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessmentRecommendedCourses\GetAssessmentRecommendedCourses::class
+        );
+
+        $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetAssessmentResults\IGetAssessmentResults::class,
             \Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetAssessmentResults\GetAssessmentResults::class
         );

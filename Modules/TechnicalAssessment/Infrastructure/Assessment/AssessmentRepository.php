@@ -141,4 +141,10 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
             $query->where('domain', $domain);
         })->get();
     }
+
+    public function getUserRecommendedCourses($assessment_id) : Collection
+    {
+
+
+    }
 }
