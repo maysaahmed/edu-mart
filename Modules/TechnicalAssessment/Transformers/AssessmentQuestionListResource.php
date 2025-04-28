@@ -18,7 +18,7 @@ class AssessmentQuestionListResource extends JsonResource
     {
         return [
             'mcq_questions' => AssessmentQuestionResource::collection($this['mcqQuestions']),
-            'tf_questions'  => AssessmentQuestionResource::collection($this['tfQuestions']),
+            'tf_questions'  => AssessmentQuestionResource::collection($this['t/fQuestions']),
             'sb_questions'  => AssessmentQuestionResource::collection($this['sbQuestions']),
         ];
     }

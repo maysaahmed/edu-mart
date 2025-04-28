@@ -68,17 +68,23 @@ class AssessmentQuestionController extends ApiController
     {
         try{
             //get assessment questions for all types
-            $mcqModel = GetQuestionsByAssessmentIDAndType\GetQuestionsByAssessmentIDAndTypeModel::from( ['assessment_id' => $assessment_id, 'question_type' => 'mcq']);
-            $tfModel = GetQuestionsByAssessmentIDAndType\GetQuestionsByAssessmentIDAndTypeModel::from( ['assessment_id' => $assessment_id, 'question_type' => 't/f']);
-            $sbModel = GetQuestionsByAssessmentIDAndType\GetQuestionsByAssessmentIDAndTypeModel::from( ['assessment_id' => $assessment_id, 'question_type' => 'sb']);
-            $mcq = $query->execute($mcqModel);
-            $tf = $query->execute($tfModel);
-            $sb = $query->execute($sbModel);
-            return $this->successResponse(new AssessmentQuestionListResource([
-                'mcqQuestions' => $mcq,
-                'tfQuestions' => $tf,
-                'sbQuestions' => $sb,
-            ]),'' , Response::HTTP_ACCEPTED);
+            $questionTypes = config('assessment.question_types');
+            $questions = [];
+
+            foreach ($questionTypes as $type) {
+                $model = GetQuestionsByAssessmentIDAndType\GetQuestionsByAssessmentIDAndTypeModel::from([
+                    'assessment_id' => $assessment_id,
+                    'question_type' => $type,
+                ]);
+
+                $questions[$type . 'Questions'] = $query->execute($model);
+            }
+            
+            return $this->successResponse(
+                new AssessmentQuestionListResource($questions),
+                '',
+                Response::HTTP_ACCEPTED
+            );
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
