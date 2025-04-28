@@ -1,11 +1,13 @@
 <?php
 namespace Modules\TechnicalAssessment\Infrastructure\AssessmentQuestion;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion\CreateAssessmentQuestionModel;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\EditAssessmentQuestion\EditAssessmentQuestionModel;
 
 use App\Infrastructure\Repository\Repository;
 
+use Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetQuestionsByAssessmentIDAndType\GetQuestionsByAssessmentIDAndTypeModel;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Repositories\IAssessmentQuestionRepository;
 use Modules\TechnicalAssessment\Domain\Entities\AssessmentQuestion;
 use Modules\TechnicalAssessment\Domain\Entities\AssessmentAnswer;
@@ -20,6 +22,16 @@ class AssessmentQuestionRepository extends Repository implements IAssessmentQues
     public function getAssessmentQuestionById($id): AssessmentQuestion|null
     {
         return AssessmentQuestion::find($id);
+    }
+
+    public function getAssessmentQuestionsByType(GetQuestionsByAssessmentIDAndTypeModel $model): Collection|null
+    {
+        return AssessmentQuestion::query()
+            ->where([
+                'assessment_id' => $model->assessment_id,
+                'question_type' => $model->question_type,
+            ])
+            ->get();
     }
 
     public function createAssessmentQuestion(CreateAssessmentQuestionModel $model): AssessmentQuestion

@@ -101,6 +101,16 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\DeleteAssessmentQuestion\DeleteAssessmentQuestion::class
         );
 
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetAssessmentQuestion\IGetAssessmentQuestion::class,
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetAssessmentQuestion\GetAssessmentQuestion::class
+        );
+
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetQuestionsByAssessmentIDAndType\IGetQuestionsByAssessmentIDAndType::class,
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetQuestionsByAssessmentIDAndType\GetQuestionsByAssessmentIDAndType::class
+        );
+
 
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\AssignAssessmentToOrganization\IAssignAssessmentToOrganization::class,
