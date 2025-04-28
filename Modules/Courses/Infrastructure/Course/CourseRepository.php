@@ -156,13 +156,15 @@ class CourseRepository extends Repository implements ICourseRepository
         $course->location = $model->location;
         $course->save();
 
-        foreach($model->factors as $item)
+        if ($model->factors)
         {
-            CourseFactor::create([
-                'course_id' => $course->id,
-                'factor_id' => $item['factor_id'],
-                'result'    => $item['result']
-            ]);
+            foreach ($model->factors as $item) {
+                CourseFactor::create([
+                    'course_id' => $course->id,
+                    'factor_id' => $item['factor_id'],
+                    'result' => $item['result']
+                ]);
+            }
         }
         return $course;
     }
@@ -185,15 +187,18 @@ class CourseRepository extends Repository implements ICourseRepository
             $save = $course->save();
 
             if ($save) {
-
-                foreach($model->factors as $item)
+                if($model->factors)
                 {
-                    $course->courseFactors()->updateOrCreate(
-                        ['factor_id' => $item['factor_id']],
-                        ['result' => $item['result']]
-                    );
+                    foreach($model->factors as $item)
+                    {
+                        $course->courseFactors()->updateOrCreate(
+                            ['factor_id' => $item['factor_id']],
+                            ['result' => $item['result']]
+                        );
 
+                    }
                 }
+
                 return $course;
             }
         }

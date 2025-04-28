@@ -16,6 +16,7 @@ use Modules\TechnicalAssessment\Infrastructure\AssessmentAnswer\Exports\Organiza
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
+
 class AssessmentAnswerRepository extends Repository implements IAssessmentAnswerRepository
 {
     protected function model(): string
@@ -74,8 +75,9 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
         return UserAssessmentResult::where('assessment_id', $assessment_id)
             ->whereNotNull('submitted_at')
             ->orderByDesc('submitted_at')
-            ->distinct('user_id')
-            ->get();
+            ->get()
+            ->unique('user_id')
+            ->values();
     }
 
     protected function generateReport($org_id, $assessment_id): string
@@ -87,10 +89,13 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
         $results = UserAssessmentResult::whereHas('assessment.organizations', function ($q) use ($org_id) {
             $q->where('organizations.id', $org_id);
         })
-            ->with(['user', 'assessment', 'assessment.tiers'])
+            ->where('assessment_id', $assessment_id)
+            ->whereNotNull('submitted_at')
             ->orderByDesc('submitted_at')
-            ->distinct('user_id')
-            ->get();
+            ->with(['user', 'assessment', 'assessment.tiers'])
+            ->get()
+            ->unique('user_id')
+            ->values();
 
         $report = $results->map(function ($result) {
             $tier = $result->assessment->tiers

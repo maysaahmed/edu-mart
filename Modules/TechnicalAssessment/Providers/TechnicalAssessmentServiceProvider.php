@@ -73,6 +73,11 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessmentRecommendedCourses\IGetAssessmentRecommendedCourses::class,
+            \Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessmentRecommendedCourses\GetAssessmentRecommendedCourses::class
+        );
+
+        $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetAssessmentResults\IGetAssessmentResults::class,
             \Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetAssessmentResults\GetAssessmentResults::class
         );
@@ -94,6 +99,16 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\DeleteAssessmentQuestion\IDeleteAssessmentQuestion::class,
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\DeleteAssessmentQuestion\DeleteAssessmentQuestion::class
+        );
+
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetAssessmentQuestion\IGetAssessmentQuestion::class,
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetAssessmentQuestion\GetAssessmentQuestion::class
+        );
+
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetQuestionsByAssessmentIDAndType\IGetQuestionsByAssessmentIDAndType::class,
+            \Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetQuestionsByAssessmentIDAndType\GetQuestionsByAssessmentIDAndType::class
         );
 
 

@@ -39,9 +39,9 @@ class CourseRequest extends ApiRequest
             'category_id' => 'nullable|integer|exists:categories,id',
             'provider_id' => 'nullable|integer|exists:providers,id',
             'location'  => 'max:255',
-            'factors' => 'required|array',
-            'factors.*.factor_id' => 'required|exists:factors,id',
-            'factors.*.result' => 'required|string',
+            'factors' => 'nullable|array',
+            'factors.*.factor_id' => 'nullable|exists:factors,id',
+            'factors.*.result' => 'nullable|string',
         ];
 
     }

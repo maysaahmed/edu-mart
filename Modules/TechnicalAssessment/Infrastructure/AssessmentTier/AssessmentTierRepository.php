@@ -50,9 +50,15 @@ class AssessmentTierRepository extends Repository implements IAssessmentTierRepo
             $save = $tier->save();
 
             if ($save) {
-                $tier->courses()->detach();
+
                 if($model->courses)
+                {
+                    $tier->courses()->detach();
                     $tier->courses()->syncWithoutDetaching($model->courses);
+                }else{
+                    $tier->courses()->detach();
+                }
+
                 return $tier;
             }
         }

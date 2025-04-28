@@ -20,7 +20,8 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     Route::resource('technical-assessments', TechnicalAssessmentController::class)->except(['create', 'edit', 'update']);
     Route::put('technical-assessments/{assessment}', 'TechnicalAssessmentController@update');
     Route::get('technical-assessments/result/{assessment}', 'AssessmentAnswerController@index');
-    Route::resource('assessment-questions', AssessmentQuestionController::class)->except(['create', 'edit', 'show']);
+    Route::resource('assessment-questions', AssessmentQuestionController::class)->except(['create', 'edit']);
+    Route::get('technical-assessments/questions/{assessment}', 'AssessmentQuestionController@getAssessmentQuestions');
     Route::post('assessment-organization', 'AssessmentOrganizationController@assignAssessmentToOrganization');
     Route::post('unassign-assessment-organization', 'AssessmentOrganizationController@unassignAssessmentFromOrganization');
     Route::resource('assessment-tiers', AssessmentTierController::class)->except(['create', 'edit', 'show']);
@@ -34,6 +35,7 @@ Route::middleware(['token-name:user-token'])->group(function () {
     Route::post('/assessments/check-code', 'TechnicalAssessmentController@checkAssessmentCode');
     Route::post('/assessments/post-answers', 'AssessmentAnswerController@storeAssessmentAnswers');
     Route::get('/assessments', 'TechnicalAssessmentController@listAssessments');
+    Route::get('/assessments/recommended-courses/{assessment}', 'TechnicalAssessmentController@getAssessmentRecommendedCourses');
 });
 
 
