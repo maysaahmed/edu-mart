@@ -79,7 +79,7 @@ class AssessmentQuestionController extends ApiController
 
                 $questions[$type . 'Questions'] = $query->execute($model);
             }
-            
+
             return $this->successResponse(
                 new AssessmentQuestionListResource($questions),
                 '',
