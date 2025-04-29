@@ -27,12 +27,14 @@ class UserTechnicalAssessmentResource extends JsonResource
             'name' => $this->name,
             'desc' => $this->desc,
             'mcq_points' => isset($weights['mcq']) ? (int)$weights['mcq'] : 0,
-            'true_false_points' => isset($weights['t/f']) ? (int) $weights['t/f'] : 0,
-            'scenario_based_points' => isset($weights['sb']) ? (int) $weights['sb'] : 0,
+            'tf_points' => isset($weights['t/f']) ? (int) $weights['t/f'] : 0,
+            'sb_points' => isset($weights['sb']) ? (int) $weights['sb'] : 0,
             'mcq_count' => $this->questions()->where('question_type', 'mcq')->count(),
-            'true_false_count' => $this->questions()->where('question_type', 't/f')->count(),
-            'scenario_based_count' => $this->questions()->where('question_type', 'sb')->count(),
-            'questions' => UserAssessmentQuestionResource::collection($this->questions),
+            'tf_count' => $this->questions()->where('question_type', 't/f')->count(),
+            'sb_count' => $this->questions()->where('question_type', 'sb')->count(),
+            'mcq_questions' => UserAssessmentQuestionResource::collection($this->questions()->where('question_type', 'mcq')->get()),
+            'tf_questions' => UserAssessmentQuestionResource::collection($this->questions()->where('question_type', 't/f')->get()),
+            'sb_questions' => UserAssessmentQuestionResource::collection($this->questions()->where('question_type', 'sb')->get()),
 
         ];
     }

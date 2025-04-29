@@ -19,6 +19,7 @@ class UserAssessmentQuestionResource extends JsonResource
             'id' => $this->id,
             'question' => $this->ques,
             'question_type' => $this->question_type,
+            'points'    => $this->weight,
             'answers' => UserQuestionAnswerResource::collection($this->answers),
         ];
     }
