@@ -21,7 +21,7 @@ class AssessmentTierResource extends JsonResource
             'assessment_id' => $this->assessment_id,
             'from' => $this->from,
             'to' => $this->to,
-            'desc' => $this->desc,
+            'desc' => $this->desc ?? '',
             'courses' => AssessmentCourseResource::collection($this->courses),
         ];
     }
