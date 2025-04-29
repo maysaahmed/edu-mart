@@ -19,7 +19,7 @@ class AssessmentOrganizationRequest extends ApiRequest
         return [
             'assessment_id' => 'required|integer|exists:assessments,id',
             'organization_id' => 'required|integer|exists:organizations,id',
-            'limit_users' => 'required|integer',
+            'limit_users' => 'required|numeric|gt:0',
         ];
 
     }
@@ -37,7 +37,8 @@ class AssessmentOrganizationRequest extends ApiRequest
             'organization_id.integer' => 'The organization id must be an integer.',
             'organization_id.exists' => 'The organization id is invalid.',
             'limit_users.required' => 'The limit of users is required.',
-            'limit_users.integer' => 'The limit of users must be an integer.',
+            'limit_users.numeric' => 'The limit of users must be a number.',
+            'limit_users.gt' => 'The limit of users must be greater than 0.',
 
         ];
 

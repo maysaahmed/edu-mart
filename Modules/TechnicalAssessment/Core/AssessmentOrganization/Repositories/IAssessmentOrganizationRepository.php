@@ -9,5 +9,5 @@ interface IAssessmentOrganizationRepository extends IRepository
 {
     public function assignAssessmentToOrganization(AssignAssessmentToOrganizationModel $model): bool;
     public function unassignAssessmentFromOrganization(UnassignAssessmentFromOrganizationModel $model): bool;
-
+    public function checkOrganizationAssigned(int $organization_id, int $assessment_id): bool;
 }
