@@ -8,6 +8,7 @@ use Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\UnassignAss
 use App\Infrastructure\Repository\Repository;
 
 use Modules\TechnicalAssessment\Core\AssessmentOrganization\Repositories\IAssessmentOrganizationRepository;
+use Modules\TechnicalAssessment\Domain\Entities\Assessment;
 use Modules\TechnicalAssessment\Domain\Entities\OrganizationAssessment;
 
 class AssessmentOrganizationRepository extends Repository implements IAssessmentOrganizationRepository
@@ -40,6 +41,16 @@ class AssessmentOrganizationRepository extends Repository implements IAssessment
         return true;
 
     }
+
+    public function checkOrganizationAssigned(int $organization_id, int $assessment_id): bool
+    {
+        $assessment = Assessment::find($assessment_id);
+        $assigned = $assessment->organizations()->where('organization_id', $organization_id)->exists();
+        if($assigned)
+            return true;
+        return false;
+    }
+
 
 
 }

@@ -14,6 +14,10 @@ class AssignAssessmentToOrganization implements IAssignAssessmentToOrganization
 
     public function execute(AssignAssessmentToOrganizationModel $model): bool
     {
+        $assigned = $this->repository->checkOrganizationAssigned($model->organization_id, $model->assessment_id);
+        if($assigned)
+            throw new \Exception('The organization is already assigned to this assessment!');
+
         return $this->repository->assignAssessmentToOrganization($model);
     }
 }
