@@ -295,7 +295,7 @@ class CoursesController extends ApiController
             $queryModel = GetUserCourses\GetUserCoursesModel::from( $request->all() + ['organization_id' => request()->user()->organization_id] );
 
             $courses = $query->execute($queryModel);
-//
+
             return $this->successResponse(UserCourseResourceCollection::make($courses)->status($request->status ?? 'all'));
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());

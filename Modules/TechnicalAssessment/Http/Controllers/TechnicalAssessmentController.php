@@ -4,13 +4,13 @@ namespace Modules\TechnicalAssessment\Http\Controllers;
 
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
+use Modules\Courses\Transformers\UserCourseResourceCollection;
 use Modules\TechnicalAssessment\Http\Requests\AssessmentRequest;
 use Modules\TechnicalAssessment\Http\Requests\CheckAssessmentCodeRequest;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentResource;
 use Modules\TechnicalAssessment\Transformers\UserTechnicalAssessmentResource;
 use Modules\TechnicalAssessment\Transformers\UserAssessmentsListResource;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentListResource;
-use Modules\TechnicalAssessment\Transformers\AssessmentRecommendedCourseResource;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\CreateAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\DeleteAssessment;
@@ -161,7 +161,7 @@ class TechnicalAssessmentController extends ApiController
         try{
             $items = $query->execute($assessment_id);
 
-            return $this->successResponse(AssessmentRecommendedCourseResource::collection($items),'' , Response::HTTP_ACCEPTED);
+            return $this->successResponse(UserCourseResourceCollection::make($items)->status( 'all'),'' , Response::HTTP_ACCEPTED);
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());

@@ -114,6 +114,14 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
 
     }
 
+    public function checkUserTookAssessment($assessment_id):bool
+    {
+        $userId = auth()->id();
+        return UserAssessmentResult::where('user_id', $userId)
+            ->where('assessment_id', $assessment_id)
+            ->exists();
+    }
+
     public function checkUserLimitOrganization(int $assessment_id): bool
     {
         $domain = getAuthUserDomain();

@@ -35,7 +35,7 @@ class AssessmentQuestionRequest extends ApiRequest
             'question' => 'required|string|max:255',
             'question_type' => 'required|in:mcq,t/f,sb',
             'assessment_id' => 'required|integer|exists:assessments,id',
-            'weight' => 'required|integer',
+            'weight' => 'required|numeric|gt:0',
             'answers' => 'required|array',
             'answers.*.is_correct' => 'required|bool',
             'answers.*.answer_text' => 'required|string',
