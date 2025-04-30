@@ -84,6 +84,7 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
     {
         $organization = Organization::find($org_id);
         $assessment = Assessment::find($assessment_id);
+        $totalWeight = AssessmentQuestion::where('assessment_id', $assessment_id)->sum('weight');
 
         //generate report
         $results = UserAssessmentResult::whereHas('assessment.organizations', function ($q) use ($org_id) {
@@ -97,17 +98,36 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
             ->unique('user_id')
             ->values();
 
-        $report = $results->map(function ($result) {
+        $report = $results->flatMap(function ($result) use ($totalWeight) {
             $tier = $result->assessment->tiers
                 ->firstWhere(fn($t) => $result->score >= $t->from && $result->score <= $t->to);
 
-            return [
-                'user'        => $result->user->name,
-                'email'       => $result->user->email,
-                'score'       => $result->score,
-                'submitted_at'=> $result->submitted_at,
-                'tier'        => $tier?->evaluation ?? 'N/A',
+            $courses = $tier?->courses ?? collect();
+            $userScore = $result->score ?? 0;
+
+            $percentage = $totalWeight > 0
+                ? round(($userScore / $totalWeight) * 100, 2)
+                : 0;
+
+            $base = [
+                'user'         => $result->user->name ?? '-',
+                'email'        => $result->user->email ?? '-',
+                'score'        => $userScore,
+                'percentage'   => $percentage.'%',
+                'submitted_at' => $result->submitted_at,
+                'tier'         => $tier?->evaluation ?? '-',
+                'feedback'     => strip_tags($tier?->desc ?? '-'),
             ];
+
+            return $courses->isNotEmpty()
+                ? $courses->map(function ($course) use ($base) {
+                    return array_merge($base, [
+                        'recommended_courses' => $course?->title ?? '-',
+                    ]);
+                })->values()
+                : collect([
+                    array_merge($base, ['recommended_courses' => '-'])
+                ]);
         });
 
         $filename = str_replace(' ', '_', $organization->name).'-'.str_replace(' ', '_', $assessment->name).'-report.csv';
