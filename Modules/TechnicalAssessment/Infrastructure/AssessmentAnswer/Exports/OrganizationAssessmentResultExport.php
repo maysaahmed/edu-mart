@@ -21,6 +21,6 @@ class OrganizationAssessmentResultExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ['User', 'Email', 'Score', 'Date', 'Evaluation'];
+        return ['User', 'Email', 'Score', 'Percentage', 'Date', 'Evaluation', 'Recommended Courses', 'FeedBack'];
     }
 }
