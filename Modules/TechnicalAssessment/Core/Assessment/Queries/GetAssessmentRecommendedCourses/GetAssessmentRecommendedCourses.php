@@ -16,9 +16,12 @@ class GetAssessmentRecommendedCourses implements IGetAssessmentRecommendedCourse
     public function execute(int $assessment_id): Collection
     {
         $exist = $this->repository->getAssessmentById($assessment_id);
-
         if(!$exist)
             throw new \Exception('The assessment is not found.');
+
+        $tookAssessment = $this->repository->checkUserTookAssessment($assessment_id);
+        if(!$tookAssessment)
+            throw new \Exception('You didn\'t take this assessment yet.');
 
         return $this->repository->getUserRecommendedCourses($assessment_id);
     }
