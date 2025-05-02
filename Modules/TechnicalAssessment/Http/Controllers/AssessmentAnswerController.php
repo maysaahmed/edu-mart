@@ -8,11 +8,12 @@ use Modules\TechnicalAssessment\Http\Requests\AnswersRequest;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Commands\PostAssessmentAnswer;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetAssessmentResults;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetOrganizationReports;
+use Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetOrganizationAllReportsZip;
 
 use Modules\TechnicalAssessment\Transformers\AssessmentResultResource;
 use Modules\TechnicalAssessment\Transformers\OrganizationAssessmentReportResource;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Storage;
+
 
 class AssessmentAnswerController extends ApiController
 {
@@ -70,9 +71,22 @@ class AssessmentAnswerController extends ApiController
 
         if (!file_exists($path)) {
             return $this->errorResponse('File not found', Response::HTTP_NOT_FOUND);
-            abort(404);
         }
-        $this->fileResponse($path);
+        return $this->fileResponse($path);
+
+    }
+
+    public function downloadZipReports(int $organization_id,GetOrganizationAllReportsZip\IGetOrganizationAllReportsZip $query): \Symfony\Component\HttpFoundation\BinaryFileResponse|JsonResponse
+    {
+
+        $zipFilename = $query->execute($organization_id);
+        $filePath = storage_path("app/reports/{$zipFilename}");
+
+        if (!file_exists($filePath)) {
+            return $this->errorResponse('File not found', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->fileResponse($filePath);
 
     }
 

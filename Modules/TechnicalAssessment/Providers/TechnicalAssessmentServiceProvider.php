@@ -87,7 +87,10 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetOrganizationReports\GetOrganizationReports::class
         );
 
-
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetOrganizationAllReportsZip\IGetOrganizationAllReportsZip::class,
+            \Modules\TechnicalAssessment\Core\AssessmentAnswer\Queries\GetOrganizationAllReportsZip\GetOrganizationAllReportsZip::class
+        );
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion\ICreateAssessmentQuestion::class,
             \Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\CreateAssessmentQuestion\CreateAssessmentQuestion::class
