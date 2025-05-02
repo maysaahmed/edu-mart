@@ -21,7 +21,7 @@ class OrganizationResource extends JsonResource
             'address' => $this->address ?? '-',
             'status' => $this->status,
             'domain' => $this->domain ?? '-',
-            'assessments' => $this->assessments()->count() ? $this->assessments()->count() . ' Assessments' : '-'
+            'assessments' => $this->assessments()->count() ? $this->assessments()->count() . ' Assessments' : null
 
         ];
     }

@@ -65,13 +65,15 @@ class AssessmentAnswerController extends ApiController
 
     public function downloadReport($filename): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
-        $path = 'reports/' . $filename;
 
-        if (!Storage::exists($path)) {
+        $path = storage_path('app/reports/' . $filename);
+
+        if (!file_exists($path)) {
+            return $this->errorResponse('File not found', Response::HTTP_NOT_FOUND);
             abort(404);
         }
+        $this->fileResponse($path);
 
-        return response()->download(storage_path('app/' . $path));
     }
 
 

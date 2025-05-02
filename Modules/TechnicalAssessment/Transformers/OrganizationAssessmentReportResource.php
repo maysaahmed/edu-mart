@@ -21,7 +21,7 @@ class OrganizationAssessmentReportResource extends JsonResource
             'id' => $this->id,
             'assessment_id' => $this->assessment_id,
             'assessment' => $this->assessment->name,
-            'report' => isset($this->report) ? asset("reports/{$this->report}") : null
+            'report' => $this->report ??  null
         ];
     }
 }
