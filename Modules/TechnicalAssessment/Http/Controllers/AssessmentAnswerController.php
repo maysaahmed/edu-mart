@@ -72,7 +72,7 @@ class AssessmentAnswerController extends ApiController
             return $this->errorResponse('File not found', Response::HTTP_NOT_FOUND);
             abort(404);
         }
-        $this->fileResponse($path);
+        return $this->fileResponse($path);
 
     }
 
