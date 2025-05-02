@@ -4,7 +4,6 @@ namespace Modules\TechnicalAssessment\Infrastructure\AssessmentAnswer;
 use App\Infrastructure\Repository\Repository;
 
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Log;
 use Modules\Organizations\Domain\Entities\Organization\Organization;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Repositories\IAssessmentAnswerRepository;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Commands\PostAssessmentAnswer\PostAssessmentAnswerModel;
