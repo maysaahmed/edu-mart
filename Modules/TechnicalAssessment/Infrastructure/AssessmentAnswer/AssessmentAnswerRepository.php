@@ -4,6 +4,7 @@ namespace Modules\TechnicalAssessment\Infrastructure\AssessmentAnswer;
 use App\Infrastructure\Repository\Repository;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 use Modules\Organizations\Domain\Entities\Organization\Organization;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Repositories\IAssessmentAnswerRepository;
 use Modules\TechnicalAssessment\Core\AssessmentAnswer\Commands\PostAssessmentAnswer\PostAssessmentAnswerModel;
@@ -15,6 +16,8 @@ use Modules\TechnicalAssessment\Domain\Entities\UserAssessmentResult;
 use Modules\TechnicalAssessment\Infrastructure\AssessmentAnswer\Exports\OrganizationAssessmentResultExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
+
 
 
 class AssessmentAnswerRepository extends Repository implements IAssessmentAnswerRepository
@@ -177,6 +180,40 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
         return OrganizationAssessment::where('organization_id', $org_id)->whereNotNull('report')->get();
     }
 
+
+    public function getOrganizationReportsZip(int $org_id) : string|bool
+    {
+        $organization = Organization::find($org_id);
+
+        $reports = OrganizationAssessment::where('organization_id', $org_id)
+            ->whereNotNull('report')
+            ->get();
+
+        $reportDir = storage_path('app/reports');
+        if (!file_exists($reportDir)) {
+            mkdir($reportDir, 0755, true);
+        }
+
+        $zip = new ZipArchive();
+        $zipFileName = str_replace(' ', '_', $organization->name) . '_reports.zip';
+        $zipPath = $reportDir . '/' . $zipFileName;
+
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+            foreach ($reports as $report) {
+                $filePath = storage_path("app/reports/{$report->report}");
+
+                if (file_exists($filePath)) {
+                    $zip->addFile($filePath, basename($filePath));
+                }
+            }
+            $zip->close();
+
+        } else {
+            return false;
+        }
+        return $zipFileName;
+
+    }
 
 
 

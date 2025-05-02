@@ -28,6 +28,7 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
 
     Route::get('assessment-organization/result/{organization}', 'AssessmentAnswerController@getReports');
     Route::get('assessment-organization/download-report/{filename}', 'AssessmentAnswerController@downloadReport');
+    Route::get('assessment-organization/download-all-reports/{organization}', 'AssessmentAnswerController@downloadZipReports');
 
 });
 
