@@ -147,8 +147,10 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
     {
         $domain = getAuthUserDomain();
         return Assessment::whereHas('organizations', function ($query) use ($domain) {
-            $query->where('domain', $domain);
-        })->get();
+                $query->where('domain', $domain);
+            })
+            ->has('questions')
+            ->get();
     }
 
     public function getUserRecommendedCourses($assessment_id) : Collection

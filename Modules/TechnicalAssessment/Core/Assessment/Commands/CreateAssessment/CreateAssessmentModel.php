@@ -8,8 +8,8 @@ class CreateAssessmentModel extends Data
     public function __construct(
         public string $name,
         public string $code,
-        public string $desc,
         public string $assessment_type,
+        public ?string $desc = '',
 
     ) {
     }
