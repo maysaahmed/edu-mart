@@ -2,6 +2,7 @@
 
 namespace Modules\TechnicalAssessment\Http\Requests;
 use App\Http\Requests\ApiRequest;
+use Illuminate\Validation\Rule;
 
 class AssessmentRequest extends ApiRequest
 {
@@ -22,10 +23,19 @@ class AssessmentRequest extends ApiRequest
 
         if (!isset($id))
         {
-            $rules += ['code'=> 'required|unique:assessments,code,NULL,id,deleted_at,NULL|max:50'];
+            $rules += ['code'=> [
+                'required',
+                'max:50',
+                Rule::unique('assessments')->whereNull('deleted_at'),
+            ]];
 
         }else{
-            $rules += ['code'=> 'required|max:50|unique:assessments,code,'.$id.',id,deleted_at,NULL'];
+
+            $rules += [ 'code' => [
+                'required',
+                'max:50',
+                Rule::unique('assessments')->ignore($id)->whereNull('deleted_at')
+            ]];
 
         }
 

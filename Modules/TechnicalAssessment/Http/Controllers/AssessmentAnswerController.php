@@ -54,6 +54,13 @@ class AssessmentAnswerController extends ApiController
 
     }
 
+    /**
+     * generate and get list of all assessments result reports
+     * @param int $organization_id
+     * @param GetOrganizationReports\IGetOrganizationReports $query
+     * @return JsonResponse
+     */
+
     public function getReports(int $organization_id,GetOrganizationReports\IGetOrganizationReports $query): JsonResponse
     {
         try {
@@ -64,6 +71,11 @@ class AssessmentAnswerController extends ApiController
         }
     }
 
+    /**
+     * download one assessment report
+     * @param $filename
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function downloadReport($filename): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
 
@@ -76,6 +88,12 @@ class AssessmentAnswerController extends ApiController
 
     }
 
+    /**
+     * download organization all reports in zipped file
+     * @param int $organization_id
+     * @param GetOrganizationAllReportsZip\IGetOrganizationAllReportsZip $query
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|JsonResponse
+     */
     public function downloadZipReports(int $organization_id,GetOrganizationAllReportsZip\IGetOrganizationAllReportsZip $query): \Symfony\Component\HttpFoundation\BinaryFileResponse|JsonResponse
     {
 

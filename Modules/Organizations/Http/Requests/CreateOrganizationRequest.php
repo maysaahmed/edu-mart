@@ -2,6 +2,7 @@
 
 namespace Modules\Organizations\Http\Requests;
 use App\Http\Requests\ApiRequest;
+use Illuminate\Validation\Rule;
 
 class CreateOrganizationRequest extends ApiRequest
 {
@@ -17,9 +18,17 @@ class CreateOrganizationRequest extends ApiRequest
         $id = $this->route('organization');
         if (!isset($id))
         {
-            $rules += ['name'=> 'required|unique:organizations|max:255'];
+            $rules += ['name'=> [
+                'required',
+                'max:255',
+                Rule::unique('organizations')->whereNull('deleted_at'),
+            ]];
         }else{
-            $rules += ['name'=> 'required|max:255|unique:organizations,name,'.$id.',id,deleted_at,NULL'];
+            $rules += [ 'name' => [
+                'required',
+                'max:255',
+                Rule::unique('organizations')->ignore($id)->whereNull('deleted_at')
+            ]];
         }
         return $rules;
 

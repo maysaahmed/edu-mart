@@ -113,10 +113,14 @@ trait ApiResponser{
     protected function fileResponse($path): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
 
-        return response()->file($path, [
+        $response = response()->file($path, [
             'Content-Type' => mime_content_type($path),
-            'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
+            'Content-Disposition' => 'attachment; filename="' . basename($path) . '"',
         ]);
+
+        $response->headers->set('X-Filename', basename($path));
+
+        return $response;
 
     }
 
