@@ -38,7 +38,7 @@ class AssessmentResultResource extends JsonResource
         return [
             'id' => $this->id,
             'user_name' => $this->user->name,
-            'email' => $this->user->name,
+            'email' => $this->user->email,
             'score' => $this->score,
             'percentage' => $percentage.'%',
             'date' => $this->submitted_at,
