@@ -5,6 +5,7 @@ namespace Modules\TechnicalAssessment\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Organizations\Domain\Entities\Organization\Organization;
+use Modules\TechnicalAssessment\Domain\Entities\AssessmentQuestion;
 
 class AssessmentResultResource extends JsonResource
 {
@@ -29,10 +30,18 @@ class AssessmentResultResource extends JsonResource
                 ->firstWhere(fn($t) => $this->score >= $t->from && $this->score <= $t->to);
         }
 
+        $totalWeight = AssessmentQuestion::where('assessment_id', $this->assessment_id)->sum('weight');
+        $percentage = $totalWeight > 0
+            ? round(($this->score / $totalWeight) * 100, 2)
+            : 0;
+
         return [
             'id' => $this->id,
             'user_name' => $this->user->name,
+            'email' => $this->user->name,
             'score' => $this->score,
+            'percentage' => $percentage.'%',
+            'date' => $this->submitted_at,
             'organization_id' => $organization ? $organization->id : null,
             'organization' => $organization ? $organization->name : null,
             'tier' => $tier ? new AssessmentTierResource($tier) : null,
