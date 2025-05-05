@@ -27,7 +27,7 @@ class   TechnicalAssessmentResource extends JsonResource
             'desc' => $this->desc,
             'type' => $this->assessment_type,
             'retake_days' => $this->retake_days,
-            'has_result' => $hasResults,
+            'can_edit' => !$hasResults,
             'questions' => AssessmentQuestionResource::collection($this->questions),
             'organizations' => AssessmentOrganizationResource::collection($this->organizations),
             'tiers' => AssessmentTierResource::collection($this->tiers)
