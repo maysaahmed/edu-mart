@@ -5,6 +5,7 @@ namespace Modules\TechnicalAssessment\Http\Controllers;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Modules\Courses\Transformers\UserCourseResourceCollection;
+use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessmentLimited;
 use Modules\TechnicalAssessment\Http\Requests\AssessmentRequest;
 use Modules\TechnicalAssessment\Http\Requests\CheckAssessmentCodeRequest;
 use Modules\TechnicalAssessment\Transformers\TechnicalAssessmentResource;
@@ -19,6 +20,8 @@ use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessments;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetUserAssessments;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessment;
 use Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessmentRecommendedCourses;
+use Modules\TechnicalAssessment\Core\Assessment\Queries\CheckAssessmentEditable;
+
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums;
 
@@ -103,13 +106,23 @@ class TechnicalAssessmentController extends ApiController
      * @param AssessmentRequest $request
      * @param int $id
      * @param EditAssessment\IEditAssessment $command
+     * @param CheckAssessmentEditable\ICheckAssessmentEditable $query
+     * @param EditAssessmentLimited\IEditAssessmentLimited $editCommand
      * @return JsonResponse
      */
-    public function update(AssessmentRequest $request, int $id, EditAssessment\IEditAssessment $command): JsonResponse
+    public function update(AssessmentRequest $request, int $id, EditAssessment\IEditAssessment $command, CheckAssessmentEditable\ICheckAssessmentEditable $query, EditAssessmentLimited\IEditAssessmentLimited $editCommand): JsonResponse
     {
         try{
-            $commandModel = EditAssessment\EditAssessmentModel::from($request->all() + ['id' => $id]);
-            $item = $command->execute($commandModel);
+            $canEdit = $item = $query->execute($id);
+            if($canEdit)
+            {
+                $commandModel = EditAssessment\EditAssessmentModel::from($request->all() + ['id' => $id]);
+                $item = $command->execute($commandModel);
+            }else{
+                $limitModel = EditAssessmentLimited\EditAssessmentLimitedModel::from($request->all() + ['id' => $id]);
+                $item = $editCommand->execute($limitModel);
+            }
+
             return $this->successResponse(new TechnicalAssessmentResource($item),'Assessment updated successfully!' , Response::HTTP_ACCEPTED);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());

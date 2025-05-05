@@ -9,6 +9,7 @@ use App\Infrastructure\Repository\Repository;
 
 use Modules\TechnicalAssessment\Core\Assessment\Repositories\IAssessmentRepository;
 use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessment\EditAssessmentModel;
+use Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessmentLimited\EditAssessmentLimitedModel;
 use Modules\TechnicalAssessment\Domain\Entities\Assessment;
 use Modules\TechnicalAssessment\Domain\Entities\UserAssessmentResult;
 use Modules\TechnicalAssessment\Domain\Entities\AssessmentTier;
@@ -55,6 +56,22 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
             $assessment->code = $model->code;
             $assessment->assessment_type = $model->assessment_type;
             $assessment->desc = $model->desc;
+            $assessment->retake_days = $model->retake_days;
+            $save = $assessment->save();
+
+            if ($save) {
+                return $assessment;
+            }
+        }
+
+        return null;
+    }
+    public function editAssessmentLimited(EditAssessmentLimitedModel $model): Assessment|null
+    {
+        $id = $model->id;
+        $assessment = $this->getAssessmentById($id);
+
+        if($assessment){
             $assessment->retake_days = $model->retake_days;
             $save = $assessment->save();
 
@@ -177,5 +194,13 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
 
         return collect();
 
+    }
+
+    public function checkAssessmentEditable($assessment_id): bool
+    {
+        $hasResults = UserAssessmentResult::where('assessment_id', $assessment_id)
+            ->whereNotNull('submitted_at')
+            ->exists();
+        return !$hasResults;
     }
 }

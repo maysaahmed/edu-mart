@@ -12,6 +12,7 @@ use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\EditAssessmentQ
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Commands\DeleteAssessmentQuestion;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetAssessmentQuestion;
 use Modules\TechnicalAssessment\Core\AssessmentQuestion\Queries\GetQuestionsByAssessmentIDAndType;
+use Modules\TechnicalAssessment\Core\Assessment\Queries\CheckAssessmentEditable;
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums;
 
@@ -28,15 +29,23 @@ class AssessmentQuestionController extends ApiController
      * Store a newly created resource in storage.
      * @param AssessmentQuestionRequest $request
      * @param CreateAssessmentQuestion\ICreateAssessmentQuestion $command
+     * @param CheckAssessmentEditable\ICheckAssessmentEditable $query
      * @return JsonResponse
      */
-    public function store(AssessmentQuestionRequest $request, CreateAssessmentQuestion\ICreateAssessmentQuestion $command): JsonResponse
+    public function store(AssessmentQuestionRequest $request, CreateAssessmentQuestion\ICreateAssessmentQuestion $command, CheckAssessmentEditable\ICheckAssessmentEditable $query): JsonResponse
     {
         try {
-            $commandModel = CreateAssessmentQuestion\CreateAssessmentQuestionModel::from($request->all());
+            $canEditAssessment = $query->execute($request->assessment_id);
+            if($canEditAssessment)
+            {
+                $commandModel = CreateAssessmentQuestion\CreateAssessmentQuestionModel::from($request->all());
 
-            $result = $command->execute($commandModel);
-            return $this->successResponse(new AssessmentQuestionResource($result),'Question saved successfully!' , Response::HTTP_CREATED);
+                $result = $command->execute($commandModel);
+                return $this->successResponse(new AssessmentQuestionResource($result),'Question saved successfully!' , Response::HTTP_CREATED);
+
+            }else{
+                return $this->errorResponse('You cann\'t add questions to this assessment.');
+            }
 
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
@@ -96,14 +105,22 @@ class AssessmentQuestionController extends ApiController
      * @param AssessmentQuestionRequest $request
      * @param int $id
      * @param EditAssessmentQuestion\IEditAssessmentQuestion $command
+     * @param CheckAssessmentEditable\ICheckAssessmentEditable $query
      * @return JsonResponse
      */
-    public function update(AssessmentQuestionRequest $request, int $id, EditAssessmentQuestion\IEditAssessmentQuestion $command): JsonResponse
+    public function update(AssessmentQuestionRequest $request, int $id, EditAssessmentQuestion\IEditAssessmentQuestion $command, CheckAssessmentEditable\ICheckAssessmentEditable $query): JsonResponse
     {
         try{
-            $commandModel = EditAssessmentQuestion\EditAssessmentQuestionModel::from($request->all() + ['id' => $id]);
-            $item = $command->execute($commandModel);
-            return $this->successResponse(new AssessmentQuestionResource($item),'Question updated successfully!' , Response::HTTP_ACCEPTED);
+            $canEditAssessment = $query->execute($request->assessment_id);
+            if($canEditAssessment)
+            {
+                $commandModel = EditAssessmentQuestion\EditAssessmentQuestionModel::from($request->all() + ['id' => $id]);
+                $item = $command->execute($commandModel);
+                return $this->successResponse(new AssessmentQuestionResource($item),'Question updated successfully!' , Response::HTTP_ACCEPTED);
+            }else{
+                return $this->errorResponse('You cann\'t edit questions of this assessment.');
+            }
+
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
