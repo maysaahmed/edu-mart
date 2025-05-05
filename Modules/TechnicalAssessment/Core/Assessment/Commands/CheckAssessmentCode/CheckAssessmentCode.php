@@ -30,6 +30,8 @@ class CheckAssessmentCode implements ICheckAssessmentCode
 
         //check if user take assessment before
         $retakeStatus = $this->repository->canUserRetakeAssessment($model->assessment_id);
+        if($retakeStatus == false)
+            throw new \Exception("You can't retake the assessment.");
 
         if ($retakeStatus !== true)
             throw new \Exception("You can retake the assessment in {$retakeStatus} days.");
