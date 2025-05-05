@@ -4,6 +4,7 @@ namespace Modules\TechnicalAssessment\Infrastructure\AssessmentOrganization;
 use Modules\Organizations\Domain\Entities\Organization\Organization;
 use Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\AssignAssessmentToOrganization\AssignAssessmentToOrganizationModel;
 use Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\UnassignAssessmentFromOrganization\UnassignAssessmentFromOrganizationModel;
+use Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\EditAssessmentOrganization\EditAssessmentOrganizationModel;
 
 use App\Infrastructure\Repository\Repository;
 
@@ -29,6 +30,20 @@ class AssessmentOrganizationRepository extends Repository implements IAssessment
         ]);
 
         return true;
+
+    }
+
+    public function editAssessmentOrganization(EditAssessmentOrganizationModel $model): bool
+    {
+        $assignedOrganization = OrganizationAssessment::find($model->id);
+
+        $assignedOrganization->limit_users = $model->limit_users;
+        $save = $assignedOrganization->save();
+
+        if ($save) {
+            return true;
+        }
+        return false;
 
     }
 

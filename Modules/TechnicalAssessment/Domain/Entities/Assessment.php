@@ -41,7 +41,7 @@ class Assessment extends Model
     public function organizations(): BelongsToMany
     {
         return $this->belongsToMany(Organization::class, 'organization_assessment')
-            ->withPivot(['limit_users'])
+            ->withPivot(['limit_users', 'id'])
             ->withTimestamps();
     }
 

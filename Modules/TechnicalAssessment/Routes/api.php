@@ -23,6 +23,7 @@ Route::middleware(['auth:'.Enums\EnumGuardNames::Admin->value, 'token-name:admin
     Route::resource('assessment-questions', AssessmentQuestionController::class)->except(['create', 'edit']);
     Route::get('technical-assessments/questions/{assessment}', 'AssessmentQuestionController@getAssessmentQuestions');
     Route::post('assessment-organization', 'AssessmentOrganizationController@assignAssessmentToOrganization');
+    Route::put('assessment-organization/{id}', 'AssessmentOrganizationController@update');
     Route::post('unassign-assessment-organization', 'AssessmentOrganizationController@unassignAssessmentFromOrganization');
     Route::resource('assessment-tiers', AssessmentTierController::class)->except(['create', 'edit', 'show']);
 

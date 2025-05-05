@@ -8,6 +8,7 @@ use Modules\TechnicalAssessment\Http\Requests\AssessmentOrganizationRequest;
 use Modules\TechnicalAssessment\Http\Requests\UnassignAssessmentOrganizationRequest;
 use Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\AssignAssessmentToOrganization;
 use Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\UnassignAssessmentFromOrganization;
+use Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\EditAssessmentOrganization;
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums;
 
@@ -16,7 +17,7 @@ class AssessmentOrganizationController extends ApiController
 
     public function __construct()
     {
-        $this->middleware('ability:'.Enums\PermissionsEnum::assignAssessmentOrganization->value,   ['only' => ['assignAssessmentToOrganization', 'unassignAssessmentFromOrganization']]);
+        $this->middleware('ability:'.Enums\PermissionsEnum::assignAssessmentOrganization->value,   ['only' => ['assignAssessmentToOrganization', 'unassignAssessmentFromOrganization', 'update']]);
     }
 
     /**
@@ -30,9 +31,11 @@ class AssessmentOrganizationController extends ApiController
         try {
             $commandModel = AssignAssessmentToOrganization\AssignAssessmentToOrganizationModel::from($request->all());
 
-            $result = $command->execute($commandModel);
-            return $this->successResponse([],'Assessment assigned successfully!' , Response::HTTP_CREATED);
-
+            $assigned = $command->execute($commandModel);
+            if($assigned)
+                return $this->successResponse([],'Assessment assigned successfully!' , Response::HTTP_CREATED);
+            else
+                return $this->errorResponse('Something went wrong');
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
@@ -50,8 +53,31 @@ class AssessmentOrganizationController extends ApiController
             $commandModel = UnassignAssessmentFromOrganization\UnassignAssessmentFromOrganizationModel::from($request->all());
 
             $result = $command->execute($commandModel);
-            return $this->successResponse([],'Assessment unassigned successfully!' , Response::HTTP_CREATED);
+            if($result)
+                return $this->successResponse([],'Assessment unassigned successfully!' , Response::HTTP_CREATED);
+            else
+                return $this->errorResponse('Something went wrong');
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage());
+        }
+    }
 
+    /**
+     * @param AssessmentOrganizationRequest $request
+     * @param int $id
+     * @param EditAssessmentOrganization\IEditAssessmentOrganization $command
+     * @return JsonResponse
+     */
+    public function update(AssessmentOrganizationRequest $request, int $id, EditAssessmentOrganization\IEditAssessmentOrganization $command): JsonResponse
+    {
+        try {
+            $commandModel = EditAssessmentOrganization\EditAssessmentOrganizationModel::from($request->all()+['id' => $id]);
+
+            $updated = $command->execute($commandModel);
+            if($updated)
+                return $this->successResponse([],'Data updated successfully!' , Response::HTTP_CREATED);
+            else
+                return $this->errorResponse('Something went wrong');
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());
         }
