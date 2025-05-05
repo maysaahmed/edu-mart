@@ -112,7 +112,13 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
     public function canUserRetakeAssessment(int $assessment_id): int|bool
     {
         $userId = auth()->id();
-        $days  = config('assessment.retake_days');
+        $assessment = $this->getAssessmentById($assessment_id);
+        $days = $assessment->retake_days;
+
+        if($days == 0)
+        {
+            return false;
+        }
 
         $result = UserAssessmentResult::where('user_id', $userId)
             ->where('assessment_id', $assessment_id)
