@@ -17,7 +17,7 @@ class AssessmentOrganizationResource extends JsonResource
     {
 
         return [
-            'id' => $this->id,
+            'id' => $this->pivot->id,
             'limit_users' => $this->pivot->limit_users ?? null,
             'assessment_id' => $this->pivot->assessment_id ?? null ,
             'organization_id' => $this->pivot->organization_id ?? null,

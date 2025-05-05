@@ -134,6 +134,11 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
             \Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\UnassignAssessmentFromOrganization\UnassignAssessmentFromOrganization::class
         );
 
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\EditAssessmentOrganization\IEditAssessmentOrganization::class,
+            \Modules\TechnicalAssessment\Core\AssessmentOrganization\Commands\EditAssessmentOrganization\EditAssessmentOrganization::class
+        );
+
 
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\AssessmentTier\Commands\CreateAssessmentTier\ICreateAssessmentTier::class,

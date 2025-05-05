@@ -15,12 +15,18 @@ class AssessmentOrganizationRequest extends ApiRequest
      */
     public function rules()
     {
-
-        return [
-            'assessment_id' => 'required|integer|exists:assessments,id',
-            'organization_id' => 'required|integer|exists:organizations,id',
-            'limit_users' => 'required|numeric|gt:0',
-        ];
+        $id = $this->route('id');
+        if(!isset($id))
+        {
+            $rules = [
+                'assessment_id' => 'required|integer|exists:assessments,id',
+                'organization_id' => 'required|integer|exists:organizations,id',
+                'limit_users' => 'required|numeric|gt:0',
+            ];
+        }else{
+            $rules = [ 'limit_users' => 'required|numeric|gt:0' ];
+        }
+        return $rules;
 
     }
 
