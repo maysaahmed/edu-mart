@@ -39,6 +39,7 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
         $assessment->code = $model->code;
         $assessment->assessment_type = $model->assessment_type;
         $assessment->desc = $model->desc;
+        $assessment->retake_days = $model->retake_days;
         $assessment->save();
 
         return $assessment;
@@ -54,6 +55,7 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
             $assessment->code = $model->code;
             $assessment->assessment_type = $model->assessment_type;
             $assessment->desc = $model->desc;
+            $assessment->retake_days = $model->retake_days;
             $save = $assessment->save();
 
             if ($save) {
