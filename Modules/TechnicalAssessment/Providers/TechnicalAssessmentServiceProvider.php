@@ -59,6 +59,11 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessmentLimited\IEditAssessmentLimited::class,
+            \Modules\TechnicalAssessment\Core\Assessment\Commands\EditAssessmentLimited\EditAssessmentLimited::class
+        );
+
+        $this->app->bind(
             \Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessment\IGetAssessment::class,
             \Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessment\GetAssessment::class
         );
@@ -75,6 +80,10 @@ class TechnicalAssessmentServiceProvider extends ServiceProvider
         $this->app->bind(
             \Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessmentRecommendedCourses\IGetAssessmentRecommendedCourses::class,
             \Modules\TechnicalAssessment\Core\Assessment\Queries\GetAssessmentRecommendedCourses\GetAssessmentRecommendedCourses::class
+        );
+        $this->app->bind(
+            \Modules\TechnicalAssessment\Core\Assessment\Queries\CheckAssessmentEditable\ICheckAssessmentEditable::class,
+            \Modules\TechnicalAssessment\Core\Assessment\Queries\CheckAssessmentEditable\CheckAssessmentEditable::class
         );
 
         $this->app->bind(
