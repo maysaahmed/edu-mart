@@ -13,7 +13,7 @@ class Assessment extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['name', 'code', 'assessment_type', 'desc'];
+    protected $fillable = ['name', 'code', 'assessment_type', 'desc', 'retake_days'];
 
 
     /**

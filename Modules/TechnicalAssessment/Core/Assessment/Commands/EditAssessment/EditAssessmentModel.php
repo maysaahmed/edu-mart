@@ -11,6 +11,7 @@ class EditAssessmentModel extends Data
         public string $name,
         public string $code,
         public string $assessment_type,
+        public int $retake_days,
         public ?string $desc = '',
 
     ) {

@@ -17,6 +17,7 @@ class AssessmentRequest extends ApiRequest
             'name' => 'required|string|max:255',
             'desc' => 'nullable|string',
             'assessment_type' => 'required|in:soft,technical',
+            'retake_days' => 'required|integer|min:0'
         ];
 
         $id = $this->route('assessment');
