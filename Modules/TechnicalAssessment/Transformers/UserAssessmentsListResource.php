@@ -29,7 +29,7 @@ class UserAssessmentsListResource extends JsonResource
             $hasTaken = isset($latestResult) ?? false;
 
             if ($latestResult && $latestResult->submitted_at) {
-                $retakeDays = config('assessment.retake_days', 30);
+                $retakeDays = $this->retake_days;
                 $nextAllowed = Carbon::parse($latestResult->submitted_at)->addDays($retakeDays);
 
                 if (now()->lt($nextAllowed)) {
@@ -45,7 +45,7 @@ class UserAssessmentsListResource extends JsonResource
             'type' => $this->assessment_type,
             'has_taken' => $hasTaken,
             'can_retake' => $canRetake,
-            'retake_after_days' => $nextRetakeIn,
+            'retake_after_days' => $nextRetakeIn == 0 ? 1 : $nextRetakeIn,
 
 
         ];

@@ -11,11 +11,11 @@ class EditProfileModel extends Data
         public string $gender,
         public string $dob,
         public int $graduated,
-        public string $education,
-        public string $university,
-        public string $industry,
-        public string $area,
-        public string $phone,
+        public ?string $education = null,
+        public ?string $university = null,
+        public ?string $industry = null,
+        public ?string $area = null,
+        public ?string $phone = null,
         public ?string $image = null,
 
     ) {
