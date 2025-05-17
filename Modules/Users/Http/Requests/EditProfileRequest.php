@@ -17,11 +17,11 @@ class EditProfileRequest extends ApiRequest
             'gender' => 'required|in:male,female',
             'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'graduated' => 'required|in:0,1',
-            'education' => 'required|max:255',
-            'university' => 'required|max:255',
-            'industry' => 'required|max:255',
-            'area'  => 'required|max:255',
-            'phone'  => 'required|regex:/^[0-9]{11}$/'
+            'education' => 'nullable|max:255',
+            'university' => 'nullable|max:255',
+            'industry' => 'nullable|max:255',
+            'area'  => 'nullable|max:255',
+            'phone'  => 'nullable|regex:/^[0-9]{11}$/'
 
         ];
 

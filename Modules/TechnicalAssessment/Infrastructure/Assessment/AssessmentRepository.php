@@ -133,7 +133,8 @@ class AssessmentRepository extends Repository implements IAssessmentRepository
             ->addDays($days);
 
         if (now()->lt($nextAllowedDate)) {
-            return now()->diffInDays($nextAllowedDate);
+            $nextRetakeIn = now()->diffInDays($nextAllowedDate);
+            return $nextRetakeIn == 0 ? 1 : $nextRetakeIn;
         }
         return true;
 
