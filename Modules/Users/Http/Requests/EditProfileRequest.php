@@ -21,7 +21,7 @@ class EditProfileRequest extends ApiRequest
             'university' => 'nullable|max:255',
             'industry' => 'nullable|max:255',
             'area'  => 'nullable|max:255',
-            'phone'  => 'nullable|regex:/^[0-9]{11}$/'
+            'phone'  => 'nullable|regex:/^\+?[0-9\s\-]{10,20}$/'
 
         ];
 
