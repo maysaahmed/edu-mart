@@ -85,10 +85,9 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
     {
         return UserAssessmentResult::where('assessment_id', $assessment_id)
             ->whereNotNull('submitted_at')
+            ->orderBy('user_id')
             ->orderByDesc('submitted_at')
-            ->get()
-            ->unique('user_id')
-            ->values();
+            ->get();
     }
 
     protected function generateReport($org_id, $assessment_id): ?string
@@ -105,9 +104,7 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
             ->whereNotNull('submitted_at')
             ->orderByDesc('submitted_at')
             ->with(['user', 'assessment', 'assessment.tiers'])
-            ->get()
-            ->unique('user_id')
-            ->values();
+            ->get();
 
         if($results->isNotEmpty())
         {
