@@ -102,6 +102,7 @@ class AssessmentAnswerRepository extends Repository implements IAssessmentAnswer
         })
             ->where('assessment_id', $assessment_id)
             ->whereNotNull('submitted_at')
+            ->orderBy('user_id')
             ->orderByDesc('submitted_at')
             ->with(['user', 'assessment', 'assessment.tiers'])
             ->get();
